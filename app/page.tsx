@@ -1,65 +1,139 @@
-import Image from "next/image";
+import { sanityFetch } from "@/sanity/lib/client"
+import {
+  siteSettingsQuery,
+  propertiesQuery,
+  reviewsQuery,
+  faqsQuery,
+  statsQuery,
+  activitiesQuery,
+  storyMediaQuery,
+  whyChooseUsQuery,
+} from "@/sanity/lib/queries"
+import type {
+  SiteSettings,
+  Property,
+  Review,
+  FAQ as FAQType,
+  Stat,
+  Activity,
+  StoryMedia,
+  WhyChooseUsTab,
+} from "@/lib/types"
 
-export default function Home() {
+import Navbar from "@/components/layout/Navbar"
+import Footer from "@/components/layout/Footer"
+import Hero from "@/components/sections/Hero"
+import Destinations from "@/components/sections/Destinations"
+import QuoteBanner from "@/components/sections/QuoteBanner"
+import WhyChooseUs from "@/components/sections/WhyChooseUs"
+import Stats from "@/components/sections/Stats"
+import ActivitiesTicker from "@/components/sections/ActivitiesTicker"
+import StoriesSection from "@/components/sections/StoriesSection"
+import Reviews from "@/components/sections/Reviews"
+import CommunityBanner from "@/components/sections/CommunityBanner"
+import FAQ from "@/components/sections/FAQ"
+
+const FALLBACK_PROPERTIES: Property[] = [
+  {
+    _id: "fallback-suryanelli",
+    title: "Suryanelli",
+    slug: { current: "suryanelli" },
+    location: "Suryanelli",
+    description: "Suryanelli is a scenic, high-altitude village located in the Idukki district of Kerala",
+    pricePerNight: 1299,
+    status: "active",
+    image: { _type: "image", asset: { _ref: "", _type: "reference" } },
+    stayTypes: [],
+    order: 1,
+  },
+  {
+    _id: "fallback-kozhikode",
+    title: "Kozhikode",
+    slug: { current: "kozhikode" },
+    location: "Kozhikode",
+    description: "Cozy room in Kozhikode with modern amenities, peaceful ambiance, and easy access to beaches, food spots, and city attractions",
+    pricePerNight: 1299,
+    status: "active",
+    image: { _type: "image", asset: { _ref: "", _type: "reference" } },
+    stayTypes: [],
+    order: 2,
+  },
+  {
+    _id: "fallback-thrissur",
+    title: "Thrissur",
+    slug: { current: "thrissur" },
+    location: "Thrissur",
+    description: "Comfortable room in Thrissur offering central location, modern amenities, and easy access to temples, cultural spots, and local dining...",
+    pricePerNight: 0,
+    status: "work-in-progress",
+    image: { _type: "image", asset: { _ref: "", _type: "reference" } },
+    stayTypes: [],
+    order: 3,
+  },
+  {
+    _id: "fallback-alappuzha",
+    title: "Alappuzha",
+    slug: { current: "alappuzha" },
+    location: "Alappuzha",
+    description: "Relax on an Alappuzha houseboat with scenic backwaters, traditional meals, private rooms, and a peaceful cruise through Kerala's iconic...",
+    pricePerNight: 0,
+    status: "coming-soon",
+    image: { _type: "image", asset: { _ref: "", _type: "reference" } },
+    stayTypes: [],
+    order: 4,
+  },
+]
+
+const FALLBACK_SETTINGS: SiteSettings = {
+  heroVideoUrl: "",
+  heroRating: "4.93 / 5",
+  heroRatingCount: "2000+",
+  heroHeading: "Your Perfect Escape in the Mountains",
+  heroHeadingItalic: "Escape",
+  heroSubheading: "Find calm in a modern hideaway with stunning views in the heart of Suryanelli",
+  quoteBannerText:
+    "We thoughtfully curate every stay, design every touchpoint with care, and move with a clear focus on experience. The difference? We're building memories with you not just facilitating stays",
+  communityBannerHeading: "Comfort Meets Community",
+  communityBannerSubheading:
+    "Designed For Travelers Who Value Both Comfort And Community, Enjoy Modern Amenities, Cozy Common Spaces, And Opportunities To Meet Fellow Explorers From Around The World.",
+}
+
+async function fetchData<T>(query: string, fallback: T): Promise<T> {
+  try {
+    const data = await sanityFetch<T>(query)
+    return data ?? fallback
+  } catch {
+    return fallback
+  }
+}
+
+export default async function Home() {
+  const [settings, properties, reviews, faqs, stats, activities, stories, whyChooseUsTabs] =
+    await Promise.all([
+      fetchData<SiteSettings>(siteSettingsQuery, FALLBACK_SETTINGS),
+      fetchData<Property[]>(propertiesQuery, FALLBACK_PROPERTIES),
+      fetchData<Review[]>(reviewsQuery, []),
+      fetchData<FAQType[]>(faqsQuery, []),
+      fetchData<Stat[]>(statsQuery, []),
+      fetchData<Activity[]>(activitiesQuery, []),
+      fetchData<StoryMedia[]>(storyMediaQuery, []),
+      fetchData<WhyChooseUsTab[]>(whyChooseUsQuery, []),
+    ])
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
-  );
+    <main>
+      <Navbar />
+      <Hero settings={settings} properties={properties} />
+      <Destinations properties={properties} />
+      <QuoteBanner text={settings.quoteBannerText} />
+      {whyChooseUsTabs.length > 0 && <WhyChooseUs tabs={whyChooseUsTabs} />}
+      {stats.length > 0 && <Stats stats={stats} />}
+      {activities.length > 0 && <ActivitiesTicker activities={activities} />}
+      {stories.length > 0 && <StoriesSection stories={stories} />}
+      {reviews.length > 0 && <Reviews reviews={reviews} />}
+      <CommunityBanner settings={settings} />
+      {faqs.length > 0 && <FAQ faqs={faqs} />}
+      <Footer />
+    </main>
+  )
 }

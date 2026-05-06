@@ -1,26 +1,76 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  /* Brand Colors */
+  --color-primary: #052721;
+  --color-cream: #fff9d0;
+
+  /* Sun palette */
+  --color-sun-300: #fc9a05;
+  --color-sun-400: #fbb938;
+  --color-sun-500: #fe6c05;
+  --color-sun-600: #fb4202;
+
+  /* Ocean palette */
+  --color-ocean-200: #9fe3d4;
+  --color-ocean-400: #2fc1ae;
+  --color-ocean-600: #0d949b;
+
+  /* Sky palette */
+  --color-sky-300: #79caf7;
+  --color-sky-700: #17679f;
+  --color-sky-900: #243a4c;
+
+  /* Earthy palette */
+  --color-earthy-200: #d9c4a9;
+  --color-earthy-500: #a77459;
+  --color-earthy-700: #744936;
+
+  /* Fonts */
+  --font-serif: "Instrument Serif", serif;
+  --font-sans: "Inclusive Sans", sans-serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* Marquee animation for activities ticker */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Auto-scroll reviews row left */
+@keyframes scroll-left {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* Auto-scroll reviews row right */
+@keyframes scroll-right {
+  from { transform: translateX(-50%); }
+  to { transform: translateX(0); }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+.animate-scroll-left {
+  animation: scroll-left 40s linear infinite;
+}
+
+.animate-scroll-right {
+  animation: scroll-right 45s linear infinite;
+}
+
+/* Pause on hover */
+.animate-marquee:hover,
+.animate-scroll-left:hover,
+.animate-scroll-right:hover {
+  animation-play-state: paused;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: var(--font-sans);
+  background-color: #ffffff;
+  color: #1a1a1a;
 }
+

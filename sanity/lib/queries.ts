@@ -1,0 +1,92 @@
+import { groq } from "next-sanity"
+
+export const siteSettingsQuery = groq`
+  *[_type == "siteSettings"][0] {
+    heroVideoUrl,
+    heroRating,
+    heroRatingCount,
+    heroHeading,
+    heroHeadingItalic,
+    heroSubheading,
+    quoteBannerText,
+    communityBannerImage,
+    communityBannerHeading,
+    communityBannerSubheading
+  }
+`
+
+export const propertiesQuery = groq`
+  *[_type == "property"] | order(order asc) {
+    _id,
+    title,
+    slug,
+    location,
+    description,
+    pricePerNight,
+    status,
+    image { asset, alt },
+    stayTypes,
+    order
+  }
+`
+
+export const reviewsQuery = groq`
+  *[_type == "review"] | order(order asc) {
+    _id,
+    reviewerName,
+    rating,
+    text,
+    reviewerAvatar { asset },
+    timeAgo,
+    source
+  }
+`
+
+export const faqsQuery = groq`
+  *[_type == "faq"] | order(order asc) {
+    _id,
+    question,
+    answer,
+    order
+  }
+`
+
+export const statsQuery = groq`
+  *[_type == "stat"] | order(order asc) {
+    _id,
+    value,
+    label,
+    description,
+    iconKey,
+    order
+  }
+`
+
+export const activitiesQuery = groq`
+  *[_type == "activity"] | order(order asc) {
+    _id,
+    label,
+    order
+  }
+`
+
+export const storyMediaQuery = groq`
+  *[_type == "storyMedia"] | order(order asc) {
+    _id,
+    mediaType,
+    cloudinaryUrl,
+    thumbnail { asset, alt },
+    order
+  }
+`
+
+export const whyChooseUsQuery = groq`
+  *[_type == "whyChooseUs"] | order(order asc) {
+    _id,
+    tabLabel,
+    image { asset, alt },
+    title,
+    description,
+    order
+  }
+`

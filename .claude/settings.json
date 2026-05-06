@@ -2,7 +2,14 @@
   "permissions": {
     "allow": [
       "WebFetch(domain:www.figma.com)",
-      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --no-eslint --yes)"
+      "Bash(npx create-next-app@latest . --typescript --tailwind --app --no-src-dir --import-alias \"@/*\" --no-eslint --yes)",
+      "Bash(npm install *)",
+      "Bash(npx tsc *)",
+      "Bash(npm run *)",
+      "Bash(node -e \"const fm = require\\('d:/work/hostyardplus/node_modules/framer-motion'\\); console.log\\(Object.keys\\(fm\\).filter\\(k => ['LazyMotion','domAnimation','m','MotionConfig','motion','useInView'].includes\\(k\\)\\)\\)\")"
+    ],
+    "additionalDirectories": [
+      "d:\\work\\hostyardplus\\components"
     ]
   }
 }
