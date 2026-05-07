@@ -1,11 +1,11 @@
 "use client"
 
-import { useRef, useState } from "react"
+import { useRef, useState, useEffect } from "react"
 import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import SectionHeader from "@/components/ui/SectionHeader"
 import AnimateIn from "@/components/ui/AnimateIn"
-import { Play } from "lucide-react"
+import { Play, Pause } from "lucide-react"
 import type { StoryMedia } from "@/lib/types"
 
 interface StoriesSectionProps {
@@ -14,7 +14,37 @@ interface StoriesSectionProps {
 
 export default function StoriesSection({ stories }: StoriesSectionProps) {
   const [active, setActive] = useState(Math.floor(stories.length / 2))
+  const [playing, setPlaying] = useState(false)
   const scrollRef = useRef<HTMLDivElement>(null)
+  const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
+
+  useEffect(() => {
+    videoRefs.current.forEach((v, i) => {
+      if (!v) return
+      if (i === active) {
+        v.play().then(() => setPlaying(true)).catch(() => setPlaying(false))
+      } else {
+        v.pause()
+        v.currentTime = 0
+      }
+    })
+  }, [active])
+
+  const handleCardClick = (i: number) => {
+    if (i === active) {
+      const v = videoRefs.current[i]
+      if (!v) return
+      if (v.paused) {
+        v.play().then(() => setPlaying(true))
+      } else {
+        v.pause()
+        setPlaying(false)
+      }
+    } else {
+      setPlaying(false)
+      setActive(i)
+    }
+  }
 
   return (
     <section className="bg-[#f8f6f1] py-20 overflow-hidden">
@@ -28,7 +58,6 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
         </AnimateIn>
       </div>
 
-      {/* Horizontal scroll reel */}
       <AnimateIn delay={200}>
         <div
           ref={scrollRef}
@@ -44,7 +73,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
             return (
               <div
                 key={story._id}
-                onClick={() => setActive(i)}
+                onClick={() => handleCardClick(i)}
                 style={{ scrollSnapAlign: "center" }}
                 className={`relative rounded-2xl overflow-hidden shrink-0 cursor-pointer transition-all duration-500 ${
                   isCenter
@@ -59,13 +88,27 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                     fill
                     className="object-cover"
                   />
+                ) : story.cloudinaryUrl ? (
+                  <video
+                    ref={el => { videoRefs.current[i] = el }}
+                    src={story.cloudinaryUrl}
+                    className="w-full h-full object-cover"
+                    muted
+                    loop
+                    playsInline
+                  />
                 ) : (
                   <div className="w-full h-full bg-gray-300" />
                 )}
+
                 {story.mediaType === "video" && isCenter && (
                   <div className="absolute inset-0 flex items-center justify-center">
                     <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      <Play size={24} className="text-white fill-white ml-1" />
+                      {playing ? (
+                        <Pause size={24} className="text-white fill-white" />
+                      ) : (
+                        <Play size={24} className="text-white fill-white ml-1" />
+                      )}
                     </div>
                   </div>
                 )}
