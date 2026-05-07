@@ -5,7 +5,7 @@ import Image from "next/image"
 import { urlFor } from "@/sanity/lib/image"
 import SectionHeader from "@/components/ui/SectionHeader"
 import AnimateIn from "@/components/ui/AnimateIn"
-import { Play, Pause } from "lucide-react"
+import { Play, Pause, Volume2, VolumeX } from "lucide-react"
 import type { StoryMedia } from "@/lib/types"
 
 interface StoriesSectionProps {
@@ -15,6 +15,7 @@ interface StoriesSectionProps {
 export default function StoriesSection({ stories }: StoriesSectionProps) {
   const [active, setActive] = useState(Math.floor(stories.length / 2))
   const [playing, setPlaying] = useState(false)
+  const [muted, setMuted] = useState(true)
   const scrollRef = useRef<HTMLDivElement>(null)
   const videoRefs = useRef<(HTMLVideoElement | null)[]>([])
 
@@ -22,13 +23,21 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     videoRefs.current.forEach((v, i) => {
       if (!v) return
       if (i === active) {
+        v.muted = muted
         v.play().then(() => setPlaying(true)).catch(() => setPlaying(false))
       } else {
         v.pause()
         v.currentTime = 0
+        v.muted = true
       }
     })
   }, [active])
+
+  // Sync muted state to the active video whenever it changes
+  useEffect(() => {
+    const v = videoRefs.current[active]
+    if (v) v.muted = muted
+  }, [muted, active])
 
   const handleCardClick = (i: number) => {
     if (i === active) {
@@ -44,6 +53,11 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       setPlaying(false)
       setActive(i)
     }
+  }
+
+  const toggleMute = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setMuted(prev => !prev)
   }
 
   return (
@@ -102,15 +116,31 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                 )}
 
                 {story.mediaType === "video" && isCenter && (
-                  <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
-                      {playing ? (
-                        <Pause size={24} className="text-white fill-white" />
-                      ) : (
-                        <Play size={24} className="text-white fill-white ml-1" />
-                      )}
+                  <>
+                    {/* Play / Pause — centre of card */}
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <div className="w-14 h-14 rounded-full bg-white/20 backdrop-blur-sm flex items-center justify-center">
+                        {playing ? (
+                          <Pause size={24} className="text-white fill-white" />
+                        ) : (
+                          <Play size={24} className="text-white fill-white ml-1" />
+                        )}
+                      </div>
                     </div>
-                  </div>
+
+                    {/* Mute / Unmute — bottom-right corner */}
+                    <button
+                      onClick={toggleMute}
+                      className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                      aria-label={muted ? "Unmute" : "Mute"}
+                    >
+                      {muted ? (
+                        <VolumeX size={16} className="text-white" />
+                      ) : (
+                        <Volume2 size={16} className="text-white" />
+                      )}
+                    </button>
+                  </>
                 )}
               </div>
             )

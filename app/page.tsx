@@ -101,7 +101,19 @@ const FALLBACK_SETTINGS: SiteSettings = {
 async function fetchData<T>(query: string, fallback: T): Promise<T> {
   try {
     const data = await sanityFetch<T>(query)
-    return data ?? fallback
+    if (data === null || data === undefined) return fallback
+    // For SiteSettings, merge so empty string fields fall back to defaults
+    if (typeof fallback === "object" && !Array.isArray(fallback) && fallback !== null) {
+      const merged = { ...fallback } as Record<string, unknown>
+      const incoming = data as Record<string, unknown>
+      for (const key of Object.keys(merged)) {
+        if (incoming[key] !== null && incoming[key] !== undefined && incoming[key] !== "") {
+          merged[key] = incoming[key]
+        }
+      }
+      return merged as T
+    }
+    return data
   } catch {
     return fallback
   }
