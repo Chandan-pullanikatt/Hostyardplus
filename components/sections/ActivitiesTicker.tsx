@@ -5,29 +5,16 @@ interface ActivitiesTickerProps {
 }
 
 const iconMap: Record<string, string> = {
-  "trekking trails":       "/icons/TRECKING.svg",
-  "sunrise yoga":          "/icons/SUNRISE%20%26%20SUNSET.svg",
-  "backwater cruises":     "/icons/KAYAKING.svg",
-  "beach walks":           "/icons/WAVES.svg",
-  "elephant encounters":   "/icons/ATV.svg",
-  "tea estate tours":      "/icons/COMPASS.svg",
-  "ayurvedic spa":         "/icons/WAVES.svg",
-  "kerala cooking classes":"/icons/COMMUNITY.svg",
-  "waterfall hikes":       "/icons/MOUNTAIN.svg",
-  "cultural performances": "/icons/MUSIC.svg",
-  // user-mapped activities (for future Sanity updates)
-  "sunrise views":         "/icons/SUNRISE%20%26%20SUNSET.svg",
-  "mountain views":        "/icons/MOUNTAIN.svg",
-  "off-road drives":       "/icons/OFF-ROAD.svg",
-  "guided tours":          "/icons/COMPASS.svg",
-  "kayaking access":       "/icons/KAYAKING.svg",
-  "forest stay":           "/icons/FOREST.svg",
-  "forest stays":          "/icons/FOREST.svg",
-  "music nights":          "/icons/MUSIC.svg",
-  "easy access":           "/icons/ROAD.svg",
-  "camping stay":          "/icons/TENT.svg",
-  "camping stays":         "/icons/TENT.svg",
-  "bonfire nights":        "/icons/CAMPFIRE.svg",
+  "sunrise views":  "/icons/SUNRISE%20%26%20SUNSET.svg",
+  "mountain views": "/icons/MOUNTAIN.svg",
+  "off-road rides": "/icons/OFF-ROAD.svg",
+  "guided tours":   "/icons/COMPASS.svg",
+  "kayaking access":"/icons/KAYAKING.svg",
+  "forest stays":   "/icons/FOREST.svg",
+  "music nights":   "/icons/MUSIC.svg",
+  "easy access":    "/icons/ROAD.svg",
+  "camping stays":  "/icons/TENT.svg",
+  "bonfire nights": "/icons/CAMPFIRE.svg",
 }
 
 function getIcon(label: string): string | null {

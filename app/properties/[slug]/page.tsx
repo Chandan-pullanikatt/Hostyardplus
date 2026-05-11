@@ -32,7 +32,7 @@ export default async function PropertyPage({
       <Navbar />
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
-      {property.experiences?.length > 0 && <PropertyExperiences property={property} />}
+      <PropertyExperiences property={property} />
       {property.galleryImages?.length > 1 && <PropertyGallery property={property} />}
       {reviews?.length > 0 && <Reviews reviews={reviews} />}
       {settings && <CommunityBanner settings={settings} />}

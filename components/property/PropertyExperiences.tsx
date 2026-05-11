@@ -1,71 +1,93 @@
+"use client"
+
+import { useState } from "react"
 import Image from "next/image"
-import { urlFor } from "@/sanity/lib/image"
 import type { PropertyDetail } from "@/lib/types"
+
+const EXPERIENCES = [
+  {
+    id: "yoga",
+    title: "Free Yoga Classes",
+    description:
+      "Begin your day with peaceful guided yoga sessions surrounded by calming natural views and fresh open air. Designed for all skill levels, our complimentary classes help improve flexibility, reduce stress.",
+    image: "/photos/yoga.jpg",
+  },
+  {
+    id: "board",
+    title: "Balancing Board Experience",
+    description:
+      "Enjoy a unique wellness activity that combines movement, focus, and fun through our balancing board experience. Perfect for both beginners and enthusiasts.",
+    image: "/photos/board.jpg",
+  },
+  {
+    id: "sunset",
+    title: "Sunset Guided Hike",
+    description:
+      "Experience the beauty of nature with our guided sunset hikes through scenic trails and breathtaking landscapes. As the sky transforms into warm golden tones, enjoy a peaceful evening walk.",
+    image: "/photos/sunsetguide.jpg",
+  },
+]
 
 interface Props {
   property: PropertyDetail
 }
 
 export default function PropertyExperiences({ property }: Props) {
-  const experiences = property.experiences ?? []
-  if (!experiences.length) return null
-
-  const [first, ...rest] = experiences
+  const [hovered, setHovered] = useState<string | null>(null)
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-[#F5F4F0] py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <h2 className="font-serif text-3xl md:text-4xl text-gray-900 mb-10">Experiences</h2>
+        <div className="flex gap-4 h-[580px]">
+          {EXPERIENCES.map((exp) => {
+            const active = hovered === exp.id
 
-        <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-[560px]">
-          {/* Featured card (large) */}
-          <div className="relative flex-1 rounded-2xl overflow-hidden min-h-[380px]">
-            {first.image?.asset?._ref && (
-              <Image
-                src={urlFor(first.image).width(800).height(700).url()}
-                alt={first.image.alt ?? first.title}
-                fill
-                className="object-cover"
-              />
-            )}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-            <div className="absolute bottom-0 left-0 right-0 p-6">
-              <span className="inline-block bg-primary text-white text-xs font-sans px-3 py-1 rounded-full mb-3">
-                {property.location}
-              </span>
-              <h3 className="font-serif text-3xl text-white mb-2">{first.title}</h3>
-              {first.description && (
-                <p className="text-white/80 font-sans text-sm leading-relaxed line-clamp-3">
-                  {first.description}
-                </p>
-              )}
-            </div>
-          </div>
+            return (
+              <div
+                key={exp.id}
+                onMouseEnter={() => setHovered(exp.id)}
+                onMouseLeave={() => setHovered(null)}
+                style={{ flex: active ? 2 : 1 }}
+                className="relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ease-in-out"
+              >
+                <Image
+                  src={exp.image}
+                  alt={exp.title}
+                  fill
+                  className="object-cover transition-transform duration-500 ease-in-out scale-100 hover:scale-[1.03]"
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                />
 
-          {/* Secondary cards */}
-          {rest.length > 0 && (
-            <div className="flex flex-col gap-4 lg:w-[340px] shrink-0">
-              {rest.slice(0, 2).map(exp => (
-                <div key={exp._key} className="relative flex-1 rounded-2xl overflow-hidden min-h-[180px]">
-                  {exp.image?.asset?._ref && (
-                    <Image
-                      src={urlFor(exp.image).width(500).height(400).url()}
-                      alt={exp.image.alt ?? exp.title}
-                      fill
-                      className="object-cover"
-                    />
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/10 to-transparent" />
-                  <div className="absolute bottom-0 left-0 right-0 p-5">
-                    <span className="inline-block bg-primary text-white text-xs font-sans px-3 py-1 rounded-full mb-2">
-                      {property.location}
-                    </span>
-                    <h3 className="font-serif text-xl text-white">{exp.title}</h3>
+                {/* gradient overlay — stronger at bottom */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/10 to-transparent" />
+
+                {/* bottom content */}
+                <div className="absolute bottom-0 left-0 right-0 p-6">
+                  <span className="inline-block bg-primary text-white text-xs font-sans px-3 py-1.5 rounded-full mb-3">
+                    {property.location}
+                  </span>
+
+                  <h3
+                    className={`font-serif italic text-white leading-tight transition-all duration-500 ease-in-out ${
+                      active ? "text-3xl mb-3" : "text-2xl mb-0"
+                    }`}
+                  >
+                    {exp.title}
+                  </h3>
+
+                  {/* description slides in/out */}
+                  <div
+                    className="overflow-hidden transition-all duration-500 ease-in-out"
+                    style={{ maxHeight: active ? "120px" : "0px", opacity: active ? 1 : 0 }}
+                  >
+                    <p className="text-white/80 font-sans text-sm leading-relaxed">
+                      {exp.description}
+                    </p>
                   </div>
                 </div>
-              ))}
-            </div>
-          )}
+              </div>
+            )
+          })}
         </div>
       </div>
     </section>
