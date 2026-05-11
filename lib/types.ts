@@ -40,6 +40,7 @@ export interface Property {
   description: string
   pricePerNight: number
   status: "active" | "work-in-progress" | "coming-soon"
+  isClickable?: boolean
   image: SanityImage
   stayTypes: string[]
   order: number
@@ -87,7 +88,7 @@ export interface StoryMedia {
 export interface WhyChooseUsTab {
   _id: string
   tabLabel: string
-  image: SanityImage
+  images: SanityImage[]
   title: string
   description: string
   order: number

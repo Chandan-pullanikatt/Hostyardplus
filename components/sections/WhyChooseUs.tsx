@@ -4,13 +4,21 @@ import { useState, useEffect } from "react"
 import Image from "next/image"
 import AnimateIn from "@/components/ui/AnimateIn"
 
-const TABS = [
+interface WhyChooseUsTabData {
+  id: string
+  label: string
+  title: string
+  description: string
+  imageUrls: string[]
+}
+
+const FALLBACK_TABS: WhyChooseUsTabData[] = [
   {
     id: "handpicked",
     label: "Handpicked Experiences",
     title: "Handpicked Experiences",
     description: "Every stay is hand-selected by our team for quality, character, and comfort that goes beyond expectations.",
-    images: [
+    imageUrls: [
       "https://fastly.picsum.photos/id/28/1400/800.jpg?hmac=6z4E1Qa0OYxGUL78g5mGSNcPUt5eVCFrHHNKMvRHWBk",
       "https://fastly.picsum.photos/id/42/1400/800.jpg?hmac=6HWE17Rm7YuUNhE7q8b7tZKEfVvzYlXLHbUmEFEuGhE",
       "https://fastly.picsum.photos/id/96/1400/800.jpg?hmac=V5YLnNNH7nCDYyUZqAaSXQPEpAO-MXfleWJBZXEjBFc",
@@ -21,7 +29,7 @@ const TABS = [
     label: "Scenic Destinations",
     title: "Scenic Destinations",
     description: "Nestled in Kerala's most breathtaking landscapes — from misty mountains to tranquil backwaters.",
-    images: [
+    imageUrls: [
       "https://fastly.picsum.photos/id/15/1400/800.jpg?hmac=XuaVl68xJMgXPnDrK07LqP0l9JEuaGh2e2Pl31LVWI",
       "https://fastly.picsum.photos/id/10/1400/800.jpg?hmac=YLhGqidl7LS9nXHujFSsqFSMqGI1FdAMuWI7YJvFxbw",
       "https://fastly.picsum.photos/id/29/1400/800.jpg?hmac=lWnFNWfB_BzxLBGWJHyEpRqT0AHWKcDNDMn1oZYniWA",
@@ -32,7 +40,7 @@ const TABS = [
     label: "Connect & Belong",
     title: "Connect & Belong",
     description: "Our spaces are designed for connection — meet fellow travelers, share stories, and feel at home anywhere.",
-    images: [
+    imageUrls: [
       "https://fastly.picsum.photos/id/65/1400/800.jpg?hmac=1zNlS3OqBTZRYtlGEr4FIJY_e7C91fblJ59AkLMioT0",
       "https://fastly.picsum.photos/id/49/1400/800.jpg?hmac=GzfNGPtfv9oW19YO7tTWvpS1Dg7f7yDjdyPM52qSUOI",
       "https://fastly.picsum.photos/id/83/1400/800.jpg?hmac=yKjPBSTXvGT3oeYd8kOL7kIHgdxETb6PrGYyVSSrNcs",
@@ -43,7 +51,7 @@ const TABS = [
     label: "Verified Stays",
     title: "Verified Stays",
     description: "Every property is personally inspected and verified to meet our standards of safety, hygiene, and quality.",
-    images: [
+    imageUrls: [
       "https://fastly.picsum.photos/id/60/1400/800.jpg?hmac=LWnFxI0FVFR_8D8R5V2FHqy3lNfkE3IFhIRGgSAWxFE",
       "https://fastly.picsum.photos/id/48/1400/800.jpg?hmac=Q7MBDZw7rK2E5EFnr2E9fT6BFAI1FhI1FRGgSAWxFE",
       "https://fastly.picsum.photos/id/39/1400/800.jpg?hmac=9KMBDZw7rK2E5EFnr2E9fT6BFAI1FhI1FRGgSAWxFE",
@@ -51,18 +59,27 @@ const TABS = [
   },
 ]
 
-export default function WhyChooseUs() {
+interface Props {
+  tabs?: WhyChooseUsTabData[]
+}
+
+export default function WhyChooseUs({ tabs }: Props) {
+  const TABS = tabs ?? FALLBACK_TABS
   const [activeIndex, setActiveIndex] = useState(0)
   const [slideIndex, setSlideIndex] = useState(0)
+
+  const active = TABS[activeIndex] ?? TABS[0]
+  const slideCount = active?.imageUrls?.length ?? 0
 
   // Auto-advance slides every 3 s; reset when tab changes
   useEffect(() => {
     setSlideIndex(0)
-    const id = setInterval(() => setSlideIndex((i) => (i + 1) % 3), 3000)
+    if (slideCount < 2) return
+    const id = setInterval(() => setSlideIndex((i) => (i + 1) % slideCount), 3000)
     return () => clearInterval(id)
-  }, [activeIndex])
+  }, [activeIndex, slideCount])
 
-  const active = TABS[activeIndex]
+  if (!active) return null
 
   return (
     <section className="bg-white py-20 px-6 lg:px-12">
@@ -94,8 +111,7 @@ export default function WhyChooseUs() {
         {/* Slideshow */}
         <AnimateIn delay={300}>
           <div className="relative rounded-2xl overflow-hidden h-[500px] md:h-[600px]">
-            {/* All 3 images stacked, crossfade via opacity */}
-            {active.images.map((src, i) => (
+            {active.imageUrls.map((src, i) => (
               <Image
                 key={src}
                 src={src}
@@ -113,17 +129,19 @@ export default function WhyChooseUs() {
               <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
               <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
               {/* Slide dots */}
-              <div className="flex gap-2 mt-4">
-                {active.images.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => setSlideIndex(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === slideIndex ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
-                    }`}
-                  />
-                ))}
-              </div>
+              {slideCount > 1 && (
+                <div className="flex gap-2 mt-4">
+                  {active.imageUrls.map((_, i) => (
+                    <button
+                      key={i}
+                      onClick={() => setSlideIndex(i)}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${
+                        i === slideIndex ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
+                      }`}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </AnimateIn>

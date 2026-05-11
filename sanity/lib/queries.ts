@@ -26,6 +26,7 @@ export const propertiesQuery = groq`
     description,
     pricePerNight,
     status,
+    isClickable,
     image { asset, alt },
     stayTypes,
     order
@@ -109,7 +110,7 @@ export const whyChooseUsQuery = groq`
   *[_type == "whyChooseUs"] | order(order asc) {
     _id,
     tabLabel,
-    image { asset, alt },
+    images[] { asset, alt },
     title,
     description,
     order

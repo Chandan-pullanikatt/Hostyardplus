@@ -14,9 +14,10 @@ const statusBadge = {
 }
 
 export default function PropertyCard({ property }: PropertyCardProps) {
-  const { title, location, description, pricePerNight, status, image, slug } = property
+  const { title, location, description, pricePerNight, status, isClickable, image, slug } = property
   const badge = statusBadge[status]
   const isAvailable = status === "active"
+  const showLink = isAvailable && (isClickable !== false)
   const imageUrl = image?.asset?._ref ? urlFor(image).width(900).height(600).url() : null
 
   const cardContent = (
@@ -67,7 +68,7 @@ export default function PropertyCard({ property }: PropertyCardProps) {
 
   return (
     <div className="flex flex-col gap-3">
-      {isAvailable ? (
+      {showLink ? (
         <Link href={`/properties/${slug?.current}`}>{cardContent}</Link>
       ) : (
         cardContent

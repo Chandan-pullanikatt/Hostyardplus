@@ -7,6 +7,7 @@ import {
   statsQuery,
   activitiesQuery,
   storyMediaQuery,
+  whyChooseUsQuery,
 } from "@/sanity/lib/queries"
 import type {
   SiteSettings,
@@ -16,7 +17,9 @@ import type {
   Stat,
   Activity,
   StoryMedia,
+  WhyChooseUsTab,
 } from "@/lib/types"
+import { urlFor } from "@/sanity/lib/image"
 
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
@@ -52,6 +55,7 @@ const FALLBACK_PROPERTIES: Property[] = [
     description: "Cozy room in Kozhikode with modern amenities, peaceful ambiance, and easy access to beaches, food spots, and city attractions",
     pricePerNight: 1299,
     status: "active",
+    isClickable: false,
     image: { _type: "image", asset: { _ref: "", _type: "reference" } },
     stayTypes: [],
     order: 2,
@@ -127,7 +131,7 @@ async function fetchData<T>(query: string, fallback: T): Promise<T> {
 }
 
 export default async function Home() {
-  const [settings, properties, reviews, faqs, stats, activities, stories] =
+  const [settings, properties, reviews, faqs, stats, activities, stories, whyChooseTabs] =
     await Promise.all([
       fetchData<SiteSettings>(siteSettingsQuery, FALLBACK_SETTINGS),
       fetchData<Property[]>(propertiesQuery, FALLBACK_PROPERTIES),
@@ -136,7 +140,18 @@ export default async function Home() {
       fetchData<Stat[]>(statsQuery, FALLBACK_STATS),
       fetchData<Activity[]>(activitiesQuery, []),
       fetchData<StoryMedia[]>(storyMediaQuery, []),
+      fetchData<WhyChooseUsTab[]>(whyChooseUsQuery, []),
     ])
+
+  const processedWhyChooseTabs = whyChooseTabs.map((tab) => ({
+    id: tab._id,
+    label: tab.tabLabel,
+    title: tab.title,
+    description: tab.description,
+    imageUrls: (tab.images ?? [])
+      .filter((img) => img?.asset?._ref)
+      .map((img) => urlFor(img).width(1400).height(800).url()),
+  }))
 
   return (
     <main>
@@ -144,7 +159,7 @@ export default async function Home() {
       <Hero settings={settings} properties={properties} />
       <AboutUs settings={settings} />
       <Destinations properties={properties} />
-      <WhyChooseUs />
+      <WhyChooseUs tabs={processedWhyChooseTabs.length > 0 ? processedWhyChooseTabs : undefined} />
       <Stats stats={stats} />
       {activities.length > 0 && <ActivitiesTicker activities={activities} />}
       {stories.length > 0 && <StoriesSection stories={stories} />}

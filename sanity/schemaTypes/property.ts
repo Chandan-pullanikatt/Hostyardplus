@@ -40,6 +40,13 @@ export const property = defineType({
         list: ["Hostel", "Resort", "Dorm", "Private Room", "Houseboat", "Homestay"],
       },
     }),
+    defineField({
+      name: "isClickable",
+      title: "Clickable (has live detail page)",
+      type: "boolean",
+      description: "Enable this only when the property detail page is ready. Disabling hides the link on the card.",
+      initialValue: true,
+    }),
     defineField({ name: "order", title: "Display Order", type: "number", initialValue: 0 }),
     defineField({ name: "tagline", title: "Tagline", type: "string", description: 'e.g. "Calm • Spacious • Elegant"' }),
     defineField({ name: "detailedHeading", title: "Detail Page Heading", type: "string" }),
