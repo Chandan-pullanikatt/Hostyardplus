@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react"
 import { m } from "framer-motion"
 import Link from "next/link"
+import Image from "next/image"
 
 const navLinks = [
   { label: "About Us", href: "#about" },
@@ -55,10 +56,8 @@ export default function Navbar() {
     >
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between py-4">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2 shrink-0" onClick={closeMenu}>
-          <span className="text-white font-serif text-2xl font-normal tracking-tight">
-            hostyard<span className="text-sun-400">+</span>
-          </span>
+        <Link href="/" className="flex items-center shrink-0" onClick={closeMenu}>
+          <Image src="/logobeige.svg" alt="Hostyard+" width={140} height={40} priority />
         </Link>
 
         {/* Desktop nav links */}

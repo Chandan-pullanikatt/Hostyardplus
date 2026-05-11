@@ -1,4 +1,5 @@
 import Link from "next/link"
+import Image from "next/image"
 import AnimateIn from "@/components/ui/AnimateIn"
 
 const quickLinks = [
@@ -64,9 +65,7 @@ export default function Footer() {
         <AnimateIn className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
           {/* Brand */}
           <div className="flex flex-col gap-3">
-            <span className="font-serif text-2xl text-white">
-              hostyard<span className="text-sun-400">+</span>
-            </span>
+            <Image src="/logobeige.svg" alt="Hostyard+" width={140} height={40} />
             <p className="text-white/60 text-sm font-sans">Calm | Nature | Adventure</p>
           </div>
 

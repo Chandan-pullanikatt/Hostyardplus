@@ -80,6 +80,29 @@ export const storyMediaQuery = groq`
   }
 `
 
+export const propertyBySlugQuery = groq`
+  *[_type == "property" && slug.current == $slug][0] {
+    _id,
+    title,
+    slug,
+    location,
+    tagline,
+    description,
+    detailedHeading,
+    pricePerNight,
+    rating,
+    bookingUrl,
+    status,
+    image { asset, alt },
+    heroImages[] { asset, alt },
+    amenities[] { _key, iconKey, label },
+    experiences[] { _key, title, description, image { asset, alt } },
+    galleryImages[] { asset, alt },
+    stayTypes,
+    order
+  }
+`
+
 export const whyChooseUsQuery = groq`
   *[_type == "whyChooseUs"] | order(order asc) {
     _id,

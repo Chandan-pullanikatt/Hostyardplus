@@ -1,3 +1,37 @@
+export interface PropertyAmenity {
+  _key: string
+  iconKey: string
+  label: string
+}
+
+export interface PropertyExperience {
+  _key: string
+  title: string
+  description: string
+  image: SanityImage
+}
+
+export interface PropertyDetail {
+  _id: string
+  title: string
+  slug: { current: string }
+  location: string
+  tagline: string
+  description: string
+  detailedHeading: string
+  pricePerNight: number
+  rating: number
+  bookingUrl: string
+  status: "active" | "work-in-progress" | "coming-soon"
+  image: SanityImage
+  heroImages: SanityImage[]
+  amenities: PropertyAmenity[]
+  experiences: PropertyExperience[]
+  galleryImages: SanityImage[]
+  stayTypes: string[]
+  order: number
+}
+
 export interface Property {
   _id: string
   title: string
