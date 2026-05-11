@@ -114,7 +114,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                   key={story._id}
                   ref={el => { cardRefs.current[i] = el }}
                   onClick={() => handleCardClick(i)}
-                  className={`relative rounded-2xl overflow-hidden shrink-0 cursor-pointer transition-all duration-500 ${
+                  className={`group relative rounded-2xl overflow-hidden shrink-0 cursor-pointer transition-all duration-500 ${
                     isCenter
                       ? "w-64 h-[480px] md:w-80 md:h-[560px] opacity-100"
                       : "w-44 h-[360px] md:w-56 md:h-[420px] opacity-50"
@@ -141,7 +141,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                   )}
 
                   {story.mediaType === "video" && isCenter && (
-                    <>
+                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute inset-0 flex items-center justify-center">
                         <div className="w-14 h-14 flex items-center justify-center">
                           {playing ? (
@@ -163,7 +163,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                           <Volume2 size={16} className="text-white" />
                         )}
                       </button>
-                    </>
+                    </div>
                   )}
                 </div>
               )

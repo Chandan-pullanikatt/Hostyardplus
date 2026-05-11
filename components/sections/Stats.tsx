@@ -1,12 +1,11 @@
-import { Users, BedDouble, Globe, MapPin } from "lucide-react"
 import AnimateIn from "@/components/ui/AnimateIn"
 import type { Stat } from "@/lib/types"
 
-const iconMap: Record<string, React.ComponentType<{ size?: number; className?: string }>> = {
-  traveler: Users,
-  bed: BedDouble,
-  community: Globe,
-  destination: MapPin,
+const iconMap: Record<string, string> = {
+  traveler:    "/icons/happytraveller.svg",
+  bed:         "/icons/verifiedstay.svg",
+  community:   "/icons/communitymembers.svg",
+  destination: "/icons/destinations.svg",
 }
 
 interface StatsProps {
@@ -19,18 +18,19 @@ export default function Stats({ stats }: StatsProps) {
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
           {stats.map((stat, index) => {
-            const Icon = iconMap[stat.iconKey] ?? MapPin
+            const iconSrc = iconMap[stat.iconKey] ?? "/icons/destinations.svg"
             return (
               <AnimateIn key={stat._id} delay={index * 80}>
-                <div className="bg-white rounded-2xl p-6 flex flex-col gap-5">
-                  <div className="w-12 h-12 rounded-lg bg-primary flex items-center justify-center">
-                    <Icon size={22} className="text-white" />
-                  </div>
+                <div className="bg-white rounded-2xl p-8 border border-gray-100 flex flex-col gap-10 h-full">
+                  <img src={iconSrc} alt="" width={48} height={48} />
                   <div>
-                    <p className="font-sans font-normal text-2xl text-gray-900">{stat.value}</p>
-                    <p className="font-sans font-normal text-base text-gray-900">{stat.label}</p>
+                    <p className="font-sans font-bold text-xl text-gray-900 leading-snug">
+                      {stat.value} {stat.label}
+                    </p>
                     {stat.description && (
-                      <p className="font-sans text-sm text-gray-500 mt-1">{stat.description}</p>
+                      <p className="font-sans text-sm text-gray-500 mt-2 leading-relaxed">
+                        {stat.description}
+                      </p>
                     )}
                   </div>
                 </div>

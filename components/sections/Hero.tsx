@@ -51,7 +51,7 @@ export default function Hero({ settings, properties }: HeroProps) {
       <div className="relative z-10 flex flex-col flex-1 max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
         <div className="h-24" />
 
-        <div className="flex flex-col items-center justify-center flex-1 text-center gap-6 pb-16">
+        <div className="flex flex-col items-center justify-end flex-1 text-center gap-4 pb-6">
           {/* Rating badge */}
           <m.div
             variants={heroVariants.badge}
@@ -72,23 +72,12 @@ export default function Hero({ settings, properties }: HeroProps) {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.85, ease, delay: 0.38 }}
-            className="text-white text-5xl md:text-6xl lg:text-7xl font-serif leading-tight max-w-3xl"
+            className="text-white text-5xl md:text-6xl lg:text-7xl font-serif leading-tight max-w-4xl"
           >
             {parts[0]}
             <em className="italic">{italicWord}</em>
             {parts[1]}
           </m.h1>
-
-          {/* Subheading */}
-          <m.p
-            variants={heroVariants.sub}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.75, ease, delay: 0.54 }}
-            className="text-white/80 font-sans text-base md:text-lg max-w-xl leading-relaxed"
-          >
-            {settings.heroSubheading ?? "Find calm in a modern hideaway with stunning views in the heart of Suryanelli"}
-          </m.p>
         </div>
 
         {/* Booking bar */}

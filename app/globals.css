@@ -68,6 +68,11 @@
   animation-play-state: paused;
 }
 
+/* Hide native cursor everywhere — custom cursor rendered via JS div */
+*, *::before, *::after {
+  cursor: none !important;
+}
+
 body {
   font-family: var(--font-sans);
   background-color: #ffffff;

@@ -8,6 +8,8 @@ export const siteSettingsQuery = groq`
     heroHeading,
     heroHeadingItalic,
     heroSubheading,
+    aboutUsHeading,
+    aboutUsText,
     quoteBannerText,
     communityBannerImage,
     communityBannerHeading,

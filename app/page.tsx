@@ -7,7 +7,6 @@ import {
   statsQuery,
   activitiesQuery,
   storyMediaQuery,
-  whyChooseUsQuery,
 } from "@/sanity/lib/queries"
 import type {
   SiteSettings,
@@ -17,14 +16,13 @@ import type {
   Stat,
   Activity,
   StoryMedia,
-  WhyChooseUsTab,
 } from "@/lib/types"
 
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import Hero from "@/components/sections/Hero"
+import AboutUs from "@/components/sections/AboutUs"
 import Destinations from "@/components/sections/Destinations"
-import QuoteBanner from "@/components/sections/QuoteBanner"
 import WhyChooseUs from "@/components/sections/WhyChooseUs"
 import Stats from "@/components/sections/Stats"
 import ActivitiesTicker from "@/components/sections/ActivitiesTicker"
@@ -84,6 +82,13 @@ const FALLBACK_PROPERTIES: Property[] = [
   },
 ]
 
+const FALLBACK_STATS: Stat[] = [
+  { _id: "stat-1", value: "10,000+", label: "Happy Travelers",     description: "Trusted by guests for comfortable stay experiences",                                          iconKey: "traveler",    order: 1 },
+  { _id: "stat-2", value: "500+",    label: "Verified Stays",      description: "Carefully selected properties that meet our standards for quality and comfort.",              iconKey: "bed",         order: 2 },
+  { _id: "stat-3", value: "5,000+",  label: "Community Members",   description: "A network of travelers and hosts sharing experiences and connections.",                       iconKey: "community",   order: 3 },
+  { _id: "stat-4", value: "25+",     label: "Destinations",        description: "Explore stays across scenic locations, cities, and hidden gems.",                             iconKey: "destination", order: 4 },
+]
+
 const FALLBACK_SETTINGS: SiteSettings = {
   heroVideoUrl: "",
   heroRating: "4.93 / 5",
@@ -91,6 +96,8 @@ const FALLBACK_SETTINGS: SiteSettings = {
   heroHeading: "Your Perfect Escape in the Mountains",
   heroHeadingItalic: "Escape",
   heroSubheading: "Find calm in a modern hideaway with stunning views in the heart of Suryanelli",
+  aboutUsHeading: "About us",
+  aboutUsText: "Created for travelers seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yourself.",
   quoteBannerText:
     "We thoughtfully curate every stay, design every touchpoint with care, and move with a clear focus on experience. The difference? We're building memories with you not just facilitating stays",
   communityBannerHeading: "Comfort Meets Community",
@@ -120,26 +127,25 @@ async function fetchData<T>(query: string, fallback: T): Promise<T> {
 }
 
 export default async function Home() {
-  const [settings, properties, reviews, faqs, stats, activities, stories, whyChooseUsTabs] =
+  const [settings, properties, reviews, faqs, stats, activities, stories] =
     await Promise.all([
       fetchData<SiteSettings>(siteSettingsQuery, FALLBACK_SETTINGS),
       fetchData<Property[]>(propertiesQuery, FALLBACK_PROPERTIES),
       fetchData<Review[]>(reviewsQuery, []),
       fetchData<FAQType[]>(faqsQuery, []),
-      fetchData<Stat[]>(statsQuery, []),
+      fetchData<Stat[]>(statsQuery, FALLBACK_STATS),
       fetchData<Activity[]>(activitiesQuery, []),
       fetchData<StoryMedia[]>(storyMediaQuery, []),
-      fetchData<WhyChooseUsTab[]>(whyChooseUsQuery, []),
     ])
 
   return (
     <main>
       <Navbar />
       <Hero settings={settings} properties={properties} />
+      <AboutUs settings={settings} />
       <Destinations properties={properties} />
-      <QuoteBanner text={settings.quoteBannerText} />
-      {whyChooseUsTabs.length > 0 && <WhyChooseUs tabs={whyChooseUsTabs} />}
-      {stats.length > 0 && <Stats stats={stats} />}
+      <WhyChooseUs />
+      <Stats stats={stats} />
       {activities.length > 0 && <ActivitiesTicker activities={activities} />}
       {stories.length > 0 && <StoriesSection stories={stories} />}
       {reviews.length > 0 && <Reviews reviews={reviews} />}

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Instrument_Serif, Inclusive_Sans } from "next/font/google"
 import MotionProvider from "@/components/ui/MotionProvider"
+import CustomCursor from "@/components/ui/CustomCursor"
 import "./globals.css"
 
 const instrumentSerif = Instrument_Serif({
@@ -31,6 +32,7 @@ export default function RootLayout({
   return (
     <html lang="en" className={`${instrumentSerif.variable} ${inclusiveSans.variable}`}>
       <body className="antialiased">
+        <CustomCursor />
         <MotionProvider>{children}</MotionProvider>
       </body>
     </html>

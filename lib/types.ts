@@ -100,6 +100,8 @@ export interface SiteSettings {
   heroHeading: string
   heroHeadingItalic: string
   heroSubheading: string
+  aboutUsHeading: string
+  aboutUsText: string
   quoteBannerText: string
   communityBannerImage?: SanityImage
   communityBannerHeading: string
