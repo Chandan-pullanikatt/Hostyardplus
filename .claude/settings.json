@@ -6,7 +6,8 @@
       "Bash(npm install *)",
       "Bash(npx tsc *)",
       "Bash(npm run *)",
-      "Bash(node -e \"const fm = require\\('d:/work/hostyardplus/node_modules/framer-motion'\\); console.log\\(Object.keys\\(fm\\).filter\\(k => ['LazyMotion','domAnimation','m','MotionConfig','motion','useInView'].includes\\(k\\)\\)\\)\")"
+      "Bash(node -e \"const fm = require\\('d:/work/hostyardplus/node_modules/framer-motion'\\); console.log\\(Object.keys\\(fm\\).filter\\(k => ['LazyMotion','domAnimation','m','MotionConfig','motion','useInView'].includes\\(k\\)\\)\\)\")",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\('next:', p.dependencies.next\\)\")"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\components",
