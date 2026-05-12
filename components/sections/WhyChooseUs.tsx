@@ -93,20 +93,23 @@ export default function WhyChooseUs({ tabs }: Props) {
 
         {/* Tab bar + Slideshow — no gap between them */}
         <AnimateIn delay={150} className="flex flex-col items-center">
-          <div className="inline-flex border border-b-0 border-gray-200 rounded-t-xl overflow-hidden shadow-sm">
-            {TABS.map((tab, i) => (
-              <button
-                key={tab.id}
-                onClick={() => setActiveIndex(i)}
-                className={`font-sans text-sm px-6 py-3 transition-colors whitespace-nowrap ${
-                  i === activeIndex
-                    ? "bg-white text-gray-900 font-semibold"
-                    : "bg-white text-gray-400 hover:text-gray-700"
-                } ${i > 0 ? "border-l border-gray-200" : ""}`}
-              >
-                {tab.label}
-              </button>
-            ))}
+          {/* Tab bar — horizontal scroll on mobile, auto-width centered on desktop */}
+          <div className="max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
+            <div className="inline-flex border border-b-0 border-gray-200 rounded-t-xl overflow-hidden shadow-sm">
+              {TABS.map((tab, i) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveIndex(i)}
+                  className={`font-sans text-xs md:text-sm px-4 md:px-6 py-3 transition-colors whitespace-nowrap ${
+                    i === activeIndex
+                      ? "bg-white text-gray-900 font-semibold"
+                      : "bg-white text-gray-400 hover:text-gray-700"
+                  } ${i > 0 ? "border-l border-gray-200" : ""}`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
           </div>
 
           {/* Slideshow */}

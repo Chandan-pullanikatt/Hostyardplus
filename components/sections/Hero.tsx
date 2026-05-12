@@ -104,7 +104,7 @@ export default function Hero({ settings, properties }: HeroProps) {
 
       {/* Content */}
       <div className="relative z-10 flex flex-col flex-1 max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
-        <div className="h-24" />
+        <div className="h-16 md:h-24" />
 
         <div className="flex flex-col items-center justify-end flex-1 text-center gap-5 pb-10">
           <m.div

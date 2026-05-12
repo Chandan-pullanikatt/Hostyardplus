@@ -163,12 +163,12 @@ export default async function Home() {
       <Navbar />
       <Hero settings={settings} properties={processedProperties} />
       <AboutUs settings={settings} />
-      <Destinations properties={processedProperties} />
       <WhyChooseUs tabs={processedWhyChooseTabs.length > 0 ? processedWhyChooseTabs : undefined} />
       <Stats stats={stats} />
       {activities.length > 0 && <ActivitiesTicker activities={activities} />}
       {stories.length > 0 && <StoriesSection stories={stories} />}
       {reviews.length > 0 && <Reviews reviews={reviews} />}
+      <Destinations properties={processedProperties} />
       <CommunityBanner settings={settings} />
       {faqs.length > 0 && <FAQ faqs={faqs} />}
       <Footer />

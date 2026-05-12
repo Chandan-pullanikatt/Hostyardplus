@@ -52,7 +52,7 @@ export default function Navbar() {
         scrolled || menuOpen ? "bg-primary shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="w-full px-10 flex items-center justify-between py-4">
+      <div className="w-full px-4 sm:px-10 flex items-center justify-between py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center shrink-0" onClick={closeMenu}>
           <Image src="/logobeige.svg" alt="Hostyard+" width={140} height={40} priority />
