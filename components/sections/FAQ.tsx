@@ -19,7 +19,7 @@ export default function FAQ({ faqs }: FAQProps) {
           {/* Left: heading */}
           <AnimateIn>
             <div className="flex flex-col gap-3">
-              <h2 className="font-serif italic text-4xl md:text-5xl text-gray-900 leading-tight">
+              <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
                 Frequently Asked Questions
               </h2>
               <p className="font-sans text-sm text-gray-500">Quick answers to common questions about your stay</p>

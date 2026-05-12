@@ -24,7 +24,7 @@ export default function Hero({ settings, properties }: HeroProps) {
     .filter((p) => p.status === "active")
     .map((p) => p.location)
 
-  const heading = settings.heroHeading ?? "Your Perfect Escape in the Mountains"
+  const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
   const italicWord = settings.heroHeadingItalic ?? "Escape"
   const parts = heading.split(italicWord)
 
@@ -72,7 +72,7 @@ export default function Hero({ settings, properties }: HeroProps) {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.85, ease, delay: 0.38 }}
-            className="text-white text-5xl md:text-6xl lg:text-7xl font-serif leading-tight max-w-4xl"
+            className="text-white text-2xl md:text-3xl lg:text-[40px] font-serif leading-none lg:whitespace-nowrap"
           >
             {parts[0]}
             <em className="italic">{italicWord}</em>

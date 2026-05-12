@@ -20,7 +20,7 @@ export default function CommunityBanner({ settings }: CommunityBannerProps) {
         <div className="absolute inset-0 bg-black/50" />
         <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-6 gap-4">
           <AnimateIn>
-            <h2 className="font-serif italic text-3xl md:text-4xl text-white">
+            <h2 className="font-serif text-3xl md:text-4xl text-white">
               {settings.communityBannerHeading ?? "Comfort Meets Community"}
             </h2>
           </AnimateIn>

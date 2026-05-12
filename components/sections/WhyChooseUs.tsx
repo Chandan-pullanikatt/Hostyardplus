@@ -86,31 +86,31 @@ export default function WhyChooseUs({ tabs }: Props) {
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <AnimateIn className="mb-12 flex flex-col items-center text-center gap-3">
-          <h2 className="font-serif italic text-4xl md:text-5xl text-gray-900 leading-tight">
+          <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
             Why Choose Us
           </h2>
         </AnimateIn>
 
-        {/* Tab bar */}
-        <AnimateIn delay={150} className="flex items-center justify-center gap-2 md:gap-4 mb-8 flex-wrap">
-          {TABS.map((tab, i) => (
-            <button
-              key={tab.id}
-              onClick={() => setActiveIndex(i)}
-              className={`font-sans text-sm px-5 py-2 rounded-full transition-colors ${
-                i === activeIndex
-                  ? "border border-gray-900 text-gray-900"
-                  : "text-gray-500 hover:text-gray-800"
-              }`}
-            >
-              {tab.label}
-            </button>
-          ))}
-        </AnimateIn>
+        {/* Tab bar + Slideshow — no gap between them */}
+        <AnimateIn delay={150} className="flex flex-col items-center">
+          <div className="inline-flex border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+            {TABS.map((tab, i) => (
+              <button
+                key={tab.id}
+                onClick={() => setActiveIndex(i)}
+                className={`font-sans text-sm px-6 py-3 transition-colors whitespace-nowrap ${
+                  i === activeIndex
+                    ? "bg-white text-gray-900 font-semibold"
+                    : "bg-white text-gray-400 hover:text-gray-700"
+                } ${i > 0 ? "border-l border-gray-200" : ""}`}
+              >
+                {tab.label}
+              </button>
+            ))}
+          </div>
 
-        {/* Slideshow */}
-        <AnimateIn delay={300}>
-          <div className="relative rounded-2xl overflow-hidden h-[500px] md:h-[600px]">
+          {/* Slideshow */}
+          <div className="relative rounded-2xl overflow-hidden h-[500px] md:h-[600px] w-full">
             {active.imageUrls.map((src, i) => (
               <Image
                 key={src}

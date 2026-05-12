@@ -10,7 +10,7 @@ export default function AboutUs({ settings }: AboutUsProps) {
     <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
       <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-10 lg:gap-20 items-start">
         <AnimateIn>
-          <h2 className="font-serif italic text-4xl md:text-5xl text-gray-900 leading-tight">
+          <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
             {settings.aboutUsHeading ?? "About us"}
           </h2>
         </AnimateIn>

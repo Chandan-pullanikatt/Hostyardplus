@@ -85,7 +85,6 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <AnimateIn className="mb-14">
           <SectionHeader
-            label="Explore before you go"
             heading="Stories From Every Stay"
             subheading="Scroll through quick glimpses of destinations, stays, and experiences before you plan your trip"
           />

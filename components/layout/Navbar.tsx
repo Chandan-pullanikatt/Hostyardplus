@@ -7,8 +7,6 @@ import Image from "next/image"
 
 const navLinks = [
   { label: "About Us", href: "#about" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Review", href: "#reviews" },
   { label: "Partner", href: "#partner" },
   { label: "Contact", href: "#contact" },
 ]
@@ -54,7 +52,7 @@ export default function Navbar() {
         scrolled || menuOpen ? "bg-primary shadow-lg" : "bg-transparent"
       }`}
     >
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 flex items-center justify-between py-4">
+      <div className="w-full px-10 flex items-center justify-between py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center shrink-0" onClick={closeMenu}>
           <Image src="/logobeige.svg" alt="Hostyard+" width={140} height={40} priority />

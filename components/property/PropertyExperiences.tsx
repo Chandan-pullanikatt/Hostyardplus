@@ -33,7 +33,7 @@ interface Props {
 }
 
 export default function PropertyExperiences({ property }: Props) {
-  const [hovered, setHovered] = useState<string | null>(null)
+  const [hovered, setHovered] = useState<string | null>("yoga")
 
   return (
     <section className="bg-[#F5F4F0] py-16">

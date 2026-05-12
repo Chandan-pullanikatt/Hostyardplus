@@ -20,7 +20,6 @@ export default function Reviews({ reviews }: ReviewsProps) {
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <AnimateIn className="mb-14">
           <SectionHeader
-            label="Google Reviews"
             heading="What Our Guests Say"
             subheading="Real experiences from travelers across our stays"
           />
