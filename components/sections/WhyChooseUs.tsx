@@ -93,7 +93,7 @@ export default function WhyChooseUs({ tabs }: Props) {
 
         {/* Tab bar + Slideshow — no gap between them */}
         <AnimateIn delay={150} className="flex flex-col items-center">
-          <div className="inline-flex border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+          <div className="inline-flex border border-b-0 border-gray-200 rounded-t-xl overflow-hidden shadow-sm">
             {TABS.map((tab, i) => (
               <button
                 key={tab.id}
@@ -110,7 +110,7 @@ export default function WhyChooseUs({ tabs }: Props) {
           </div>
 
           {/* Slideshow */}
-          <div className="relative rounded-2xl overflow-hidden h-[500px] md:h-[600px] w-full">
+          <div className="relative rounded-b-2xl overflow-hidden h-[500px] md:h-[600px] w-full">
             {active.imageUrls.map((src, i) => (
               <Image
                 key={src}

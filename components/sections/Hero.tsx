@@ -25,9 +25,7 @@ export default function Hero({ settings, properties }: HeroProps) {
     .filter((p) => p.status === "active")
     .map((p) => p.location)
 
-  const heading   = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
-  const italicWord = settings.heroHeadingItalic ?? "Escape"
-  const parts     = heading.split(italicWord)
+  const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
 
   const videoRef       = useRef<HTMLVideoElement>(null)
   const sectionRef     = useRef<HTMLElement>(null)
@@ -38,33 +36,38 @@ export default function Hero({ settings, properties }: HeroProps) {
     const v = videoRef.current
     if (!v) return
 
-    // Play muted first (browser autoplay policy requires this)
-    v.muted = true
-    v.play()
-      .then(() => {
-        // Playing successfully — now unmute (allowed without gesture in Chrome/Firefox)
+    let cancelled = false
+
+    const start = async () => {
+      v.muted = true
+      try {
+        await v.play()
+        if (cancelled) return          // Strict Mode cleanup fired — second run will take over
         v.muted = false
         setMuted(false)
-      })
-      .catch(() => {
-        // Autoplay blocked entirely — stay muted, user can click to unmute
-        setMuted(true)
-      })
+      } catch {
+        if (!cancelled) setMuted(true) // autoplay blocked entirely
+      }
+    }
 
-    // Safari / strict-policy fallback: unmute on first user interaction
-    const unmute = () => {
+    start()
+
+    // Fallback: unmute + start on first interaction (Safari / blocked autoplay)
+    const unmuteOnInteraction = () => {
       const vid = videoRef.current
       if (!vid) return
       vid.muted = false
       setMuted(false)
-      vid.play().catch(() => {})
+      if (vid.paused) vid.play().catch(() => {})
     }
-    document.addEventListener("click",      unmute, { once: true, passive: true })
-    document.addEventListener("touchstart", unmute, { once: true, passive: true })
+    document.addEventListener("click",      unmuteOnInteraction, { once: true, passive: true })
+    document.addEventListener("touchstart", unmuteOnInteraction, { once: true, passive: true })
 
     return () => {
-      document.removeEventListener("click",      unmute)
-      document.removeEventListener("touchstart", unmute)
+      cancelled = true
+      v.pause()   // clean slate so the second Strict-Mode invocation starts fresh
+      document.removeEventListener("click",      unmuteOnInteraction)
+      document.removeEventListener("touchstart", unmuteOnInteraction)
     }
   }, [])
 
@@ -106,7 +109,6 @@ export default function Hero({ settings, properties }: HeroProps) {
           <video
             ref={videoRef}
             src={settings.heroVideo.secure_url}
-            autoPlay
             muted
             loop
             playsInline
@@ -154,9 +156,7 @@ export default function Hero({ settings, properties }: HeroProps) {
             transition={{ duration: 0.85, ease, delay: 0.38 }}
             className="text-white text-2xl md:text-3xl lg:text-[40px] font-serif leading-none lg:whitespace-nowrap"
           >
-            {parts[0]}
-            <em className="italic">{italicWord}</em>
-            {parts[1]}
+            {heading}
           </m.h1>
         </div>
 

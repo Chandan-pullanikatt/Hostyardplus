@@ -71,14 +71,33 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     const v = videoRefs.current[activeOrigIdx]
     if (!v) return
 
-    v.muted = false
-    v.play()
-      .then(() => { setMuted(false); setPlaying(true) })
-      .catch(() => {
+    let cancelled = false
+
+    const start = async () => {
+      v.muted = false
+      try {
+        await v.play()
+        if (cancelled) return
+        setMuted(false)
+        setPlaying(true)
+      } catch {
+        if (cancelled) return
+        // Unmuted play blocked — retry muted
         v.muted = true
         setMuted(true)
-        v.play().then(() => setPlaying(true)).catch(() => {})
-      })
+        try {
+          await v.play()
+          if (!cancelled) setPlaying(true)
+        } catch { /* fully blocked */ }
+      }
+    }
+
+    start()
+
+    return () => {
+      cancelled = true
+      v.pause() // clean slate for Strict Mode re-invoke or next card
+    }
   }, [activeOrigIdx])
 
   // Keep mute state in sync if toggled

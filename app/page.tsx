@@ -143,6 +143,11 @@ export default async function Home() {
       fetchData<WhyChooseUsTab[]>(whyChooseUsQuery, []),
     ])
 
+  // Kozhikode detail page is not ready yet — disable card link regardless of CMS value
+  const processedProperties = properties.map((p) =>
+    p.slug?.current === "kozhikode" ? { ...p, isClickable: false } : p
+  )
+
   const processedWhyChooseTabs = whyChooseTabs.map((tab) => ({
     id: tab._id,
     label: tab.tabLabel,
@@ -156,9 +161,9 @@ export default async function Home() {
   return (
     <main>
       <Navbar />
-      <Hero settings={settings} properties={properties} />
+      <Hero settings={settings} properties={processedProperties} />
       <AboutUs settings={settings} />
-      <Destinations properties={properties} />
+      <Destinations properties={processedProperties} />
       <WhyChooseUs tabs={processedWhyChooseTabs.length > 0 ? processedWhyChooseTabs : undefined} />
       <Stats stats={stats} />
       {activities.length > 0 && <ActivitiesTicker activities={activities} />}
