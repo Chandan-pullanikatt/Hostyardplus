@@ -106,7 +106,7 @@ export default function Hero({ settings, properties }: HeroProps) {
       <div className="relative z-10 flex flex-col flex-1 max-w-[1400px] mx-auto px-6 lg:px-12 w-full">
         <div className="h-24" />
 
-        <div className="flex flex-col items-center justify-end flex-1 text-center gap-4 pb-6">
+        <div className="flex flex-col items-center justify-end flex-1 text-center gap-5 pb-10">
           <m.div
             variants={heroVariants.badge}
             initial="hidden"
@@ -125,7 +125,7 @@ export default function Hero({ settings, properties }: HeroProps) {
             initial="hidden"
             animate="visible"
             transition={{ duration: 0.85, ease, delay: 0.38 }}
-            className="text-white text-2xl md:text-3xl lg:text-[40px] font-serif leading-none lg:whitespace-nowrap"
+            className="text-white text-2xl md:text-3xl lg:text-[52px] font-serif leading-none lg:whitespace-nowrap"
           >
             {heading}
           </m.h1>
