@@ -19,10 +19,10 @@ export const storyMedia = defineType({
       initialValue: "video",
     }),
     defineField({
-      name: "cloudinaryUrl",
-      title: "Cloudinary URL",
-      type: "url",
-      description: "Paste the Cloudinary video or image URL here",
+      name: "cloudinaryAsset",
+      title: "Video / Image",
+      type: "cloudinary.asset",
+      description: "Upload directly from your computer",
     }),
     defineField({
       name: "thumbnail",

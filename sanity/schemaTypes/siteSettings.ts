@@ -6,10 +6,10 @@ export const siteSettings = defineType({
   type: "document",
   fields: [
     defineField({
-      name: "heroVideoUrl",
-      title: "Hero Video URL (Cloudinary)",
-      type: "url",
-      description: "Paste your Cloudinary video URL for the hero section background",
+      name: "heroVideo",
+      title: "Hero Background Video",
+      type: "cloudinary.asset",
+      description: "Upload a video directly from your computer — no links needed",
     }),
     defineField({ name: "heroRating", title: "Hero Rating (e.g. 4.93 / 5)", type: "string", initialValue: "4.93 / 5" }),
     defineField({ name: "heroRatingCount", title: "Hero Review Count (e.g. 2000+)", type: "string", initialValue: "2000+" }),

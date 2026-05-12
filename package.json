@@ -18,7 +18,8 @@
     "next-sanity": "^12.4.1",
     "react": "19.2.4",
     "react-dom": "19.2.4",
-    "sanity": "^5.23.0"
+    "sanity": "^5.23.0",
+    "sanity-plugin-cloudinary": "^1.4.1"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",

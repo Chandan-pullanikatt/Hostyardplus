@@ -80,7 +80,7 @@ export interface Activity {
 export interface StoryMedia {
   _id: string
   mediaType: "video" | "image"
-  cloudinaryUrl: string
+  cloudinaryAsset?: CloudinaryAsset
   thumbnail?: SanityImage
   order: number
 }
@@ -94,8 +94,16 @@ export interface WhyChooseUsTab {
   order: number
 }
 
+export interface CloudinaryAsset {
+  _type?: "cloudinary.asset"
+  secure_url: string
+  public_id?: string
+  resource_type?: string
+  format?: string
+}
+
 export interface SiteSettings {
-  heroVideoUrl: string
+  heroVideo?: CloudinaryAsset
   heroRating: string
   heroRatingCount: string
   heroHeading: string

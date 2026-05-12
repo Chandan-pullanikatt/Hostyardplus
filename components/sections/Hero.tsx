@@ -32,9 +32,9 @@ export default function Hero({ settings, properties }: HeroProps) {
     <section className="relative min-h-screen flex flex-col">
       {/* Video / image background */}
       <div className="absolute inset-0 overflow-hidden">
-        {settings.heroVideoUrl ? (
+        {settings.heroVideo?.secure_url ? (
           <video
-            src={settings.heroVideoUrl}
+            src={settings.heroVideo.secure_url}
             autoPlay
             muted
             loop

@@ -2,7 +2,7 @@ import { groq } from "next-sanity"
 
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0] {
-    heroVideoUrl,
+    heroVideo { secure_url, public_id, resource_type, format },
     heroRating,
     heroRatingCount,
     heroHeading,
@@ -77,7 +77,7 @@ export const storyMediaQuery = groq`
   *[_type == "storyMedia"] | order(order asc) {
     _id,
     mediaType,
-    cloudinaryUrl,
+    cloudinaryAsset { secure_url, public_id, resource_type, format },
     thumbnail { asset, alt },
     order
   }
