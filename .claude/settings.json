@@ -9,7 +9,11 @@
       "Bash(node -e \"const fm = require\\('d:/work/hostyardplus/node_modules/framer-motion'\\); console.log\\(Object.keys\\(fm\\).filter\\(k => ['LazyMotion','domAnimation','m','MotionConfig','motion','useInView'].includes\\(k\\)\\)\\)\")",
       "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\('next:', p.dependencies.next\\)\")",
       "Bash(node scripts/seed-why-choose-us.mjs)",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(Get-ChildItem -Path \"d:\\\\work\\\\hostyardplus\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(node -e \"const pkg = require\\('./node_modules/react-day-picker/package.json'\\); console.log\\(pkg.version\\); console.log\\(Object.keys\\(pkg.exports || {}\\).slice\\(0,10\\)\\)\")",
+      "Bash(node -e \"const m = require\\('./node_modules/react-day-picker'\\); console.log\\(Object.keys\\(m\\).join\\(', '\\)\\)\")"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\components",

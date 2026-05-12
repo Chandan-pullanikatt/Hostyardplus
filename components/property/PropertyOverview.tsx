@@ -1,8 +1,9 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef, useEffect } from "react"
 import Link from "next/link"
-import { ChevronDown, Star, Wifi, SquareParking, Coffee, Dumbbell, Sparkles, Droplets, MapPin } from "lucide-react"
+import { DayPicker } from "react-day-picker"
+import { ChevronDown, Star, Wifi, SquareParking, Coffee, Dumbbell, Sparkles, MapPin } from "lucide-react"
 import type { PropertyDetail } from "@/lib/types"
 
 const SVG_ICONS: Record<string, string> = {
@@ -31,16 +32,14 @@ function AmenityIcon({ iconKey }: { iconKey: string }) {
   if (svgSrc) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={svgSrc}
-        alt=""
-        width={22}
-        height={22}
-        className="brightness-0 invert"
-      />
+      <img src={svgSrc} alt="" width={22} height={22} className="brightness-0 invert" />
     )
   }
   return <>{LUCIDE_ICONS[iconKey] ?? <MapPin size={18} className="text-white" />}</>
+}
+
+function fmt(d: Date) {
+  return d.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })
 }
 
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8]
@@ -50,10 +49,35 @@ interface Props {
 }
 
 export default function PropertyOverview({ property }: Props) {
-  const [stayType, setStayType] = useState(property.stayTypes?.[0] ?? "")
-  const [guests, setGuests] = useState(2)
-  const [showStayMenu, setShowStayMenu] = useState(false)
+  const today = new Date()
+  today.setHours(0, 0, 0, 0)
+
+  const [stayType, setStayType]       = useState(property.stayTypes?.[0] ?? "")
+  const [guests, setGuests]           = useState(2)
+  const [showStayMenu, setShowStayMenu]   = useState(false)
   const [showGuestMenu, setShowGuestMenu] = useState(false)
+  const [checkIn, setCheckIn]         = useState<Date | undefined>(undefined)
+  const [checkOut, setCheckOut]       = useState<Date | undefined>(undefined)
+  const [showCheckIn, setShowCheckIn]   = useState(false)
+  const [showCheckOut, setShowCheckOut] = useState(false)
+
+  const dateRowRef = useRef<HTMLDivElement>(null)
+
+  // Close calendars when clicking outside the date row
+  useEffect(() => {
+    function onDown(e: MouseEvent) {
+      if (dateRowRef.current && !dateRowRef.current.contains(e.target as Node)) {
+        setShowCheckIn(false)
+        setShowCheckOut(false)
+      }
+    }
+    document.addEventListener("mousedown", onDown)
+    return () => document.removeEventListener("mousedown", onDown)
+  }, [])
+
+  const checkOutMin = checkIn
+    ? new Date(checkIn.getTime() + 86_400_000)
+    : today
 
   return (
     <section className="bg-white py-16">
@@ -98,11 +122,12 @@ export default function PropertyOverview({ property }: Props) {
           </div>
 
           {/* Right — booking card */}
-          <div className="lg:w-[380px] shrink-0">
-            <div className="border border-gray-200 rounded-2xl shadow-sm sticky top-24 overflow-hidden">
+          <div className="lg:w-[380px] shrink-0 relative z-10">
+            {/* overflow-visible so calendar popovers aren't clipped */}
+            <div className="border border-gray-200 rounded-2xl shadow-sm sticky top-24">
 
               {/* Price + rating */}
-              <div className="flex items-baseline justify-between px-6 pt-6 pb-5">
+              <div className="flex items-baseline justify-between px-6 pt-6 pb-5 rounded-t-2xl">
                 <div className="flex items-baseline gap-1">
                   <span className="text-4xl font-serif font-semibold text-gray-900">
                     ₹{property.pricePerNight?.toLocaleString("en-IN")}
@@ -123,7 +148,12 @@ export default function PropertyOverview({ property }: Props) {
               {property.stayTypes?.length > 0 && (
                 <div className="border-t border-gray-200 relative">
                   <button
-                    onClick={() => { setShowStayMenu(v => !v); setShowGuestMenu(false) }}
+                    onClick={() => {
+                      setShowStayMenu(v => !v)
+                      setShowGuestMenu(false)
+                      setShowCheckIn(false)
+                      setShowCheckOut(false)
+                    }}
                     className="w-full text-left px-6 py-4"
                   >
                     <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
@@ -138,7 +168,7 @@ export default function PropertyOverview({ property }: Props) {
                     </div>
                   </button>
                   {showStayMenu && (
-                    <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-10">
+                    <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-50">
                       {property.stayTypes.map((t) => (
                         <button
                           key={t}
@@ -154,25 +184,90 @@ export default function PropertyOverview({ property }: Props) {
               )}
 
               {/* Check In / Check Out */}
-              <div className="border-t border-gray-200 grid grid-cols-2">
-                <div className="px-6 py-4 border-r border-gray-200">
-                  <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                    Check In
-                  </p>
-                  <p className="font-sans text-gray-900 font-medium text-sm">Oct 12, 2026</p>
+              <div ref={dateRowRef} className="border-t border-gray-200 relative">
+                <div className="grid grid-cols-2">
+                  {/* Check In button */}
+                  <button
+                    onClick={() => {
+                      setShowCheckIn(v => !v)
+                      setShowCheckOut(false)
+                      setShowStayMenu(false)
+                      setShowGuestMenu(false)
+                    }}
+                    className="text-left px-6 py-4 border-r border-gray-200 hover:bg-gray-50 transition-colors"
+                  >
+                    <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
+                      Check In
+                    </p>
+                    <p className={`font-sans font-medium text-sm ${checkIn ? "text-gray-900" : "text-gray-400"}`}>
+                      {checkIn ? fmt(checkIn) : "Select date"}
+                    </p>
+                  </button>
+
+                  {/* Check Out button */}
+                  <button
+                    onClick={() => {
+                      setShowCheckOut(v => !v)
+                      setShowCheckIn(false)
+                      setShowStayMenu(false)
+                      setShowGuestMenu(false)
+                    }}
+                    className="text-left px-6 py-4 hover:bg-gray-50 transition-colors"
+                  >
+                    <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
+                      Check Out
+                    </p>
+                    <p className={`font-sans font-medium text-sm ${checkOut ? "text-gray-900" : "text-gray-400"}`}>
+                      {checkOut ? fmt(checkOut) : "Select date"}
+                    </p>
+                  </button>
                 </div>
-                <div className="px-6 py-4">
-                  <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                    Check Out
-                  </p>
-                  <p className="font-sans text-gray-900 font-medium text-sm">Oct 19, 2026</p>
-                </div>
+
+                {/* Check In calendar */}
+                {showCheckIn && (
+                  <div className="absolute top-full left-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1">
+                    <DayPicker
+                      mode="single"
+                      selected={checkIn}
+                      onSelect={(date) => {
+                        setCheckIn(date)
+                        // If chosen check-in is after existing check-out, clear check-out
+                        if (date && checkOut && date >= checkOut) setCheckOut(undefined)
+                        setShowCheckIn(false)
+                        setShowCheckOut(true)
+                      }}
+                      disabled={{ before: today }}
+                      defaultMonth={checkIn ?? today}
+                    />
+                  </div>
+                )}
+
+                {/* Check Out calendar */}
+                {showCheckOut && (
+                  <div className="absolute top-full right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1">
+                    <DayPicker
+                      mode="single"
+                      selected={checkOut}
+                      onSelect={(date) => {
+                        setCheckOut(date)
+                        setShowCheckOut(false)
+                      }}
+                      disabled={{ before: checkOutMin }}
+                      defaultMonth={checkIn ?? today}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Travelers */}
               <div className="border-t border-gray-200 relative">
                 <button
-                  onClick={() => { setShowGuestMenu(v => !v); setShowStayMenu(false) }}
+                  onClick={() => {
+                    setShowGuestMenu(v => !v)
+                    setShowStayMenu(false)
+                    setShowCheckIn(false)
+                    setShowCheckOut(false)
+                  }}
                   className="w-full text-left px-6 py-4"
                 >
                   <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
@@ -187,7 +282,7 @@ export default function PropertyOverview({ property }: Props) {
                   </div>
                 </button>
                 {showGuestMenu && (
-                  <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-10">
+                  <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-50">
                     {GUEST_OPTIONS.map((n) => (
                       <button
                         key={n}

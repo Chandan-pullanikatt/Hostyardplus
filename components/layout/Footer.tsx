@@ -3,17 +3,17 @@ import Image from "next/image"
 import AnimateIn from "@/components/ui/AnimateIn"
 
 const quickLinks = [
-  { label: "About", href: "#about" },
-  { label: "FAQ", href: "#faq" },
-  { label: "Review", href: "#reviews" },
+  { label: "About",    href: "#about" },
+  { label: "FAQ",      href: "#faq" },
+  { label: "Review",   href: "#reviews" },
   { label: "Book Now", href: "#book" },
 ]
 
 const policies = [
-  { label: "Privacy Policy", href: "/privacy-policy" },
-  { label: "Guest Policies", href: "/guest-policies" },
+  { label: "Privacy Policy",       href: "/privacy-policy" },
+  { label: "Guest Policies",       href: "/guest-policies" },
   { label: "Cancellation Policies", href: "/cancellation-policies" },
-  { label: "Terms & Conditions", href: "/terms" },
+  { label: "Terms & Conditions",   href: "/terms" },
 ]
 
 const socials = [
@@ -61,17 +61,18 @@ const socials = [
 export default function Footer() {
   return (
     <footer className="bg-primary text-white">
-      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-16">
-        <AnimateIn className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
+      <div className="max-w-[1400px] mx-auto px-6 lg:px-12 py-12">
+        <AnimateIn className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-10">
+
           {/* Brand */}
-          <div className="flex flex-col gap-3">
+          <div className="col-span-2 md:col-span-1 flex flex-col gap-2">
             <Image src="/logobeige.svg" alt="Hostyard+" width={140} height={40} />
             <p className="text-white/60 text-sm font-sans">Calm | Nature | Adventure</p>
           </div>
 
           {/* Quick Links */}
           <div>
-            <h4 className="text-white text-sm font-sans font-normal mb-5">Quick Links</h4>
+            <h4 className="text-white text-sm font-sans font-normal mb-4">Quick Links</h4>
             <ul className="flex flex-col gap-3">
               {quickLinks.map((l) => (
                 <li key={l.href}>
@@ -85,7 +86,7 @@ export default function Footer() {
 
           {/* Policies */}
           <div>
-            <h4 className="text-white text-sm font-sans font-normal mb-5">Policies</h4>
+            <h4 className="text-white text-sm font-sans font-normal mb-4">Policies</h4>
             <ul className="flex flex-col gap-3">
               {policies.map((l) => (
                 <li key={l.href}>
@@ -97,34 +98,34 @@ export default function Footer() {
             </ul>
           </div>
 
-          {/* Address + Socials */}
-          <div className="flex flex-col gap-5">
-            <div>
-              <h4 className="text-white text-sm font-sans font-normal mb-3">Registered Office Address</h4>
-              <address className="not-italic text-white/70 text-sm font-sans leading-relaxed">
-                Near central hospital, HML Estate,<br />
-                Suryanelli, Kerala 685618<br />
-                <a href="tel:+917025227733" className="hover:text-white transition-colors">
-                  Mob: 91 70252 27733
-                </a>
-              </address>
-            </div>
-            <div>
-              <h4 className="text-white text-sm font-sans font-normal mb-3">Socials</h4>
-              <div className="flex items-center gap-3">
-                {socials.map(({ icon, href, label }) => (
-                  <Link
-                    key={label}
-                    href={href}
-                    aria-label={label}
-                    className="w-9 h-9 rounded-full border border-white/20 flex items-center justify-center text-white/70 hover:text-white hover:border-white/60 transition-colors"
-                  >
-                    {icon}
-                  </Link>
-                ))}
-              </div>
+          {/* Contact Us */}
+          <div>
+            <h4 className="text-white text-sm font-sans font-normal mb-4">Contact Us</h4>
+            <a
+              href="tel:+917025227733"
+              className="text-white/70 hover:text-white text-sm font-sans transition-colors"
+            >
+              Mob: 91 70252 27733
+            </a>
+          </div>
+
+          {/* Socials */}
+          <div>
+            <h4 className="text-white text-sm font-sans font-normal mb-4">Socials</h4>
+            <div className="flex items-center gap-3">
+              {socials.map(({ icon, href, label }) => (
+                <Link
+                  key={label}
+                  href={href}
+                  aria-label={label}
+                  className="w-9 h-9 rounded-full bg-white/15 flex items-center justify-center text-white hover:bg-white/25 transition-colors"
+                >
+                  {icon}
+                </Link>
+              ))}
             </div>
           </div>
+
         </AnimateIn>
       </div>
 

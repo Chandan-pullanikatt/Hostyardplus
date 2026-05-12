@@ -1,4 +1,5 @@
 @import "tailwindcss";
+@import "react-day-picker/style.css";
 
 @theme {
   /* Brand Colors */
@@ -29,6 +30,12 @@
   /* Fonts */
   --font-serif: "Instrument Serif", serif;
   --font-sans: "Inclusive Sans", sans-serif;
+}
+
+/* react-day-picker: brand colour overrides */
+.rdp-root {
+  --rdp-accent-color: #052721;
+  --rdp-accent-background-color: #e6efee;
 }
 
 /* Marquee animation for activities ticker */
