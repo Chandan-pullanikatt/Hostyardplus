@@ -32,41 +32,40 @@ export default function Hero({ settings, properties }: HeroProps) {
   const videoRef       = useRef<HTMLVideoElement>(null)
   const sectionRef     = useRef<HTMLElement>(null)
   const hasScrolledRef = useRef(false)
-  const [muted, setMuted] = useState(false)
+  const [muted, setMuted] = useState(true) // matches the muted HTML attribute
 
-  // Autoplay muted (required by browsers), then unmute on first user interaction
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
 
+    // Play muted first (browser autoplay policy requires this)
     v.muted = true
-    v.play().catch(() => {})
+    v.play()
+      .then(() => {
+        // Playing successfully — now unmute (allowed without gesture in Chrome/Firefox)
+        v.muted = false
+        setMuted(false)
+      })
+      .catch(() => {
+        // Autoplay blocked entirely — stay muted, user can click to unmute
+        setMuted(true)
+      })
 
-    const cleanupFns: (() => void)[] = []
-
-    // First try: unmute immediately (works if user has interacted with the site before)
-    const tryImmediateUnmute = () => {
-      v.muted = false
+    // Safari / strict-policy fallback: unmute on first user interaction
+    const unmute = () => {
+      const vid = videoRef.current
+      if (!vid) return
+      vid.muted = false
       setMuted(false)
+      vid.play().catch(() => {})
     }
-    // Small delay to let autoplay settle before unmuting
-    const t = setTimeout(tryImmediateUnmute, 500)
-    cleanupFns.push(() => clearTimeout(t))
+    document.addEventListener("click",      unmute, { once: true, passive: true })
+    document.addEventListener("touchstart", unmute, { once: true, passive: true })
 
-    // Fallback: if browser still blocks audio, unmute on first click or touch
-    const unmuteOnInteraction = () => {
-      if (!videoRef.current) return
-      videoRef.current.muted = false
-      setMuted(false)
+    return () => {
+      document.removeEventListener("click",      unmute)
+      document.removeEventListener("touchstart", unmute)
     }
-    document.addEventListener("click",      unmuteOnInteraction, { once: true, passive: true })
-    document.addEventListener("touchstart", unmuteOnInteraction, { once: true, passive: true })
-    cleanupFns.push(
-      () => document.removeEventListener("click",      unmuteOnInteraction),
-      () => document.removeEventListener("touchstart", unmuteOnInteraction),
-    )
-
-    return () => cleanupFns.forEach(fn => fn())
   }, [])
 
   // Pause when hero scrolls out of view, resume when it comes back.
