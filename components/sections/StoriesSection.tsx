@@ -16,25 +16,27 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const N = stories.length
   const center = Math.floor(N / 2)
 
-  // slots[i] = original story index at flex position i
   const [slots, setSlots] = useState<number[]>(() =>
     Array.from({ length: N }, (_, i) => i)
   )
-  const [active, setActive] = useState(center)
+  const [active, setActive]   = useState(center)
   const [playing, setPlaying] = useState(false)
-  const [muted, setMuted] = useState(true)
+  const [muted, setMuted]     = useState(false)
 
+  // videoRefs indexed by original story index — only the active card's ref is non-null
   const videoRefs   = useRef<(HTMLVideoElement | null)[]>(Array(N).fill(null))
   const cardRefs    = useRef<(HTMLDivElement  | null)[]>(Array(N).fill(null))
   const stripRef    = useRef<HTMLDivElement>(null)
+  const sectionRef  = useRef<HTMLElement>(null)
   const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
   const slotsRef    = useRef(slots)
-  const recenterRef = useRef(false)   // flag: do a no-animation recenter after slot rotation
+  const recenterRef = useRef(false)
+  const activeOrigRef    = useRef(slots[center])
+  const hasBeenVisibleRef = useRef(false)
 
-  // Keep slotsRef in sync so the timeout callback always reads current slots
   useEffect(() => { slotsRef.current = slots }, [slots])
 
-  // ── Direct-DOM helpers (no React state → no extra re-renders) ──────────
+  // ── Strip DOM helpers ──────────────────────────────────────────────────
   function moveStrip(x: number, animated: boolean) {
     const el = stripRef.current
     if (!el) return
@@ -51,12 +53,10 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   }
   // ──────────────────────────────────────────────────────────────────────
 
-  // Initial centering — runs once, before first paint
   useLayoutEffect(() => {
     snapToSlot(center, false)
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
-  // After a slot rotation React re-renders the strip — recenter silently
   useLayoutEffect(() => {
     if (!recenterRef.current) return
     recenterRef.current = false
@@ -64,6 +64,53 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   }, [slots]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const activeOrigIdx = slots[active]
+  useEffect(() => { activeOrigRef.current = activeOrigIdx }, [activeOrigIdx])
+
+  // ── Play active video (only 1 video element in DOM at a time) ──────────
+  useEffect(() => {
+    const v = videoRefs.current[activeOrigIdx]
+    if (!v) return
+
+    v.muted = false
+    v.play()
+      .then(() => { setMuted(false); setPlaying(true) })
+      .catch(() => {
+        v.muted = true
+        setMuted(true)
+        v.play().then(() => setPlaying(true)).catch(() => {})
+      })
+  }, [activeOrigIdx])
+
+  // Keep mute state in sync if toggled
+  useEffect(() => {
+    const v = videoRefs.current[activeOrigIdx]
+    if (v) v.muted = muted
+  }, [muted, activeOrigIdx])
+
+  // Pause when section leaves viewport, resume when it returns.
+  // Only start pausing AFTER the section has been visible at least once —
+  // this prevents the observer's initial below-fold callback from stopping
+  // a video that just started playing on mount.
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const v = videoRefs.current[activeOrigRef.current]
+        if (entry.isIntersecting) {
+          hasBeenVisibleRef.current = true
+          if (v) v.play().catch(() => {})
+        } else if (hasBeenVisibleRef.current) {
+          // Only pause after the section was previously visible
+          if (v) { v.pause(); setPlaying(false) }
+        }
+      },
+      { threshold: 0.1 }
+    )
+    obs.observe(section)
+    return () => obs.disconnect()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // ──────────────────────────────────────────────────────────────────────
 
   const handleCardClick = (slotIndex: number) => {
     const origIdx = slots[slotIndex]
@@ -78,10 +125,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
 
     setPlaying(false)
     setActive(slotIndex)
-    snapToSlot(slotIndex, true)   // animate strip to clicked card
+    snapToSlot(slotIndex, true)
 
-    // After the strip animation settles, rotate slots so the active card
-    // returns to the centre slot — keeping cards ready on both sides
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
       const currentSlots = slotsRef.current
@@ -92,7 +137,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
         ? [...currentSlots.slice(shift), ...currentSlots.slice(0, shift)]
         : [...currentSlots.slice(N + shift), ...currentSlots.slice(0, N + shift)]
 
-      recenterRef.current = true   // tell useLayoutEffect to recenter
+      recenterRef.current = true
       setSlots(newSlots)
       setActive(center)
     }, 570)
@@ -103,29 +148,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     setMuted(prev => !prev)
   }
 
-  // ── Video playback ─────────────────────────────────────────────────────
-  useEffect(() => {
-    videoRefs.current.forEach((v, origIdx) => {
-      if (!v) return
-      if (origIdx === activeOrigIdx) {
-        v.muted = muted
-        v.play().then(() => setPlaying(true)).catch(() => setPlaying(false))
-      } else {
-        v.pause()
-        v.currentTime = 0
-        v.muted = true
-      }
-    })
-  }, [activeOrigIdx]) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    const v = videoRefs.current[activeOrigIdx]
-    if (v) v.muted = muted
-  }, [muted, activeOrigIdx])
-  // ──────────────────────────────────────────────────────────────────────
-
   return (
-    <section className="bg-[#f8f6f1] py-20 overflow-hidden">
+    <section ref={sectionRef} className="bg-[#f8f6f1] py-20 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <AnimateIn className="mb-14">
           <SectionHeader
@@ -161,6 +185,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                       : "w-44 h-[360px] md:w-56 md:h-[420px] opacity-50"
                     }`}
                 >
+                  {/* Thumbnail always visible as base layer */}
                   {thumbUrl ? (
                     <Image
                       src={thumbUrl}
@@ -168,19 +193,23 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                       fill
                       className="object-cover"
                     />
-                  ) : story.cloudinaryAsset?.secure_url ? (
+                  ) : (
+                    <div className="w-full h-full bg-gray-400" />
+                  )}
+
+                  {/* Video only rendered for active card, overlaid on thumbnail */}
+                  {isCenter && story.cloudinaryAsset?.secure_url && (
                     <video
                       ref={el => { videoRefs.current[origIdx] = el }}
                       src={story.cloudinaryAsset.secure_url}
-                      className="w-full h-full object-cover"
+                      className="absolute inset-0 w-full h-full object-cover"
                       muted
                       loop
                       playsInline
                     />
-                  ) : (
-                    <div className="w-full h-full bg-gray-300" />
                   )}
 
+                  {/* Play/pause + mute controls on active card */}
                   {story.mediaType === "video" && isCenter && (
                     <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute inset-0 flex items-center justify-center">

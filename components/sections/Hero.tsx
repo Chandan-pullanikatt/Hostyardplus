@@ -1,9 +1,10 @@
 "use client"
 
+import { useRef, useState, useEffect } from "react"
 import { m } from "framer-motion"
 import BookingBar from "@/components/ui/BookingBar"
 import type { SiteSettings, Property } from "@/lib/types"
-import { Star } from "lucide-react"
+import { Star, Volume2, VolumeX } from "lucide-react"
 
 interface HeroProps {
   settings: SiteSettings
@@ -24,16 +25,87 @@ export default function Hero({ settings, properties }: HeroProps) {
     .filter((p) => p.status === "active")
     .map((p) => p.location)
 
-  const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
+  const heading   = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
   const italicWord = settings.heroHeadingItalic ?? "Escape"
-  const parts = heading.split(italicWord)
+  const parts     = heading.split(italicWord)
+
+  const videoRef       = useRef<HTMLVideoElement>(null)
+  const sectionRef     = useRef<HTMLElement>(null)
+  const hasScrolledRef = useRef(false)
+  const [muted, setMuted] = useState(false)
+
+  // Autoplay muted (required by browsers), then unmute on first user interaction
+  useEffect(() => {
+    const v = videoRef.current
+    if (!v) return
+
+    v.muted = true
+    v.play().catch(() => {})
+
+    const cleanupFns: (() => void)[] = []
+
+    // First try: unmute immediately (works if user has interacted with the site before)
+    const tryImmediateUnmute = () => {
+      v.muted = false
+      setMuted(false)
+    }
+    // Small delay to let autoplay settle before unmuting
+    const t = setTimeout(tryImmediateUnmute, 500)
+    cleanupFns.push(() => clearTimeout(t))
+
+    // Fallback: if browser still blocks audio, unmute on first click or touch
+    const unmuteOnInteraction = () => {
+      if (!videoRef.current) return
+      videoRef.current.muted = false
+      setMuted(false)
+    }
+    document.addEventListener("click",      unmuteOnInteraction, { once: true, passive: true })
+    document.addEventListener("touchstart", unmuteOnInteraction, { once: true, passive: true })
+    cleanupFns.push(
+      () => document.removeEventListener("click",      unmuteOnInteraction),
+      () => document.removeEventListener("touchstart", unmuteOnInteraction),
+    )
+
+    return () => cleanupFns.forEach(fn => fn())
+  }, [])
+
+  // Pause when hero scrolls out of view, resume when it comes back.
+  // Skip the initial callback (hero is visible on load) to avoid interfering
+  // with the autoplay that's already been triggered.
+  useEffect(() => {
+    const section = sectionRef.current
+    if (!section) return
+    const obs = new IntersectionObserver(
+      ([entry]) => {
+        const v = videoRef.current
+        if (!v) return
+        if (entry.isIntersecting) {
+          if (hasScrolledRef.current) v.play().catch(() => {})
+        } else {
+          hasScrolledRef.current = true
+          v.pause()
+        }
+      },
+      { threshold: 0.1 }
+    )
+    obs.observe(section)
+    return () => obs.disconnect()
+  }, [])
+
+  const toggleMute = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setMuted(v.muted)
+  }
 
   return (
-    <section className="relative min-h-screen flex flex-col">
+    <section ref={sectionRef} className="relative min-h-screen flex flex-col">
       {/* Video / image background */}
       <div className="absolute inset-0 overflow-hidden">
         {settings.heroVideo?.secure_url ? (
           <video
+            ref={videoRef}
             src={settings.heroVideo.secure_url}
             autoPlay
             muted
@@ -45,6 +117,17 @@ export default function Hero({ settings, properties }: HeroProps) {
           <div className="w-full h-full bg-primary" />
         )}
         <div className="absolute inset-0 bg-gradient-to-b from-black/40 via-black/20 to-black/60" />
+
+        {/* Mute / unmute toggle */}
+        {settings.heroVideo?.secure_url && (
+          <button
+            onClick={toggleMute}
+            aria-label={muted ? "Unmute video" : "Mute video"}
+            className="absolute bottom-6 right-6 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors"
+          >
+            {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
+          </button>
+        )}
       </div>
 
       {/* Content */}
@@ -52,7 +135,6 @@ export default function Hero({ settings, properties }: HeroProps) {
         <div className="h-24" />
 
         <div className="flex flex-col items-center justify-end flex-1 text-center gap-4 pb-6">
-          {/* Rating badge */}
           <m.div
             variants={heroVariants.badge}
             initial="hidden"
@@ -66,7 +148,6 @@ export default function Hero({ settings, properties }: HeroProps) {
             </span>
           </m.div>
 
-          {/* Main heading */}
           <m.h1
             variants={heroVariants.heading}
             initial="hidden"
@@ -80,7 +161,6 @@ export default function Hero({ settings, properties }: HeroProps) {
           </m.h1>
         </div>
 
-        {/* Booking bar */}
         <m.div
           variants={heroVariants.booking}
           initial="hidden"
