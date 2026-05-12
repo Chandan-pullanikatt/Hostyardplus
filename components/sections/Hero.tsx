@@ -35,40 +35,10 @@ export default function Hero({ settings, properties }: HeroProps) {
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
-
-    let cancelled = false
-
-    const start = async () => {
-      v.muted = true
-      try {
-        await v.play()
-        if (cancelled) return          // Strict Mode cleanup fired — second run will take over
-        v.muted = false
-        setMuted(false)
-      } catch {
-        if (!cancelled) setMuted(true) // autoplay blocked entirely
-      }
-    }
-
-    start()
-
-    // Fallback: unmute + start on first interaction (Safari / blocked autoplay)
-    const unmuteOnInteraction = () => {
-      const vid = videoRef.current
-      if (!vid) return
-      vid.muted = false
-      setMuted(false)
-      if (vid.paused) vid.play().catch(() => {})
-    }
-    document.addEventListener("click",      unmuteOnInteraction, { once: true, passive: true })
-    document.addEventListener("touchstart", unmuteOnInteraction, { once: true, passive: true })
-
-    return () => {
-      cancelled = true
-      v.pause()   // clean slate so the second Strict-Mode invocation starts fresh
-      document.removeEventListener("click",      unmuteOnInteraction)
-      document.removeEventListener("touchstart", unmuteOnInteraction)
-    }
+    // Programmatic play as a fallback — keeps audio muted (matches the HTML attribute).
+    // Browsers block autoPlay only when unmuted; muted autoplay is always allowed.
+    v.muted = true
+    v.play().catch(() => {})
   }, [])
 
   // Pause when hero scrolls out of view, resume when it comes back.
@@ -109,6 +79,7 @@ export default function Hero({ settings, properties }: HeroProps) {
           <video
             ref={videoRef}
             src={settings.heroVideo.secure_url}
+            autoPlay
             muted
             loop
             playsInline
