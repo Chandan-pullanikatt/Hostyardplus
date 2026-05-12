@@ -82,70 +82,77 @@ export default function WhyChooseUs({ tabs }: Props) {
   if (!active) return null
 
   return (
-    <section className="bg-white py-20 px-6 lg:px-12">
+    <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <AnimateIn className="mb-12 flex flex-col items-center text-center gap-3">
           <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
             Why Choose Us
           </h2>
+          <p className="font-sans text-sm text-gray-500 max-w-md leading-relaxed">
+            Thoughtfully curated stays designed for comfort, convenience, and memorable travel experiences.
+          </p>
         </AnimateIn>
 
-        {/* Tab bar + Slideshow — no gap between them */}
-        <AnimateIn delay={150} className="flex flex-col items-center">
-          {/* Tab bar — horizontal scroll on mobile, auto-width centered on desktop */}
-          <div className="max-w-full overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
-            <div className="inline-flex border border-b-0 border-gray-200 rounded-t-xl overflow-hidden shadow-sm">
-              {TABS.map((tab, i) => (
-                <button
-                  key={tab.id}
-                  onClick={() => setActiveIndex(i)}
-                  className={`font-sans text-xs md:text-sm px-4 md:px-6 py-3 transition-colors whitespace-nowrap ${
-                    i === activeIndex
-                      ? "bg-white text-gray-900 font-semibold"
-                      : "bg-white text-gray-400 hover:text-gray-700"
-                  } ${i > 0 ? "border-l border-gray-200" : ""}`}
-                >
-                  {tab.label}
-                </button>
-              ))}
+        <AnimateIn delay={150} className="w-full">
+          <div className="flex flex-col">
+
+            {/* Tab bar — OUTSIDE the card, centered, curved top corners, no bottom border */}
+            <div className="flex justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
+              <div className="inline-flex bg-white border border-b-0 border-gray-200 rounded-t-2xl overflow-hidden">
+                {TABS.map((tab, i) => (
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveIndex(i)}
+                    className={`font-sans text-xs md:text-sm px-5 md:px-8 py-3 transition-colors whitespace-nowrap ${
+                      i === activeIndex
+                        ? "text-gray-900 font-semibold"
+                        : "text-gray-400 hover:text-gray-700"
+                    } ${i > 0 ? "border-l border-gray-200" : ""}`}
+                  >
+                    {tab.label}
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          {/* Slideshow */}
-          <div className="relative rounded-b-2xl overflow-hidden h-[500px] md:h-[600px] w-full">
-            {active.imageUrls.map((src, i) => (
-              <Image
-                key={src}
-                src={src}
-                alt={`${active.title} ${i + 1}`}
-                fill
-                priority={i === 0}
-                className={`object-cover transition-opacity duration-700 ${
-                  i === slideIndex ? "opacity-100" : "opacity-0"
-                }`}
-              />
-            ))}
+            {/* White card — full border on all 4 sides, padding creates white gap around image */}
+            <div className="w-full bg-white border border-gray-200 rounded-[24px] p-4">
+              <div className="relative h-[500px] md:h-[600px] w-full rounded-[20px] overflow-hidden">
+                {active.imageUrls.map((src, i) => (
+                  <Image
+                    key={src}
+                    src={src}
+                    alt={`${active.title} ${i + 1}`}
+                    fill
+                    priority={i === 0}
+                    className={`object-cover transition-opacity duration-700 ${
+                      i === slideIndex ? "opacity-100" : "opacity-0"
+                    }`}
+                  />
+                ))}
 
-            {/* Bottom info card */}
-            <div className="absolute bottom-6 left-6 right-6 sm:right-auto bg-white rounded-xl p-5 sm:max-w-xs shadow-md">
-              <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
-              <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
-              {/* Slide dots */}
-              {slideCount > 1 && (
-                <div className="flex gap-2 mt-4">
-                  {active.imageUrls.map((_, i) => (
-                    <button
-                      key={i}
-                      onClick={() => setSlideIndex(i)}
-                      className={`h-1.5 rounded-full transition-all duration-300 ${
-                        i === slideIndex ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
-                      }`}
-                    />
-                  ))}
+                {/* Bottom info card */}
+                <div className="absolute bottom-6 left-6 right-6 sm:right-auto bg-white rounded-xl p-5 sm:max-w-xs shadow-md">
+                  <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
+                  <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
+                  {slideCount > 1 && (
+                    <div className="flex gap-2 mt-4">
+                      {active.imageUrls.map((_, i) => (
+                        <button
+                          key={i}
+                          onClick={() => setSlideIndex(i)}
+                          className={`h-1.5 rounded-full transition-all duration-300 ${
+                            i === slideIndex ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
+                          }`}
+                        />
+                      ))}
+                    </div>
+                  )}
                 </div>
-              )}
+              </div>
             </div>
+
           </div>
         </AnimateIn>
       </div>
