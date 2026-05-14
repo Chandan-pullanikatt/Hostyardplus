@@ -132,24 +132,26 @@ export default function WhyChooseUs({ tabs }: Props) {
                   />
                 ))}
 
-                {/* Bottom info card */}
-                <div className="absolute bottom-6 left-6 right-6 sm:right-auto bg-white rounded-xl p-5 sm:max-w-xs shadow-md">
+                {/* Info box — bottom left, no dots inside */}
+                <div className="absolute bottom-6 left-6 bg-white rounded-xl p-5 max-w-xs shadow-md">
                   <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
                   <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
-                  {slideCount > 1 && (
-                    <div className="flex gap-2 mt-4">
-                      {active.imageUrls.map((_, i) => (
-                        <button
-                          key={i}
-                          onClick={() => setSlideIndex(i)}
-                          className={`h-1.5 rounded-full transition-all duration-300 ${
-                            i === slideIndex ? "w-6 bg-gray-900" : "w-1.5 bg-gray-300"
-                          }`}
-                        />
-                      ))}
-                    </div>
-                  )}
                 </div>
+
+                {/* Slide dots — center bottom of image */}
+                {slideCount > 1 && (
+                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                    {active.imageUrls.map((_, i) => (
+                      <button
+                        key={i}
+                        onClick={() => setSlideIndex(i)}
+                        className={`h-1.5 rounded-full transition-all duration-300 ${
+                          i === slideIndex ? "w-6 bg-white" : "w-1.5 bg-white/50"
+                        }`}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 

@@ -28,7 +28,6 @@ import AboutUs from "@/components/sections/AboutUs"
 import Destinations from "@/components/sections/Destinations"
 import WhyChooseUs from "@/components/sections/WhyChooseUs"
 import Stats from "@/components/sections/Stats"
-import ActivitiesTicker from "@/components/sections/ActivitiesTicker"
 import StoriesSection from "@/components/sections/StoriesSection"
 import Reviews from "@/components/sections/Reviews"
 import CommunityBanner from "@/components/sections/CommunityBanner"
@@ -131,14 +130,13 @@ async function fetchData<T>(query: string, fallback: T): Promise<T> {
 }
 
 export default async function Home() {
-  const [settings, properties, reviews, faqs, stats, activities, stories, whyChooseTabs] =
+  const [settings, properties, reviews, faqs, stats, stories, whyChooseTabs] =
     await Promise.all([
       fetchData<SiteSettings>(siteSettingsQuery, FALLBACK_SETTINGS),
       fetchData<Property[]>(propertiesQuery, FALLBACK_PROPERTIES),
       fetchData<Review[]>(reviewsQuery, []),
       fetchData<FAQType[]>(faqsQuery, []),
       fetchData<Stat[]>(statsQuery, FALLBACK_STATS),
-      fetchData<Activity[]>(activitiesQuery, []),
       fetchData<StoryMedia[]>(storyMediaQuery, []),
       fetchData<WhyChooseUsTab[]>(whyChooseUsQuery, []),
     ])
@@ -165,7 +163,6 @@ export default async function Home() {
       <AboutUs settings={settings} />
       <WhyChooseUs tabs={processedWhyChooseTabs.length > 0 ? processedWhyChooseTabs : undefined} />
       <Stats stats={stats} />
-      {activities.length > 0 && <ActivitiesTicker activities={activities} />}
       {stories.length > 0 && <StoriesSection stories={stories} />}
       {reviews.length > 0 && <Reviews reviews={reviews} />}
       <Destinations properties={processedProperties} />
