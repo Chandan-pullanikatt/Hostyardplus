@@ -72,7 +72,7 @@ export default function Hero({ settings, properties }: HeroProps) {
   }
 
   return (
-    <section ref={sectionRef} className="relative min-h-screen flex flex-col">
+    <section ref={sectionRef} className="relative min-h-[100svh] flex flex-col">
       {/* Video / image background */}
       <div className="absolute inset-0 overflow-hidden">
         {settings.heroVideo?.secure_url ? (

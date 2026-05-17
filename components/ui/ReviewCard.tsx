@@ -9,7 +9,7 @@ export default function ReviewCard({ review }: { review: Review }) {
     : null
 
   return (
-    <div className="bg-white rounded-2xl p-5 w-72 shrink-0 flex flex-col gap-3">
+    <div className="bg-white rounded-2xl p-4 md:p-5 w-56 md:w-72 shrink-0 flex flex-col gap-3">
       <div className="flex items-center gap-1">
         <Star size={14} className="fill-sun-400 text-sun-400" />
         <span className="font-sans text-sm text-gray-700">{review.rating.toFixed(1)}/5</span>

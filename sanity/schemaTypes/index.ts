@@ -6,6 +6,10 @@ import { activity } from "./activity"
 import { storyMedia } from "./storyMedia"
 import { whyChooseUs } from "./whyChooseUs"
 import { siteSettings } from "./siteSettings"
+import { aboutPage } from "./aboutPage"
+import { partnerPage } from "./partnerPage"
+import { contactPage } from "./contactPage"
+import { privacyPolicy, guestPolicy, cancellationPolicy, termsConditions } from "./policyPages"
 
 export const schemaTypes = [
   property,
@@ -16,4 +20,11 @@ export const schemaTypes = [
   storyMedia,
   whyChooseUs,
   siteSettings,
+  aboutPage,
+  partnerPage,
+  contactPage,
+  privacyPolicy,
+  guestPolicy,
+  cancellationPolicy,
+  termsConditions,
 ]

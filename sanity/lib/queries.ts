@@ -116,3 +116,44 @@ export const whyChooseUsQuery = groq`
     order
   }
 `
+
+export const aboutPageQuery = groq`
+  *[_type == "aboutPage"][0] {
+    heroHeading,
+    heroSubtitle,
+    storyHeading,
+    storyText,
+    valuesHeading,
+    values[] { title, description, accent },
+    teamHeading,
+    teamMembers[] { name, role, bio, photo { asset, alt } }
+  }
+`
+
+export const partnerPageQuery = groq`
+  *[_type == "partnerPage"][0] {
+    heroHeading,
+    heroSubtitle,
+    featuresHeading,
+    features[] { iconKey, title, description },
+    ctaHeading,
+    ctaSubtitle,
+    ctaButtonText
+  }
+`
+
+export const contactPageQuery = groq`
+  *[_type == "contactPage"][0] {
+    heading,
+    tagline,
+    phone,
+    whatsappNumber,
+    whatsappButtonText,
+    phoneButtonText
+  }
+`
+
+export const privacyPolicyQuery = groq`*[_type == "privacyPolicy"][0] { title, lastUpdated, body }`
+export const guestPolicyQuery = groq`*[_type == "guestPolicy"][0] { title, lastUpdated, body }`
+export const cancellationPolicyQuery = groq`*[_type == "cancellationPolicy"][0] { title, lastUpdated, body }`
+export const termsConditionsQuery = groq`*[_type == "termsConditions"][0] { title, lastUpdated, body }`

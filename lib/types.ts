@@ -125,3 +125,59 @@ export interface SanityImage {
   }
   alt?: string
 }
+
+export interface AboutPageValue {
+  title: string
+  description: string
+  accent: string
+}
+
+export interface AboutPageTeamMember {
+  name: string
+  role: string
+  bio?: string
+  photo?: SanityImage
+}
+
+export interface AboutPage {
+  heroHeading: string
+  heroSubtitle: string
+  storyHeading: string
+  storyText: string
+  valuesHeading: string
+  values: AboutPageValue[]
+  teamHeading: string
+  teamMembers?: AboutPageTeamMember[]
+}
+
+export interface PartnerFeature {
+  iconKey: string
+  title: string
+  description: string
+}
+
+export interface PartnerPage {
+  heroHeading: string
+  heroSubtitle: string
+  featuresHeading: string
+  features: PartnerFeature[]
+  ctaHeading: string
+  ctaSubtitle: string
+  ctaButtonText: string
+}
+
+export interface ContactPage {
+  heading: string
+  tagline: string
+  phone: string
+  whatsappNumber: string
+  whatsappButtonText: string
+  phoneButtonText: string
+}
+
+export interface PolicyPage {
+  title: string
+  lastUpdated: string
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  body?: any[]
+}

@@ -26,7 +26,7 @@ export default function PropertyHero({ property }: Props) {
   }, [images.length])
 
   return (
-    <section className="relative h-screen w-full overflow-hidden">
+    <section className="relative h-[100svh] w-full overflow-hidden">
       {images.map((img, i) => {
         const src = img?.asset?._ref ? urlFor(img).width(1600).height(900).url() : null
         if (!src) return null
@@ -44,13 +44,13 @@ export default function PropertyHero({ property }: Props) {
       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-black/30" />
 
       {/* Bottom content */}
-      <div className="absolute bottom-0 left-0 right-0 px-8 pb-10 flex items-end justify-between">
-        <div>
-          <h1 className="font-serif text-5xl md:text-7xl text-white font-normal leading-none">
+      <div className="absolute bottom-0 left-0 right-0 px-6 md:px-8 pb-8 md:pb-10 flex flex-col md:flex-row md:items-end md:justify-between gap-3">
+        <div className="min-w-0">
+          <h1 className="font-serif text-3xl md:text-5xl lg:text-7xl text-white font-normal leading-tight md:leading-none">
             {property.title}
           </h1>
           {property.tagline && (
-            <p className="mt-2 text-white/80 text-base font-sans tracking-wide">
+            <p className="mt-2 text-white/80 text-sm md:text-base font-sans tracking-wide">
               {property.tagline}
             </p>
           )}
@@ -58,7 +58,7 @@ export default function PropertyHero({ property }: Props) {
 
         {/* Slide indicators */}
         {images.length > 1 && (
-          <div className="absolute bottom-10 left-1/2 -translate-x-1/2 flex items-center gap-2">
+          <div className="flex items-center gap-2 md:absolute md:bottom-10 md:left-1/2 md:-translate-x-1/2">
             {images.map((_, i) => (
               <button
                 key={i}
@@ -77,7 +77,7 @@ export default function PropertyHero({ property }: Props) {
             href={property.bookingUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-medium px-6 py-3 rounded-lg transition-colors"
+            className="self-start md:self-auto shrink-0 bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-medium px-6 py-3 rounded-lg transition-colors"
           >
             Book Now
           </Link>

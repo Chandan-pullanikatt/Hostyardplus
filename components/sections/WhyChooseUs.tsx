@@ -82,7 +82,7 @@ export default function WhyChooseUs({ tabs }: Props) {
   if (!active) return null
 
   return (
-    <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
+    <section className="bg-[#f8f6f1] py-14 md:py-20 px-6 lg:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <AnimateIn className="mb-12 flex flex-col items-center text-center gap-3">
@@ -98,7 +98,7 @@ export default function WhyChooseUs({ tabs }: Props) {
           <div className="flex flex-col">
 
             {/* Tab bar — OUTSIDE the card, centered, curved top corners, no bottom border */}
-            <div className="flex justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
+            <div className="flex justify-start md:justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
               <div className="inline-flex bg-white border border-b-0 border-gray-200 rounded-t-2xl overflow-hidden">
                 {TABS.map((tab, i) => (
                   <button
@@ -117,8 +117,8 @@ export default function WhyChooseUs({ tabs }: Props) {
             </div>
 
             {/* White card — full border on all 4 sides, padding creates white gap around image */}
-            <div className="w-full bg-white border border-gray-200 rounded-[24px] p-4">
-              <div className="relative h-[500px] md:h-[600px] w-full rounded-[20px] overflow-hidden">
+            <div className="w-full bg-white border border-gray-200 rounded-[24px] p-3 md:p-4">
+              <div className="relative h-[240px] md:h-[600px] w-full rounded-[16px] md:rounded-[20px] overflow-hidden">
                 {active.imageUrls.map((src, i) => (
                   <Image
                     key={src}
@@ -132,15 +132,15 @@ export default function WhyChooseUs({ tabs }: Props) {
                   />
                 ))}
 
-                {/* Info box — bottom left, no dots inside */}
-                <div className="absolute bottom-6 left-6 bg-white rounded-xl p-5 max-w-xs shadow-md">
+                {/* Info box — desktop overlay only */}
+                <div className="hidden md:block absolute bottom-6 left-6 bg-white rounded-xl p-5 max-w-xs shadow-md">
                   <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
                   <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
                 </div>
 
                 {/* Slide dots — center bottom of image */}
                 {slideCount > 1 && (
-                  <div className="absolute bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
+                  <div className="absolute bottom-4 md:bottom-6 left-1/2 -translate-x-1/2 flex gap-2">
                     {active.imageUrls.map((_, i) => (
                       <button
                         key={i}
@@ -152,6 +152,12 @@ export default function WhyChooseUs({ tabs }: Props) {
                     ))}
                   </div>
                 )}
+              </div>
+
+              {/* Info block — mobile only, below image */}
+              <div className="md:hidden px-3 pt-4 pb-2">
+                <h3 className="font-serif text-base text-gray-900 mb-1">{active.title}</h3>
+                <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
               </div>
             </div>
 

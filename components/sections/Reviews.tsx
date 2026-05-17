@@ -16,7 +16,7 @@ export default function Reviews({ reviews }: ReviewsProps) {
   const tile = (arr: Review[]) => [...arr, ...arr, ...arr, ...arr]
 
   return (
-    <section className="bg-[#f8f6f1] py-20 overflow-hidden">
+    <section className="bg-[#f8f6f1] py-14 md:py-20 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <AnimateIn className="mb-14">
           <SectionHeader

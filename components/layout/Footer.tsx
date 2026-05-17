@@ -3,10 +3,10 @@ import Image from "next/image"
 import AnimateIn from "@/components/ui/AnimateIn"
 
 const quickLinks = [
-  { label: "About",    href: "#about" },
-  { label: "FAQ",      href: "#faq" },
-  { label: "Review",   href: "#reviews" },
-  { label: "Book Now", href: "#book" },
+  { label: "About",    href: "/about" },
+  { label: "Partner",  href: "/partner" },
+  { label: "Contact",  href: "/contact" },
+  { label: "Book Now", href: "/#book" },
 ]
 
 const policies = [
