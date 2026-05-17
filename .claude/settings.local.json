@@ -3,7 +3,8 @@
     "allow": [
       "Bash(Test-Path \"D:\\\\work\\\\hostyardplus\\\\node_modules\\\\@portabletext\\\\react\")",
       "Bash(Write-Output)",
-      "Bash(npx next *)"
+      "Bash(npx next *)",
+      "Bash(git add *)"
     ]
   }
 }
