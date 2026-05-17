@@ -9,6 +9,9 @@ export default function CustomCursor() {
     const el = ref.current
     if (!el) return
 
+    // Skip on touch / pointer-coarse devices
+    if (window.matchMedia("(pointer: coarse)").matches) return
+
     const onMove = (e: MouseEvent) => {
       // translate so the hotspot (centre of the 16×16 SVG) aligns with the pointer
       el.style.transform = `translate(${e.clientX - 8}px, ${e.clientY - 8}px)`

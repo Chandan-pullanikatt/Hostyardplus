@@ -251,24 +251,29 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                     )}
 
                     {story.mediaType === "video" && isCenter && (
-                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <div className="w-14 h-14 flex items-center justify-center">
-                            {playing
-                              ? <Pause size={24} className="text-white fill-white" />
-                              : <Play  size={24} className="text-white fill-white ml-1" />}
+                      <>
+                        {/* Play/pause — hover only on desktop */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none">
+                          <div className="absolute inset-0 flex items-center justify-center">
+                            <div className="w-14 h-14 flex items-center justify-center pointer-events-none">
+                              {playing
+                                ? <Pause size={24} className="text-white fill-white" />
+                                : <Play  size={24} className="text-white fill-white ml-1" />}
+                            </div>
                           </div>
                         </div>
+
+                        {/* Mute button — always visible on mobile, hover-only on desktop */}
                         <button
                           onClick={toggleMute}
-                          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center"
+                          className="absolute bottom-3 right-3 w-9 h-9 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center md:opacity-0 md:group-hover:opacity-100 md:transition-opacity"
                           aria-label={muted ? "Unmute" : "Mute"}
                         >
                           {muted
                             ? <VolumeX size={16} className="text-white" />
                             : <Volume2 size={16} className="text-white" />}
                         </button>
-                      </div>
+                      </>
                     )}
                   </div>
                 </div>

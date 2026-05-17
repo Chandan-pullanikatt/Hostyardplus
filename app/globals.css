@@ -80,6 +80,13 @@
   cursor: none !important;
 }
 
+/* Restore native cursor on touch / pointer-coarse devices (mobile) */
+@media (pointer: coarse) {
+  *, *::before, *::after {
+    cursor: auto !important;
+  }
+}
+
 body {
   font-family: var(--font-sans);
   background-color: #ffffff;

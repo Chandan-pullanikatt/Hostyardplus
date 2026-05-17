@@ -38,7 +38,8 @@ export default function PropertyExperiences({ property }: Props) {
   return (
     <section className="bg-[#F5F4F0] py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="flex gap-4 h-[580px]">
+        {/* Mobile: vertical stack. Desktop: horizontal flex with hover-expand */}
+        <div className="flex flex-col gap-4 md:flex-row md:h-[580px]">
           {EXPERIENCES.map((exp) => {
             const active = hovered === exp.id
 
@@ -48,7 +49,7 @@ export default function PropertyExperiences({ property }: Props) {
                 onMouseEnter={() => setHovered(exp.id)}
                 onMouseLeave={() => setHovered(null)}
                 style={{ flex: active ? 2 : 1 }}
-                className="relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ease-in-out"
+                className="relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-500 ease-in-out min-h-[280px] md:min-h-0 md:h-[580px]"
               >
                 <Image
                   src={exp.image}
@@ -67,17 +68,19 @@ export default function PropertyExperiences({ property }: Props) {
                     {property.location}
                   </span>
 
-                  <h3
-                    className={`font-serif italic text-white leading-tight transition-all duration-500 ease-in-out ${
-                      active ? "text-3xl mb-3" : "text-2xl mb-0"
-                    }`}
-                  >
+                  {/* Title: fixed size on mobile, hover-responsive on desktop */}
+                  <h3 className={`font-serif italic text-white leading-tight md:transition-all md:duration-500 ease-in-out text-2xl mb-2 md:mb-0 ${
+                    active ? "md:text-3xl md:mb-3" : ""
+                  }`}>
                     {exp.title}
                   </h3>
 
-                  {/* description slides in/out */}
+                  {/* Description: always visible on mobile, hover-only on desktop */}
+                  <p className="text-white/80 font-sans text-sm leading-relaxed md:hidden">
+                    {exp.description}
+                  </p>
                   <div
-                    className="overflow-hidden transition-all duration-500 ease-in-out"
+                    className="hidden md:block overflow-hidden transition-all duration-500 ease-in-out"
                     style={{ maxHeight: active ? "120px" : "0px", opacity: active ? 1 : 0 }}
                   >
                     <p className="text-white/80 font-sans text-sm leading-relaxed">

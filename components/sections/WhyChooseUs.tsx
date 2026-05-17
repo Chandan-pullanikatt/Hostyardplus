@@ -68,6 +68,9 @@ export default function WhyChooseUs({ tabs }: Props) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [slideIndex, setSlideIndex] = useState(0)
 
+  const prevTab = () => setActiveIndex((i) => (i - 1 + TABS.length) % TABS.length)
+  const nextTab = () => setActiveIndex((i) => (i + 1) % TABS.length)
+
   const active = TABS[activeIndex] ?? TABS[0]
   const slideCount = active?.imageUrls?.length ?? 0
 
@@ -97,23 +100,57 @@ export default function WhyChooseUs({ tabs }: Props) {
         <AnimateIn delay={150} className="w-full">
           <div className="flex flex-col">
 
-            {/* Tab bar — OUTSIDE the card, centered, curved top corners, no bottom border */}
-            <div className="flex justify-start md:justify-center overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none]">
-              <div className="inline-flex bg-white border border-b-0 border-gray-200 rounded-t-2xl overflow-hidden">
-                {TABS.map((tab, i) => (
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveIndex(i)}
-                    className={`font-sans text-xs md:text-sm px-5 md:px-8 py-3 transition-colors whitespace-nowrap ${
-                      i === activeIndex
-                        ? "text-gray-900 font-semibold"
-                        : "text-gray-400 hover:text-gray-700"
-                    } ${i > 0 ? "border-l border-gray-200" : ""}`}
-                  >
-                    {tab.label}
-                  </button>
-                ))}
+            {/* Tab bar — mobile: arrow buttons flanking active label; desktop: full tab strip */}
+            <div className="flex items-end gap-2">
+
+              {/* Mobile prev arrow */}
+              <button
+                onClick={prevTab}
+                aria-label="Previous tab"
+                className="md:hidden shrink-0 mb-0 w-9 h-10 rounded-t-xl bg-white border border-b-0 border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="10 4 4 8 10 12" />
+                </svg>
+              </button>
+
+              {/* Tab strip — hidden on mobile, full strip on desktop */}
+              <div className="hidden md:flex justify-center flex-1">
+                <div className="inline-flex bg-white border border-b-0 border-gray-200 rounded-t-2xl overflow-hidden">
+                  {TABS.map((tab, i) => (
+                    <button
+                      key={tab.id}
+                      onClick={() => setActiveIndex(i)}
+                      className={`font-sans text-xs md:text-sm px-5 md:px-8 py-3 transition-colors whitespace-nowrap ${
+                        i === activeIndex
+                          ? "text-gray-900 font-semibold"
+                          : "text-gray-400 hover:text-gray-700"
+                      } ${i > 0 ? "border-l border-gray-200" : ""}`}
+                    >
+                      {tab.label}
+                    </button>
+                  ))}
+                </div>
               </div>
+
+              {/* Mobile active tab label */}
+              <div className="md:hidden flex-1 bg-white border border-b-0 border-gray-200 rounded-t-2xl px-4 py-3 text-center">
+                <span className="font-sans text-sm text-gray-900 font-semibold whitespace-nowrap">
+                  {TABS[activeIndex]?.label}
+                </span>
+              </div>
+
+              {/* Mobile next arrow */}
+              <button
+                onClick={nextTab}
+                aria-label="Next tab"
+                className="md:hidden shrink-0 w-9 h-10 rounded-t-xl bg-white border border-b-0 border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+              >
+                <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <polyline points="6 4 12 8 6 12" />
+                </svg>
+              </button>
+
             </div>
 
             {/* White card — full border on all 4 sides, padding creates white gap around image */}
