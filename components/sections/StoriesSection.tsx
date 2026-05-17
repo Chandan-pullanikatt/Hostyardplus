@@ -33,6 +33,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const recenterRef = useRef(false)
   const activeOrigRef    = useRef(slots[center])
   const hasBeenVisibleRef = useRef(false)
+  const isVisibleRef      = useRef(false)
 
   useEffect(() => { slotsRef.current = slots }, [slots])
 
@@ -70,6 +71,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   useEffect(() => {
     const v = videoRefs.current[activeOrigIdx]
     if (!v) return
+    // Don't auto-play on mount if the section isn't visible yet
+    if (!isVisibleRef.current) return
 
     let cancelled = false
 
@@ -117,11 +120,25 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       ([entry]) => {
         const v = videoRefs.current[activeOrigRef.current]
         if (entry.isIntersecting) {
-          hasBeenVisibleRef.current = true
-          if (v) v.play().catch(() => {})
-        } else if (hasBeenVisibleRef.current) {
-          // Only pause after the section was previously visible
-          if (v) { v.pause(); setPlaying(false) }
+          isVisibleRef.current = true
+          if (!hasBeenVisibleRef.current) {
+            // First time visible — trigger the initial play
+            hasBeenVisibleRef.current = true
+            if (v) {
+              v.muted = false
+              v.play().catch(() => {
+                v.muted = true
+                v.play().catch(() => {})
+              })
+            }
+          } else {
+            if (v) v.play().catch(() => {})
+          }
+        } else {
+          isVisibleRef.current = false
+          if (hasBeenVisibleRef.current) {
+            if (v) { v.pause(); setPlaying(false) }
+          }
         }
       },
       { threshold: 0.1 }
