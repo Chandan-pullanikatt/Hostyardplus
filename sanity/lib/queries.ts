@@ -119,26 +119,36 @@ export const whyChooseUsQuery = groq`
 
 export const aboutPageQuery = groq`
   *[_type == "aboutPage"][0] {
-    heroHeading,
-    heroSubtitle,
-    storyHeading,
-    storyText,
-    valuesHeading,
-    values[] { title, description, accent },
-    teamHeading,
-    teamMembers[] { name, role, bio, photo { asset, alt } }
+    heroLabel,
+    mainHeading,
+    mainDescription,
+    heroImage { asset, alt },
+    stats[] { value, label },
+    promiseSectionHeading,
+    promiseSubtitle,
+    promises[] { title, description },
+    ctaHeading,
+    ctaSubtitle,
+    ctaButtonText,
+    ctaButtonLink,
+    ctaImage { asset, alt }
   }
 `
 
 export const partnerPageQuery = groq`
   *[_type == "partnerPage"][0] {
+    heroLabel,
     heroHeading,
-    heroSubtitle,
-    featuresHeading,
-    features[] { iconKey, title, description },
+    heroDescription,
+    partnerCards[] { _key, category, title, description, image { asset, alt } },
     ctaHeading,
     ctaSubtitle,
-    ctaButtonText
+    ctaButtonText,
+    ctaButtonLink,
+    ctaImage { asset, alt },
+    faqHeading,
+    faqSubtitle,
+    faqs[] { _key, question, answer }
   }
 `
 

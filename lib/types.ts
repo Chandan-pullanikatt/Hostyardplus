@@ -126,44 +126,59 @@ export interface SanityImage {
   alt?: string
 }
 
-export interface AboutPageValue {
-  title: string
-  description: string
-  accent: string
+export interface AboutPageStat {
+  value: string
+  label: string
 }
 
-export interface AboutPageTeamMember {
-  name: string
-  role: string
-  bio?: string
-  photo?: SanityImage
+export interface AboutPagePromise {
+  title: string
+  description: string
 }
 
 export interface AboutPage {
-  heroHeading: string
-  heroSubtitle: string
-  storyHeading: string
-  storyText: string
-  valuesHeading: string
-  values: AboutPageValue[]
-  teamHeading: string
-  teamMembers?: AboutPageTeamMember[]
-}
-
-export interface PartnerFeature {
-  iconKey: string
-  title: string
-  description: string
-}
-
-export interface PartnerPage {
-  heroHeading: string
-  heroSubtitle: string
-  featuresHeading: string
-  features: PartnerFeature[]
+  heroLabel: string
+  mainHeading: string
+  mainDescription: string
+  heroImage?: SanityImage
+  stats: AboutPageStat[]
+  promiseSectionHeading: string
+  promiseSubtitle: string
+  promises: AboutPagePromise[]
   ctaHeading: string
   ctaSubtitle: string
   ctaButtonText: string
+  ctaButtonLink: string
+  ctaImage?: SanityImage
+}
+
+export interface PartnerCard {
+  _key: string
+  category: string
+  title: string
+  description: string
+  image?: SanityImage
+}
+
+export interface PartnerPageFAQ {
+  _key: string
+  question: string
+  answer: string
+}
+
+export interface PartnerPage {
+  heroLabel: string
+  heroHeading: string
+  heroDescription: string
+  partnerCards: PartnerCard[]
+  ctaHeading: string
+  ctaSubtitle: string
+  ctaButtonText: string
+  ctaButtonLink: string
+  ctaImage?: SanityImage
+  faqHeading: string
+  faqSubtitle: string
+  faqs: PartnerPageFAQ[]
 }
 
 export interface ContactPage {

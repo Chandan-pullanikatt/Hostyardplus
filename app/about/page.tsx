@@ -3,36 +3,54 @@ import { aboutPageQuery } from "@/sanity/lib/queries"
 import type { AboutPage } from "@/lib/types"
 import { urlFor } from "@/sanity/lib/image"
 import Image from "next/image"
+import Link from "next/link"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import AnimateIn from "@/components/ui/AnimateIn"
 
 const FALLBACK: AboutPage = {
-  heroHeading: "About Us",
-  heroSubtitle: "Calm · Nature · Adventure",
-  storyHeading: "Our Story",
-  storyText:
-    "Hostyard+ was born from a simple belief: that travel should feel like coming home. Founded in Kerala, India, we started with a single property in the mountains of Suryanelli — a quiet place where guests could slow down, breathe deeper, and reconnect with what matters.\n\nWhat began as one stay has grown into a curated collection of homes across Kerala's most beautiful landscapes. But our founding philosophy hasn't changed: every property we add must earn its place. We look for spaces that have soul — where the architecture speaks to the land, the hosts care, and the experience lingers long after checkout.",
-  valuesHeading: "What We Stand For",
-  values: [
-    { title: "Calm over noise", description: "We curate spaces that offer genuine rest. No party crowds, no compromise on the quiet that real travel requires.", accent: "ocean-400" },
-    { title: "Care in every detail", description: "From the first message to checkout, every touchpoint is designed with intention. The difference is in what you don't have to think about.", accent: "sun-400" },
-    { title: "Connection over transaction", description: "We're not just facilitating stays. We're building a community of hosts and travelers who believe travel should be meaningful.", accent: "earthy-500" },
+  heroLabel: "About us",
+  mainHeading: "Where Modern Comfort Meets the Beauty of Nature",
+  mainDescription:
+    "Created for traveler's seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yours.",
+  heroImage: undefined,
+  stats: [
+    { value: "10,000+", label: "Happy Travelers" },
+    { value: "8,000+", label: "Community Members" },
+    { value: "6,000+", label: "Returning Guests" },
+    { value: "95%", label: "Positive Reviews" },
+    { value: "4 Years", label: "Trusted Hospitality" },
   ],
-  teamHeading: "Meet the Team",
-  teamMembers: [],
-}
-
-const accentBorderMap: Record<string, string> = {
-  "ocean-400": "border-ocean-400",
-  "sun-400": "border-sun-400",
-  "earthy-500": "border-earthy-500",
-}
-
-const accentTextMap: Record<string, string> = {
-  "ocean-400": "text-ocean-400",
-  "sun-400": "text-sun-400",
-  "earthy-500": "text-earthy-500",
+  promiseSectionHeading: "Our Promise",
+  promiseSubtitle: "Promising Comfort, Quality, and Meaningful Travel Experiences",
+  promises: [
+    {
+      title: "Thoughtful Hospitality",
+      description:
+        "We believe every traveler deserves a welcoming, comfortable, and seamless experience designed with care and attention to detail.",
+    },
+    {
+      title: "Meaningful Connections",
+      description:
+        "We create spaces and experiences that bring people together, encouraging genuine connections between travelers, hosts, and destinations.",
+    },
+    {
+      title: "Authentic Experiences",
+      description:
+        "We focus on creating memorable stays that reflect the beauty, culture, and uniqueness of every destination we offer.",
+    },
+    {
+      title: "Trusted Quality",
+      description:
+        "We carefully curate and verify every stay to ensure consistent quality, comfort, and experiences travelers can rely on with confidence.",
+    },
+  ],
+  ctaHeading: "Ready To Experience Your Perfect Escape",
+  ctaSubtitle:
+    "Discover Thoughtfully Curated Stays Designed For Comfort, Connection, And Unforgettable Experiences Across Every Destination",
+  ctaButtonText: "Book Now",
+  ctaButtonLink: "/",
+  ctaImage: undefined,
 }
 
 async function fetchPage(): Promise<AboutPage> {
@@ -40,14 +58,19 @@ async function fetchPage(): Promise<AboutPage> {
     const data = await sanityFetch<AboutPage>(aboutPageQuery)
     if (!data) return FALLBACK
     return {
-      heroHeading: data.heroHeading || FALLBACK.heroHeading,
-      heroSubtitle: data.heroSubtitle || FALLBACK.heroSubtitle,
-      storyHeading: data.storyHeading || FALLBACK.storyHeading,
-      storyText: data.storyText || FALLBACK.storyText,
-      valuesHeading: data.valuesHeading || FALLBACK.valuesHeading,
-      values: data.values?.length ? data.values : FALLBACK.values,
-      teamHeading: data.teamHeading || FALLBACK.teamHeading,
-      teamMembers: data.teamMembers ?? [],
+      heroLabel: data.heroLabel || FALLBACK.heroLabel,
+      mainHeading: data.mainHeading || FALLBACK.mainHeading,
+      mainDescription: data.mainDescription || FALLBACK.mainDescription,
+      heroImage: data.heroImage ?? undefined,
+      stats: data.stats?.length ? data.stats : FALLBACK.stats,
+      promiseSectionHeading: data.promiseSectionHeading || FALLBACK.promiseSectionHeading,
+      promiseSubtitle: data.promiseSubtitle || FALLBACK.promiseSubtitle,
+      promises: data.promises?.length ? data.promises : FALLBACK.promises,
+      ctaHeading: data.ctaHeading || FALLBACK.ctaHeading,
+      ctaSubtitle: data.ctaSubtitle || FALLBACK.ctaSubtitle,
+      ctaButtonText: data.ctaButtonText || FALLBACK.ctaButtonText,
+      ctaButtonLink: data.ctaButtonLink || FALLBACK.ctaButtonLink,
+      ctaImage: data.ctaImage ?? undefined,
     }
   } catch {
     return FALLBACK
@@ -56,67 +79,93 @@ async function fetchPage(): Promise<AboutPage> {
 
 export default async function AboutPage() {
   const page = await fetchPage()
-  const paragraphs = page.storyText.split("\n\n").filter(Boolean)
-  const hasTeam = (page.teamMembers?.length ?? 0) > 0
+
+  const heroImageSrc = page.heroImage?.asset?._ref
+    ? urlFor(page.heroImage).width(1400).height(560).url()
+    : "/photos/aboutusmain.jpg"
+
+  const ctaImageSrc = page.ctaImage?.asset?._ref
+    ? urlFor(page.ctaImage).width(1400).height(500).url()
+    : "/photos/aboutusbottom.png"
 
   return (
-    <main>
-      <Navbar />
+    <main className="bg-white">
+      <Navbar theme="light" />
 
-      {/* Hero */}
-      <section className="relative bg-primary min-h-[40vh] flex flex-col items-center justify-center text-center px-6 pt-28 pb-20">
-        <div className="absolute inset-0 bg-gradient-to-b from-black/20 to-transparent pointer-events-none" />
-        <div className="relative z-10 max-w-3xl mx-auto flex flex-col items-center gap-4">
-          <AnimateIn>
-            <h1 className="font-serif text-5xl md:text-6xl lg:text-7xl text-white leading-none">
-              {page.heroHeading}
-            </h1>
-          </AnimateIn>
-          <AnimateIn delay={120}>
-            <p className="font-sans text-white/70 text-base md:text-lg tracking-widest uppercase">
-              {page.heroSubtitle}
-            </p>
-          </AnimateIn>
-        </div>
-      </section>
+      {/* ── About Section ─────────────────────────────────────────────────── */}
+      <section className="pt-28 lg:pt-32 pb-0 px-6 lg:px-12 bg-white">
+        <div className="max-w-[1400px] mx-auto">
 
-      {/* Story */}
-      <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
-        <div className="max-w-[1400px] mx-auto grid grid-cols-1 lg:grid-cols-[1fr_3fr] gap-10 lg:gap-20 items-start">
-          <AnimateIn>
-            <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
-              {page.storyHeading}
-            </h2>
-          </AnimateIn>
-          <AnimateIn delay={100}>
-            <div className="flex flex-col gap-5">
-              {paragraphs.map((p, i) => (
-                <p key={i} className="font-sans text-gray-600 text-base md:text-lg leading-relaxed">
-                  {p}
-                </p>
-              ))}
+          {/* Two-column header */}
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20 mb-10 lg:mb-14">
+            <AnimateIn>
+              <p className="font-serif text-[24px] leading-none tracking-[0.01em] text-[#1B1C1D] mb-4">{page.heroLabel}</p>
+              <h1 className="font-sans font-medium text-[36px] leading-none tracking-normal text-gray-900">
+                {page.mainHeading}
+              </h1>
+            </AnimateIn>
+            <AnimateIn delay={100} className="flex lg:items-center">
+              <p className="font-sans font-normal text-[18px] leading-none tracking-normal text-gray-500">
+                {page.mainDescription}
+              </p>
+            </AnimateIn>
+          </div>
+
+          {/* Hero image with stats overlay */}
+          <AnimateIn delay={160}>
+            <div className="relative h-[280px] sm:h-[380px] lg:h-[520px] rounded-2xl lg:rounded-3xl overflow-hidden">
+              <Image
+                src={heroImageSrc}
+                alt="Hostyard+ property"
+                fill
+                className="object-cover"
+                priority
+              />
+              {/* Stats overlay */}
+              <div className="absolute bottom-0 left-0 right-0 flex divide-x divide-white/25 bg-gradient-to-t from-black/50 to-transparent pt-10">
+                {page.stats.map((stat) => (
+                  <div key={stat.label} className="flex-1 py-5 lg:py-7 text-center text-white">
+                    <p className="font-serif text-2xl lg:text-3xl xl:text-4xl leading-none">
+                      {stat.value}
+                    </p>
+                    <p className="font-sans text-[11px] lg:text-xs mt-1.5 text-white/75 tracking-wide uppercase">
+                      {stat.label}
+                    </p>
+                  </div>
+                ))}
+              </div>
             </div>
           </AnimateIn>
         </div>
       </section>
 
-      {/* Values */}
+      {/* ── Our Promise ───────────────────────────────────────────────────── */}
       <section className="bg-white py-20 px-6 lg:px-12">
         <div className="max-w-[1400px] mx-auto">
-          <AnimateIn className="mb-12 text-center">
-            <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
-              {page.valuesHeading}
+
+          {/* Section heading */}
+          <AnimateIn className="text-center mb-10 lg:mb-12">
+            <h2 className="font-serif text-4xl md:text-5xl text-gray-900">
+              {page.promiseSectionHeading}
             </h2>
+            <p className="font-sans text-gray-400 text-sm mt-3">
+              {page.promiseSubtitle}
+            </p>
           </AnimateIn>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {page.values.map((val, i) => (
-              <AnimateIn key={val.title} delay={i * 80}>
-                <div className={`h-full border-t-4 ${accentBorderMap[val.accent] ?? "border-ocean-400"} bg-[#f8f6f1] rounded-2xl p-8 flex flex-col gap-4`}>
-                  <h3 className={`font-serif text-2xl ${accentTextMap[val.accent] ?? "text-ocean-400"} leading-snug`}>
-                    {val.title}
+
+          {/* Promise items */}
+          <div className="rounded-2xl overflow-hidden bg-[#e8f0ed] divide-y divide-black/[0.07]">
+            {page.promises.map((promise, i) => (
+              <AnimateIn key={promise.title} delay={i * 60}>
+                <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 lg:gap-12 px-6 sm:px-8 lg:px-12 py-7 lg:py-9">
+                  <span className="font-serif text-gray-400 text-[36px] leading-none tracking-normal flex-none w-14">
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <h3 className="font-serif text-[36px] leading-none tracking-normal text-gray-900 flex-none sm:w-[400px]">
+                    {promise.title}
                   </h3>
-                  <p className="font-sans text-gray-600 text-sm leading-relaxed flex-1">
-                    {val.description}
+                  <p className="font-sans text-gray-500 text-base leading-none tracking-normal flex-1">
+                    {promise.description}
                   </p>
                 </div>
               </AnimateIn>
@@ -125,49 +174,36 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      {/* Team — hidden when empty */}
-      {hasTeam && (
-        <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
-          <div className="max-w-[1400px] mx-auto">
-            <AnimateIn className="mb-12 text-center">
-              <h2 className="font-serif text-4xl md:text-5xl text-gray-900 leading-tight">
-                {page.teamHeading}
-              </h2>
-            </AnimateIn>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
-              {page.teamMembers!.map((member, i) => (
-                <AnimateIn key={member.name} delay={i * 80}>
-                  <div className="bg-white rounded-2xl overflow-hidden shadow-sm flex flex-col">
-                    {member.photo?.asset?._ref ? (
-                      <div className="relative h-64 w-full">
-                        <Image
-                          src={urlFor(member.photo).width(600).height(512).url()}
-                          alt={member.name}
-                          fill
-                          className="object-cover"
-                        />
-                      </div>
-                    ) : (
-                      <div className="h-64 w-full bg-primary/10 flex items-center justify-center">
-                        <span className="font-serif text-5xl text-primary/30">
-                          {member.name.charAt(0)}
-                        </span>
-                      </div>
-                    )}
-                    <div className="p-6 flex flex-col gap-1">
-                      <h3 className="font-serif text-xl text-gray-900">{member.name}</h3>
-                      <p className="font-sans text-ocean-600 text-sm">{member.role}</p>
-                      {member.bio && (
-                        <p className="font-sans text-gray-500 text-sm leading-relaxed mt-2">{member.bio}</p>
-                      )}
-                    </div>
-                  </div>
-                </AnimateIn>
-              ))}
+      {/* ── CTA Banner ────────────────────────────────────────────────────── */}
+      <section className="pb-20 px-6 lg:px-12 bg-white">
+        <div className="max-w-[1400px] mx-auto">
+          <AnimateIn>
+            <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[260px] md:min-h-[320px] lg:min-h-[360px] px-6 py-16">
+              <Image
+                src={ctaImageSrc}
+                alt="Book your stay"
+                fill
+                className="object-cover"
+              />
+              <div className="absolute inset-0 bg-black/45" />
+              <div className="relative z-10">
+                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-tight max-w-2xl mx-auto">
+                  {page.ctaHeading}
+                </h2>
+                <p className="font-sans text-white/75 text-sm md:text-base mt-4 max-w-xl mx-auto leading-relaxed">
+                  {page.ctaSubtitle}
+                </p>
+                <Link
+                  href={page.ctaButtonLink}
+                  className="mt-8 inline-block border border-white text-white font-sans text-sm px-8 py-3 rounded-md hover:bg-white/10 transition-colors"
+                >
+                  {page.ctaButtonText}
+                </Link>
+              </div>
             </div>
-          </div>
-        </section>
-      )}
+          </AnimateIn>
+        </div>
+      </section>
 
       <Footer />
     </main>

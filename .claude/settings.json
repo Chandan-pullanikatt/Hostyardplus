@@ -13,7 +13,10 @@
       "Bash(Get-ChildItem -Path \"d:\\\\work\\\\hostyardplus\" -Directory)",
       "Bash(Select-Object Name)",
       "Bash(node -e \"const pkg = require\\('./node_modules/react-day-picker/package.json'\\); console.log\\(pkg.version\\); console.log\\(Object.keys\\(pkg.exports || {}\\).slice\\(0,10\\)\\)\")",
-      "Bash(node -e \"const m = require\\('./node_modules/react-day-picker'\\); console.log\\(Object.keys\\(m\\).join\\(', '\\)\\)\")"
+      "Bash(node -e \"const m = require\\('./node_modules/react-day-picker'\\); console.log\\(Object.keys\\(m\\).join\\(', '\\)\\)\")",
+      "Bash(grep -E \"\\\\.\\(js|ts|json\\)$\")",
+      "Read(//d/work/hostyardplus/public/photos/**)",
+      "PowerShell(\\(Get-Item \"d:\\\\work\\\\hostyardplus\\\\public\\\\photos\\\\aboutusmain.jpg\"\\).Length, \\(Get-Item \"d:\\\\work\\\\hostyardplus\\\\public\\\\photos\\\\aboutusbottom.png\"\\).Length)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\components",

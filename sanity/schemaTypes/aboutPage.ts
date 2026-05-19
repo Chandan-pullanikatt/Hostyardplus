@@ -5,50 +5,153 @@ export const aboutPage = defineType({
   title: "About Us Page",
   type: "document",
   fields: [
-    defineField({ name: "heroHeading", title: "Hero Heading", type: "string", initialValue: "About Us" }),
-    defineField({ name: "heroSubtitle", title: "Hero Subtitle", type: "text", rows: 2, initialValue: "Calm · Nature · Adventure" }),
-    defineField({ name: "storyHeading", title: "Story Section Heading", type: "string", initialValue: "Our Story" }),
-    defineField({ name: "storyText", title: "Founding Story", type: "text", rows: 8, initialValue: "Hostyard+ was born from a simple belief: that travel should feel like coming home. Founded in Kerala, India, we started with a single property in the mountains of Suryanelli — a quiet place where guests could slow down, breathe deeper, and reconnect with what matters.\n\nWhat began as one stay has grown into a curated collection of homes across Kerala's most beautiful landscapes. But our founding philosophy hasn't changed: every property we add must earn its place. We look for spaces that have soul — where the architecture speaks to the land, the hosts care, and the experience lingers long after checkout." }),
-    defineField({ name: "valuesHeading", title: "Values Section Heading", type: "string", initialValue: "What We Stand For" }),
+    // ── Hero ──────────────────────────────────────────────────────────────────
     defineField({
-      name: "values",
-      title: "Values",
+      name: "heroLabel",
+      title: "Section Label",
+      type: "string",
+      initialValue: "About us",
+      description: "Small label above the main heading",
+    }),
+    defineField({
+      name: "mainHeading",
+      title: "Main Heading",
+      type: "string",
+      initialValue: "Where Modern Comfort Meets the Beauty of Nature",
+    }),
+    defineField({
+      name: "mainDescription",
+      title: "Description",
+      type: "text",
+      rows: 4,
+      initialValue:
+        "Created for traveler's seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yours.",
+    }),
+    defineField({
+      name: "heroImage",
+      title: "Main Image",
+      type: "image",
+      description: "Large image displayed below the heading with stats overlay",
+      options: { hotspot: true },
+    }),
+
+    // ── Stats ─────────────────────────────────────────────────────────────────
+    defineField({
+      name: "stats",
+      title: "Statistics",
+      type: "array",
+      description: "Overlaid on the main image at the bottom",
+      of: [
+        defineArrayMember({
+          type: "object",
+          fields: [
+            defineField({ name: "value", type: "string", title: "Value", description: "e.g. 10,000+" }),
+            defineField({ name: "label", type: "string", title: "Label", description: "e.g. Happy Travelers" }),
+          ],
+          preview: { select: { title: "value", subtitle: "label" } },
+        }),
+      ],
+      initialValue: [
+        { _type: "object", _key: "stat1", value: "10,000+", label: "Happy Travelers" },
+        { _type: "object", _key: "stat2", value: "8,000+", label: "Community Members" },
+        { _type: "object", _key: "stat3", value: "6,000+", label: "Returning Guests" },
+        { _type: "object", _key: "stat4", value: "95%", label: "Positive Reviews" },
+        { _type: "object", _key: "stat5", value: "4 Years", label: "Trusted Hospitality" },
+      ],
+    }),
+
+    // ── Our Promise ───────────────────────────────────────────────────────────
+    defineField({
+      name: "promiseSectionHeading",
+      title: "Promise Section Heading",
+      type: "string",
+      initialValue: "Our Promise",
+    }),
+    defineField({
+      name: "promiseSubtitle",
+      title: "Promise Subtitle",
+      type: "string",
+      initialValue: "Promising Comfort, Quality, and Meaningful Travel Experiences",
+    }),
+    defineField({
+      name: "promises",
+      title: "Promises",
       type: "array",
       of: [
         defineArrayMember({
           type: "object",
           fields: [
             defineField({ name: "title", type: "string", title: "Title" }),
-            defineField({ name: "description", type: "text", title: "Description", rows: 3 }),
-            defineField({ name: "accent", type: "string", title: "Accent Colour", description: "Tailwind colour token, e.g. ocean-400, sun-400, earthy-500", initialValue: "ocean-400" }),
+            defineField({ name: "description", type: "text", title: "Description", rows: 2 }),
           ],
           preview: { select: { title: "title" } },
         }),
       ],
       initialValue: [
-        { _type: "object", _key: "calm", title: "Calm over noise", description: "We curate spaces that offer genuine rest. No party crowds, no compromise on the quiet that real travel requires.", accent: "ocean-400" },
-        { _type: "object", _key: "care", title: "Care in every detail", description: "From the first message to checkout, every touchpoint is designed with intention. The difference is in what you don't have to think about.", accent: "sun-400" },
-        { _type: "object", _key: "connection", title: "Connection over transaction", description: "We're not just facilitating stays. We're building a community of hosts and travelers who believe travel should be meaningful.", accent: "earthy-500" },
+        {
+          _type: "object",
+          _key: "p1",
+          title: "Thoughtful Hospitality",
+          description:
+            "We believe every traveler deserves a welcoming, comfortable, and seamless experience designed with care and attention to detail.",
+        },
+        {
+          _type: "object",
+          _key: "p2",
+          title: "Meaningful Connections",
+          description:
+            "We create spaces and experiences that bring people together, encouraging genuine connections between travelers, hosts, and destinations.",
+        },
+        {
+          _type: "object",
+          _key: "p3",
+          title: "Authentic Experiences",
+          description:
+            "We focus on creating memorable stays that reflect the beauty, culture, and uniqueness of every destination we offer.",
+        },
+        {
+          _type: "object",
+          _key: "p4",
+          title: "Trusted Quality",
+          description:
+            "We carefully curate and verify every stay to ensure consistent quality, comfort, and experiences travelers can rely on with confidence.",
+        },
       ],
     }),
-    defineField({ name: "teamHeading", title: "Team Section Heading", type: "string", initialValue: "Meet the Team" }),
+
+    // ── CTA Banner ────────────────────────────────────────────────────────────
     defineField({
-      name: "teamMembers",
-      title: "Team Members",
-      type: "array",
-      description: "Leave empty to hide the team section",
-      of: [
-        defineArrayMember({
-          type: "object",
-          fields: [
-            defineField({ name: "name", type: "string", title: "Name" }),
-            defineField({ name: "role", type: "string", title: "Role" }),
-            defineField({ name: "bio", type: "text", title: "Short Bio", rows: 2 }),
-            defineField({ name: "photo", type: "image", title: "Photo", options: { hotspot: true } }),
-          ],
-          preview: { select: { title: "name", subtitle: "role", media: "photo" } },
-        }),
-      ],
+      name: "ctaHeading",
+      title: "CTA Heading",
+      type: "string",
+      initialValue: "Ready To Experience Your Perfect Escape",
+    }),
+    defineField({
+      name: "ctaSubtitle",
+      title: "CTA Subtitle",
+      type: "string",
+      initialValue:
+        "Discover Thoughtfully Curated Stays Designed For Comfort, Connection, And Unforgettable Experiences Across Every Destination",
+    }),
+    defineField({
+      name: "ctaButtonText",
+      title: "CTA Button Text",
+      type: "string",
+      initialValue: "Book Now",
+    }),
+    defineField({
+      name: "ctaButtonLink",
+      title: "CTA Button Link",
+      type: "string",
+      initialValue: "/",
+      description: "URL the button points to",
+    }),
+    defineField({
+      name: "ctaImage",
+      title: "CTA Background Image",
+      type: "image",
+      description: "Dark background image for the CTA banner",
+      options: { hotspot: true },
     }),
   ],
   preview: { prepare() { return { title: "About Us Page" } } },
