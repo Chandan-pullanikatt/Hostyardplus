@@ -121,10 +121,13 @@ export default async function AboutPage() {
                 className="object-cover"
                 priority
               />
+              {/* Gradient overlay covering the entire image: bottom 100% black to top 0% transparent */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black to-transparent" />
+
               {/* Stats overlay */}
-              <div className="absolute bottom-0 left-0 right-0 flex divide-x divide-white/25 bg-gradient-to-t from-black/50 to-transparent pt-10">
+              <div className="absolute bottom-0 left-0 right-0 flex divide-x divide-white/25 pt-10">
                 {page.stats.map((stat) => (
-                  <div key={stat.label} className="flex-1 py-5 lg:py-7 text-center text-white">
+                  <div key={stat.label} className="flex-1 py-5 lg:py-7 text-center text-white z-10">
                     <p className="font-serif text-2xl lg:text-3xl xl:text-4xl leading-none">
                       {stat.value}
                     </p>
