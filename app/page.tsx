@@ -157,7 +157,7 @@ export default async function Home() {
   }))
 
   return (
-    <main>
+    <main className="bg-[#f8f6f1]">
       <Navbar />
       <Hero settings={settings} properties={processedProperties} />
       <AboutUs settings={settings} />

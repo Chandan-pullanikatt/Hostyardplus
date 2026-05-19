@@ -13,7 +13,7 @@ export default function FAQ({ faqs }: FAQProps) {
   const [open, setOpen] = useState<string | null>(faqs[0]?._id ?? null)
 
   return (
-    <section className="bg-white py-20 px-6 lg:px-12">
+    <section className="bg-[#f8f6f1] py-20 px-6 lg:px-12">
       <div className="max-w-[1400px] mx-auto">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_2fr] gap-12 lg:gap-20">
           {/* Left: heading */}

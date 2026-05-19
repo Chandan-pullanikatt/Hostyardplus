@@ -98,43 +98,44 @@ export default function WhyChooseUs({ tabs }: Props) {
         </AnimateIn>
 
         <AnimateIn delay={150} className="w-full">
-          <div className="flex flex-col">
+          {/* --- Desktop tab strip: sits ABOVE the card --- */}
+          <div className="hidden md:flex justify-center">
+            <div className="inline-flex items-end gap-0 relative" style={{ marginBottom: '-1px' }}>
+              {TABS.map((tab, i) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveIndex(i)}
+                  className={`relative font-sans text-sm px-8 py-3 whitespace-nowrap transition-colors ${
+                    i === activeIndex
+                      ? "bg-white text-gray-900 font-semibold rounded-t-2xl border border-gray-200 border-b-white z-10"
+                      : "text-gray-400 hover:text-gray-700 bg-transparent border border-transparent"
+                  }`}
+                >
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
 
-            {/* Tab bar — mobile: arrow buttons flanking active label; desktop: full tab strip */}
-            <div className="flex items-end gap-2">
+          {/* White content card */}
+          <div className="w-full bg-white border border-gray-200 rounded-[24px]">
+
+            {/* Mobile tab navigation — sits inside the card */}
+            <div className="flex md:hidden items-center gap-2 px-3">
 
               {/* Mobile prev arrow */}
               <button
                 onClick={prevTab}
                 aria-label="Previous tab"
-                className="md:hidden shrink-0 mb-0 w-9 h-10 rounded-t-xl bg-white border border-b-0 border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+                className="shrink-0 w-9 h-10 rounded-2xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="10 4 4 8 10 12" />
                 </svg>
               </button>
 
-              {/* Tab strip — hidden on mobile, full strip on desktop */}
-              <div className="hidden md:flex justify-center flex-1">
-                <div className="inline-flex bg-white border border-b-0 border-gray-200 rounded-t-2xl overflow-hidden">
-                  {TABS.map((tab, i) => (
-                    <button
-                      key={tab.id}
-                      onClick={() => setActiveIndex(i)}
-                      className={`font-sans text-xs md:text-sm px-5 md:px-8 py-3 transition-colors whitespace-nowrap ${
-                        i === activeIndex
-                          ? "text-gray-900 font-semibold"
-                          : "text-gray-400 hover:text-gray-700"
-                      } ${i > 0 ? "border-l border-gray-200" : ""}`}
-                    >
-                      {tab.label}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
               {/* Mobile active tab label */}
-              <div className="md:hidden flex-1 bg-white border border-b-0 border-gray-200 rounded-t-2xl px-4 py-3 text-center">
+              <div className="flex-1 text-center py-3">
                 <span className="font-sans text-sm text-gray-900 font-semibold whitespace-nowrap">
                   {TABS[activeIndex]?.label}
                 </span>
@@ -144,7 +145,7 @@ export default function WhyChooseUs({ tabs }: Props) {
               <button
                 onClick={nextTab}
                 aria-label="Next tab"
-                className="md:hidden shrink-0 w-9 h-10 rounded-t-xl bg-white border border-b-0 border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+                className="shrink-0 w-9 h-10 rounded-2xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="6 4 12 8 6 12" />
@@ -153,8 +154,8 @@ export default function WhyChooseUs({ tabs }: Props) {
 
             </div>
 
-            {/* White card — full border on all 4 sides, padding creates white gap around image */}
-            <div className="w-full bg-white border border-gray-200 rounded-[24px] p-3 md:p-4">
+            {/* Image area */}
+            <div className="p-3 md:p-4">
               <div className="relative h-[240px] md:h-[600px] w-full rounded-[16px] md:rounded-[20px] overflow-hidden">
                 {active.imageUrls.map((src, i) => (
                   <Image

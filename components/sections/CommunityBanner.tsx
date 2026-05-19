@@ -14,7 +14,7 @@ export default function CommunityBanner({ settings }: CommunityBannerProps) {
     : "/photos/community.jpg"
 
   return (
-    <section className="relative overflow-hidden rounded-3xl mx-6 lg:mx-12 my-6">
+    <section className="relative overflow-hidden rounded-3xl mx-6 lg:mx-12 mt-20 mb-6">
       <div className="relative h-72 md:h-80">
         <Image src={bgUrl} alt="Community Banner" fill className="object-cover" />
         <div className="absolute inset-0 bg-black/50" />
