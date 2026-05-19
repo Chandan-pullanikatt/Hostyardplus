@@ -17,6 +17,11 @@ const SVG_ICONS: Record<string, string> = {
   trek:     "/icons/TRECKING.svg",
   pool:     "/icons/WAVES.svg",
   river:    "/icons/WAVES.svg",
+  compass:  "/icons/COMPASS.svg",
+  atv:      "/icons/ATV.svg",
+  zipline:  "/icons/ZIPLINE.svg",
+  kayaking: "/icons/KAYAKING.svg",
+  boots:    "/icons/BOOTS.svg",
 }
 
 const LUCIDE_ICONS: Record<string, React.ReactNode> = {
@@ -27,15 +32,15 @@ const LUCIDE_ICONS: Record<string, React.ReactNode> = {
   spa:       <Sparkles size={18} className="text-white" />,
 }
 
-function AmenityIcon({ iconKey }: { iconKey: string }) {
+function AmenityIcon({ iconKey, size = 12 }: { iconKey: string; size?: number }) {
   const svgSrc = SVG_ICONS[iconKey]
   if (svgSrc) {
     return (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={svgSrc} alt="" width={22} height={22} className="brightness-0 invert" />
+      <img src={svgSrc} alt="" width={size} height={size} className="brightness-0 invert" />
     )
   }
-  return <>{LUCIDE_ICONS[iconKey] ?? <MapPin size={18} className="text-white" />}</>
+  return <>{LUCIDE_ICONS[iconKey] ?? <MapPin size={size} className="text-white" />}</>
 }
 
 function fmt(d: Date) {
@@ -79,6 +84,84 @@ export default function PropertyOverview({ property }: Props) {
     ? new Date(checkIn.getTime() + 86_400_000)
     : today
 
+  const isSuryanelli = property.slug?.current === "suryanelli"
+
+  const detailedHeading = isSuryanelli
+    ? "Where Heritage Meets Modern Serenity"
+    : (property.detailedHeading || "")
+
+  const description = isSuryanelli
+    ? `Discover a stay where peaceful landscapes, refined interiors, and unforgettable experiences come together in perfect harmony. Designed for travelers seeking calm, comfort, and exclusivity, every moment here invites you to slow down, unwind, and reconnect with what truly matters.
+Wake up to serene mornings, indulge in thoughtfully curated comforts, and experience hospitality that feels both warm and elevated
+
+From breathtaking sunrise views to cozy evenings under the stars, your stay is crafted to feel effortless, intimate, and deeply memorable — a destination you will never want to leave.
+Whether you seek relaxation, adventure, or a quiet escape from the everyday, every detail is designed to make your journey unforgettable`
+    : (property.description || "")
+
+  // Deduplicate and uniquely populate the amenities using icons inside public/icons
+  const processedAmenities: Array<{ _key: string; iconKey: string; label: string }> = []
+  const seenIconKeys = new Set<string>()
+  const seenLabels = new Set<string>()
+
+  if (isSuryanelli) {
+    processedAmenities.push(
+      { _key: "suryanelli-bonfire",  iconKey: "bonfire",  label: "Bonfire Nights" },
+      { _key: "suryanelli-compass",  iconKey: "compass",  label: "Guided Trekking" },
+      { _key: "suryanelli-river",    iconKey: "river",    label: "River Side" },
+      { _key: "suryanelli-camping",  iconKey: "camping",  label: "Camping Stay" },
+      { _key: "suryanelli-mountain", iconKey: "mountain", label: "Mountain Views" },
+      { _key: "suryanelli-offroad",  iconKey: "offroad",  label: "Off-road Drives" },
+      { _key: "suryanelli-forest",   iconKey: "forest",   label: "Forest Stay" },
+      { _key: "suryanelli-pet",      iconKey: "pet",      label: "Pet Friendly" },
+      { _key: "suryanelli-view",     iconKey: "view",     label: "Sunrise Views" },
+      { _key: "suryanelli-trek",     iconKey: "trek",     label: "Trekking Trails" },
+      { _key: "suryanelli-atv",      iconKey: "atv",      label: "ATV Rides" },
+      { _key: "suryanelli-zipline",  iconKey: "zipline",  label: "Zipline Adventure" },
+    )
+  } else if (property.amenities?.length > 0) {
+    // Step 1: Scan and collect already unique amenities
+    property.amenities.forEach((amenity) => {
+      if (!seenIconKeys.has(amenity.iconKey) && !seenLabels.has(amenity.label)) {
+        processedAmenities.push(amenity)
+        seenIconKeys.add(amenity.iconKey)
+        seenLabels.add(amenity.label)
+      }
+    })
+
+    // Step 2: Fill duplicate/repeated slots with high-quality unique amenities from the icons pool
+    const desiredLength = property.amenities.length
+    const fallbackPool = [
+      { iconKey: "bonfire",  label: "Bonfire Nights" },
+      { iconKey: "compass",  label: "Guided Trekking" },
+      { iconKey: "river",    label: "River Side" },
+      { iconKey: "camping",  label: "Camping Stay" },
+      { iconKey: "mountain", label: "Mountain Views" },
+      { iconKey: "offroad",  label: "Off-road Drives" },
+      { iconKey: "forest",   label: "Forest Stay" },
+      { iconKey: "pet",      label: "Pet Friendly" },
+      { iconKey: "view",     label: "Sunrise Views" },
+      { iconKey: "trek",     label: "Trekking Trails" },
+      { iconKey: "atv",      label: "ATV Rides" },
+      { iconKey: "zipline",  label: "Zipline Adventure" },
+      { iconKey: "kayaking", label: "Kayaking Tours" },
+      { iconKey: "boots",    label: "Hiking Boots" },
+    ]
+
+    let poolIdx = 0
+    while (processedAmenities.length < desiredLength && poolIdx < fallbackPool.length) {
+      const candidate = fallbackPool[poolIdx++]
+      if (!seenIconKeys.has(candidate.iconKey) && !seenLabels.has(candidate.label)) {
+        processedAmenities.push({
+          _key: `fallback-${candidate.iconKey}`,
+          iconKey: candidate.iconKey,
+          label: candidate.label,
+        })
+        seenIconKeys.add(candidate.iconKey)
+        seenLabels.add(candidate.label)
+      }
+    }
+  }
+
   return (
     <section className="bg-white py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
@@ -86,32 +169,43 @@ export default function PropertyOverview({ property }: Props) {
 
           {/* Left — description + amenities */}
           <div className="flex-1 min-w-0">
-            {property.detailedHeading && (
+            {detailedHeading && (
               <h2 className="font-serif text-3xl md:text-4xl text-gray-900 leading-snug mb-6">
-                {property.detailedHeading}
+                {detailedHeading}
               </h2>
             )}
-            {property.description && (
-              <div className="text-gray-600 font-sans text-base leading-relaxed mb-10 whitespace-pre-line">
-                {property.description}
+            {isSuryanelli ? (
+              <div className="flex flex-col gap-6 mb-10 w-full lg:w-[793px]">
+                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] lg:h-[95px] text-left">
+                  Discover a stay where peaceful landscapes, refined interiors, and unforgettable experiences come together in perfect harmony. Designed for travelers seeking calm, comfort, and exclusivity, every moment here invites you to slow down, unwind, and reconnect with what truly matters. Wake up to serene mornings, indulge in thoughtfully curated comforts, and experience hospitality that feels both warm and elevated
+                </p>
+                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] lg:h-[95px] text-left">
+                  From breathtaking sunrise views to cozy evenings under the stars, your stay is crafted to feel effortless, intimate, and deeply memorable — a destination you will never want to leave. Whether you seek relaxation, adventure, or a quiet escape from the everyday, every detail is designed to make your journey unforgettable
+                </p>
               </div>
+            ) : (
+              description && (
+                <div className="text-gray-600 font-sans text-base leading-relaxed mb-10 whitespace-pre-line max-w-[793px]">
+                  {description}
+                </div>
+              )
             )}
 
-            {property.amenities?.length > 0 && (
+            {processedAmenities.length > 0 && (
               <div>
                 <h3 className="font-sans text-base font-semibold text-gray-900 mb-4">
-                  What We Offers
+                  What We Offer
                 </h3>
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                  {property.amenities.map((amenity) => (
+                  {processedAmenities.map((amenity) => (
                     <div
                       key={amenity._key}
-                      className="flex items-center gap-3 px-3 py-3 border border-gray-200 rounded-xl bg-white"
+                      className="flex items-center h-10 px-4 gap-4 border-[0.5px] border-[#002922]/30 rounded-[6px] bg-[#002922]/[0.02]"
                     >
-                      <span className="flex-shrink-0 w-9 h-9 rounded-full bg-primary flex items-center justify-center">
-                        <AmenityIcon iconKey={amenity.iconKey} />
+                      <span className="flex-shrink-0 w-6 h-6 rounded-full bg-primary flex items-center justify-center">
+                        <AmenityIcon iconKey={amenity.iconKey} size={12} />
                       </span>
-                      <span className="text-xs font-sans text-gray-800 leading-tight">
+                      <span className="text-xs font-sans font-medium text-[#002922] leading-none truncate">
                         {amenity.label}
                       </span>
                     </div>
@@ -122,193 +216,195 @@ export default function PropertyOverview({ property }: Props) {
           </div>
 
           {/* Right — booking card */}
-          <div className="lg:w-[380px] shrink-0 relative z-10">
+          <div className="w-full lg:w-[440px] shrink-0 relative z-10">
             {/* overflow-visible so calendar popovers aren't clipped */}
-            <div className="border border-gray-200 rounded-2xl shadow-sm sticky top-24">
+            <div className="border border-gray-200/80 rounded-[24px] p-6 bg-white shadow-sm flex flex-col justify-between sticky top-24 lg:h-[483px]">
 
               {/* Price + rating */}
-              <div className="flex items-baseline justify-between px-6 pt-6 pb-5 rounded-t-2xl">
+              <div className="flex items-center justify-between">
                 <div className="flex items-baseline gap-1">
-                  <span className="text-4xl font-serif font-semibold text-gray-900">
+                  <span className="text-[32px] font-serif font-semibold text-gray-900 leading-none">
                     ₹{property.pricePerNight?.toLocaleString("en-IN")}
                   </span>
                   <span className="text-gray-500 font-sans text-sm ml-0.5">/ night</span>
                 </div>
                 {property.rating && (
-                  <div className="flex items-center gap-1">
-                    <Star size={14} className="fill-yellow-400 text-yellow-400" />
-                    <span className="font-sans text-sm font-medium text-gray-800">
+                  <div className="flex items-center gap-1 bg-yellow-50 border border-yellow-200/50 px-2.5 py-1 rounded-full">
+                    <Star size={12} className="fill-yellow-400 text-yellow-400" />
+                    <span className="font-sans text-xs font-semibold text-gray-800 leading-none">
                       {property.rating}
                     </span>
                   </div>
                 )}
               </div>
 
-              {/* Stay Type */}
-              {property.stayTypes?.length > 0 && (
-                <div className="border-t border-gray-200 relative">
+              {/* Input Fields Group */}
+              <div className="flex flex-col gap-4 my-auto py-2">
+                {/* Stay Type */}
+                {property.stayTypes?.length > 0 && (
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowStayMenu(v => !v)
+                        setShowGuestMenu(false)
+                        setShowCheckIn(false)
+                        setShowCheckOut(false)
+                      }}
+                      className="w-full text-left px-5 py-3 border border-gray-200 rounded-xl hover:border-primary/50 transition-colors flex items-center justify-between bg-white"
+                    >
+                      <div>
+                        <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
+                          Stay Type
+                        </p>
+                        <span className="font-sans text-sm text-gray-900 font-semibold">{stayType || "Select"}</span>
+                      </div>
+                      <ChevronDown
+                        size={16}
+                        className={`text-gray-500 transition-transform duration-200 ${showStayMenu ? "rotate-180" : ""}`}
+                      />
+                    </button>
+                    {showStayMenu && (
+                      <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                        {property.stayTypes.map((t) => (
+                          <button
+                            key={t}
+                            onClick={() => { setStayType(t); setShowStayMenu(false) }}
+                            className="w-full text-left px-5 py-2.5 font-sans text-sm text-gray-800 hover:bg-gray-50 transition-colors"
+                          >
+                            {t}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Check In / Check Out */}
+                <div ref={dateRowRef} className="grid grid-cols-2 gap-4 relative">
+                  {/* Check In button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowCheckIn(v => !v)
+                        setShowCheckOut(false)
+                        setShowStayMenu(false)
+                        setShowGuestMenu(false)
+                      }}
+                      className="w-full text-left px-5 py-3 border border-gray-200 rounded-xl hover:border-primary/50 transition-colors bg-white"
+                    >
+                      <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
+                        Check In
+                      </p>
+                      <p className={`font-sans font-semibold text-sm ${checkIn ? "text-gray-900" : "text-gray-400"}`}>
+                        {checkIn ? fmt(checkIn) : "Select date"}
+                      </p>
+                    </button>
+                    {/* Check In calendar */}
+                    {showCheckIn && (
+                      <div className="absolute top-full left-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1 p-2">
+                        <DayPicker
+                          mode="single"
+                          selected={checkIn}
+                          onSelect={(date) => {
+                            setCheckIn(date)
+                            if (date && checkOut && date >= checkOut) setCheckOut(undefined)
+                            setShowCheckIn(false)
+                            setShowCheckOut(true)
+                          }}
+                          disabled={{ before: today }}
+                          defaultMonth={checkIn ?? today}
+                        />
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Check Out button */}
+                  <div className="relative">
+                    <button
+                      onClick={() => {
+                        setShowCheckOut(v => !v)
+                        setShowCheckIn(false)
+                        setShowStayMenu(false)
+                        setShowGuestMenu(false)
+                      }}
+                      className="w-full text-left px-5 py-3 border border-gray-200 rounded-xl hover:border-primary/50 transition-colors bg-white"
+                    >
+                      <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
+                        Check Out
+                      </p>
+                      <p className={`font-sans font-semibold text-sm ${checkOut ? "text-gray-900" : "text-gray-400"}`}>
+                        {checkOut ? fmt(checkOut) : "Select date"}
+                      </p>
+                    </button>
+                    {/* Check Out calendar */}
+                    {showCheckOut && (
+                      <div className="absolute top-full right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1 p-2">
+                        <DayPicker
+                          mode="single"
+                          selected={checkOut}
+                          onSelect={(date) => {
+                            setCheckOut(date)
+                            setShowCheckOut(false)
+                          }}
+                          disabled={{ before: checkOutMin }}
+                          defaultMonth={checkIn ?? today}
+                        />
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* Travelers */}
+                <div className="relative">
                   <button
                     onClick={() => {
-                      setShowStayMenu(v => !v)
-                      setShowGuestMenu(false)
+                      setShowGuestMenu(v => !v)
+                      setShowStayMenu(false)
                       setShowCheckIn(false)
                       setShowCheckOut(false)
                     }}
-                    className="w-full text-left px-6 py-4"
+                    className="w-full text-left px-5 py-3 border border-gray-200 rounded-xl hover:border-primary/50 transition-colors flex items-center justify-between bg-white"
                   >
-                    <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                      Stay Type
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span className="font-sans text-gray-900 font-medium">{stayType || "Select"}</span>
-                      <ChevronDown
-                        size={18}
-                        className={`text-gray-500 transition-transform ${showStayMenu ? "rotate-180" : ""}`}
-                      />
+                    <div>
+                      <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
+                        Travelers
+                      </p>
+                      <span className="font-sans text-sm text-gray-900 font-semibold">{guests} Guests</span>
                     </div>
+                    <ChevronDown
+                      size={16}
+                      className={`text-gray-500 transition-transform duration-200 ${showGuestMenu ? "rotate-180" : ""}`}
+                    />
                   </button>
-                  {showStayMenu && (
-                    <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-50">
-                      {property.stayTypes.map((t) => (
+                  {showGuestMenu && (
+                    <div className="absolute left-0 right-0 top-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg z-50 overflow-hidden py-1">
+                      {GUEST_OPTIONS.map((n) => (
                         <button
-                          key={t}
-                          onClick={() => { setStayType(t); setShowStayMenu(false) }}
-                          className="w-full text-left px-6 py-3 font-sans text-sm text-gray-800 hover:bg-gray-50"
+                          key={n}
+                          onClick={() => { setGuests(n); setShowGuestMenu(false) }}
+                          className="w-full text-left px-5 py-2.5 font-sans text-sm text-gray-800 hover:bg-gray-50 transition-colors"
                         >
-                          {t}
+                          {n} {n === 1 ? "Guest" : "Guests"}
                         </button>
                       ))}
                     </div>
                   )}
                 </div>
-              )}
-
-              {/* Check In / Check Out */}
-              <div ref={dateRowRef} className="border-t border-gray-200 relative">
-                <div className="grid grid-cols-2">
-                  {/* Check In button */}
-                  <button
-                    onClick={() => {
-                      setShowCheckIn(v => !v)
-                      setShowCheckOut(false)
-                      setShowStayMenu(false)
-                      setShowGuestMenu(false)
-                    }}
-                    className="text-left px-6 py-4 border-r border-gray-200 hover:bg-gray-50 transition-colors"
-                  >
-                    <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                      Check In
-                    </p>
-                    <p className={`font-sans font-medium text-sm ${checkIn ? "text-gray-900" : "text-gray-400"}`}>
-                      {checkIn ? fmt(checkIn) : "Select date"}
-                    </p>
-                  </button>
-
-                  {/* Check Out button */}
-                  <button
-                    onClick={() => {
-                      setShowCheckOut(v => !v)
-                      setShowCheckIn(false)
-                      setShowStayMenu(false)
-                      setShowGuestMenu(false)
-                    }}
-                    className="text-left px-6 py-4 hover:bg-gray-50 transition-colors"
-                  >
-                    <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                      Check Out
-                    </p>
-                    <p className={`font-sans font-medium text-sm ${checkOut ? "text-gray-900" : "text-gray-400"}`}>
-                      {checkOut ? fmt(checkOut) : "Select date"}
-                    </p>
-                  </button>
-                </div>
-
-                {/* Check In calendar */}
-                {showCheckIn && (
-                  <div className="absolute top-full left-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1">
-                    <DayPicker
-                      mode="single"
-                      selected={checkIn}
-                      onSelect={(date) => {
-                        setCheckIn(date)
-                        // If chosen check-in is after existing check-out, clear check-out
-                        if (date && checkOut && date >= checkOut) setCheckOut(undefined)
-                        setShowCheckIn(false)
-                        setShowCheckOut(true)
-                      }}
-                      disabled={{ before: today }}
-                      defaultMonth={checkIn ?? today}
-                    />
-                  </div>
-                )}
-
-                {/* Check Out calendar */}
-                {showCheckOut && (
-                  <div className="absolute top-full right-0 z-50 bg-white border border-gray-200 rounded-xl shadow-xl mt-1">
-                    <DayPicker
-                      mode="single"
-                      selected={checkOut}
-                      onSelect={(date) => {
-                        setCheckOut(date)
-                        setShowCheckOut(false)
-                      }}
-                      disabled={{ before: checkOutMin }}
-                      defaultMonth={checkIn ?? today}
-                    />
-                  </div>
-                )}
               </div>
 
-              {/* Travelers */}
-              <div className="border-t border-gray-200 relative">
-                <button
-                  onClick={() => {
-                    setShowGuestMenu(v => !v)
-                    setShowStayMenu(false)
-                    setShowCheckIn(false)
-                    setShowCheckOut(false)
-                  }}
-                  className="w-full text-left px-6 py-4"
-                >
-                  <p className="text-[10px] font-sans uppercase tracking-widest text-gray-400 mb-1">
-                    Travelers
-                  </p>
-                  <div className="flex items-center justify-between">
-                    <span className="font-sans text-gray-900 font-medium">{guests} Guests</span>
-                    <ChevronDown
-                      size={18}
-                      className={`text-gray-500 transition-transform ${showGuestMenu ? "rotate-180" : ""}`}
-                    />
-                  </div>
-                </button>
-                {showGuestMenu && (
-                  <div className="absolute left-0 right-0 bg-white border border-gray-200 shadow-lg z-50">
-                    {GUEST_OPTIONS.map((n) => (
-                      <button
-                        key={n}
-                        onClick={() => { setGuests(n); setShowGuestMenu(false) }}
-                        className="w-full text-left px-6 py-3 font-sans text-sm text-gray-800 hover:bg-gray-50"
-                      >
-                        {n} {n === 1 ? "Guest" : "Guests"}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
-
-              {/* Book Now */}
-              <div className="px-6 py-5 border-t border-gray-200">
+              {/* Book Now Button */}
+              <div className="w-full">
                 {property.bookingUrl ? (
                   <Link
                     href={property.bookingUrl}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="block w-full text-center bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-semibold py-4 rounded-xl transition-colors"
+                    className="flex w-full items-center justify-center bg-primary hover:bg-[#0b3c33] text-white font-sans text-sm font-semibold h-12 rounded-xl transition-all shadow-sm"
                   >
                     Book Now
                   </Link>
                 ) : (
-                  <button className="block w-full text-center bg-primary text-white font-sans text-sm font-semibold py-4 rounded-xl">
+                  <button className="flex w-full items-center justify-center bg-primary text-white font-sans text-sm font-semibold h-12 rounded-xl">
                     Book Now
                   </button>
                 )}

@@ -85,7 +85,7 @@ export default function WhyChooseUs({ tabs }: Props) {
   if (!active) return null
 
   return (
-    <section className="bg-[#f8f6f1] py-14 md:py-20 px-6 lg:px-12">
+    <section className="bg-[#f8f6f1] pt-14 md:pt-20 pb-0 px-6 lg:px-12">
       <div className="max-w-[1400px] mx-auto">
         {/* Header */}
         <AnimateIn className="mb-12 flex flex-col items-center text-center gap-3">
