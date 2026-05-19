@@ -93,7 +93,7 @@ export default async function AboutPage() {
       <Navbar theme="light" />
 
       {/* ── About Section ─────────────────────────────────────────────────── */}
-      <section className="pt-28 lg:pt-32 pb-0 px-6 lg:px-12 bg-white">
+      <section className="pt-28 lg:pt-32 pb-14 lg:pb-20 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
 
           {/* Two-column header */}
@@ -143,7 +143,7 @@ export default async function AboutPage() {
       </section>
 
       {/* ── Our Promise ───────────────────────────────────────────────────── */}
-      <section className="bg-white py-20 px-6 lg:px-12">
+      <section className="bg-white py-14 lg:py-20 px-6 lg:px-12">
         <div className="max-w-[1400px] mx-auto">
 
           {/* Section heading */}
@@ -157,7 +157,7 @@ export default async function AboutPage() {
           </AnimateIn>
 
           {/* Promise items */}
-          <div className="rounded-2xl overflow-hidden bg-[#e8f0ed] divide-y divide-black/[0.07]">
+          <div className="rounded-2xl overflow-hidden bg-[#EAF2F0] divide-y divide-black/[0.07]">
             {page.promises.map((promise, i) => (
               <AnimateIn key={promise.title} delay={i * 60}>
                 <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 lg:gap-12 px-6 sm:px-8 lg:px-12 py-7 lg:py-9">
@@ -178,7 +178,7 @@ export default async function AboutPage() {
       </section>
 
       {/* ── CTA Banner ────────────────────────────────────────────────────── */}
-      <section className="pb-20 px-6 lg:px-12 bg-white">
+      <section className="pt-14 lg:pt-20 pb-20 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <AnimateIn>
             <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[260px] md:min-h-[320px] lg:min-h-[360px] px-6 py-16">

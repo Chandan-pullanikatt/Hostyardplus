@@ -86,10 +86,8 @@ export default async function PartnerPage() {
 
   return (
     <main className="bg-white">
-      <Navbar theme="light" />
-
-      {/* Hero */}
-      <section className="pt-28 lg:pt-32 pb-12 px-6 lg:px-12 bg-white">
+      <Navbar theme="light" />      {/* Hero */}
+      <section className="pt-28 lg:pt-32 pb-0 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
             <AnimateIn>
@@ -108,9 +106,9 @@ export default async function PartnerPage() {
           </div>
         </div>
       </section>
-
+ 
       {/* Partner Cards */}
-      <section className="pb-20 px-6 lg:px-12 bg-white">
+      <section className="py-20 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {page.partnerCards.map((card, i) => {
@@ -143,9 +141,9 @@ export default async function PartnerPage() {
           </div>
         </div>
       </section>
-
+ 
       {/* CTA Banner */}
-      <section className="pb-20 px-6 lg:px-12 bg-white">
+      <section className="pb-0 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <AnimateIn>
             <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[260px] md:min-h-[320px] lg:min-h-[360px] px-6 py-16">
