@@ -31,6 +31,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
   const slotsRef    = useRef(slots)
   const recenterRef = useRef(false)
+  const snapAnimatedRef = useRef(false)
   const activeOrigRef    = useRef(slots[center])
   const hasBeenVisibleRef = useRef(false)
   const isVisibleRef      = useRef(false)
@@ -42,7 +43,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     const el = stripRef.current
     if (!el) return
     el.style.transition = animated
-      ? "transform 0.55s cubic-bezier(0.25,0.46,0.45,0.94)"
+      ? "transform 0.6s cubic-bezier(0.25,0.46,0.45,0.94)"
       : "none"
     el.style.transform = `translateX(${x}px)`
   }
@@ -59,10 +60,18 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useLayoutEffect(() => {
-    if (!recenterRef.current) return
-    recenterRef.current = false
-    snapToSlot(center, false)
+    if (recenterRef.current) {
+      recenterRef.current = false
+      snapToSlot(center, false)
+    }
   }, [slots]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Snap strip AFTER React commits DOM (margins applied) but BEFORE paint
+  useLayoutEffect(() => {
+    if (!snapAnimatedRef.current) return
+    snapAnimatedRef.current = false
+    snapToSlot(active, true)
+  }, [active]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const activeOrigIdx = slots[active]
   useEffect(() => { activeOrigRef.current = activeOrigIdx }, [activeOrigIdx])
@@ -160,8 +169,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     }
 
     setPlaying(false)
+    snapAnimatedRef.current = true
     setActive(slotIndex)
-    snapToSlot(slotIndex, true)
 
     if (timerRef.current) clearTimeout(timerRef.current)
     timerRef.current = setTimeout(() => {
@@ -176,7 +185,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       recenterRef.current = true
       setSlots(newSlots)
       setActive(center)
-    }, 570)
+    }, 620)
   }
 
   const toggleMute = (e: React.MouseEvent) => {
@@ -215,7 +224,11 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                   key={story._id}
                   ref={el => { cardRefs.current[slotIndex] = el }}
                   className="relative flex-shrink-0 w-[240px] h-[400px] sm:w-[270px] sm:h-[450px] md:w-[300px] md:h-[500px] flex items-center justify-center"
-                  style={{ zIndex: isCenter ? 10 : 0 }}
+                  style={{
+                    zIndex: isCenter ? 10 : 0,
+                    marginLeft:  isCenter ? '40px' : '0px',
+                    marginRight: isCenter ? '40px' : '0px',
+                  }}
                 >
                   {/* Inner card: non-uniform scale via inline style — GPU composited, no reflow */}
                   <div
@@ -225,7 +238,7 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                       transform: isCenter ? "scaleX(1.267) scaleY(1.2)" : "scale(1)",
                     }}
                     className={`group absolute inset-0 rounded-2xl overflow-hidden cursor-pointer
-                      transition-[transform,opacity] duration-500 ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
+                      transition-[transform,opacity] duration-[600ms] ease-[cubic-bezier(0.25,0.46,0.45,0.94)]
                       ${isCenter ? "opacity-100" : "opacity-50"}`}
                   >
                     {thumbUrl ? (
