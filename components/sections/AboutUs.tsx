@@ -15,7 +15,7 @@ export default function AboutUs({ settings }: AboutUsProps) {
           </h2>
         </AnimateIn>
         <AnimateIn delay={100}>
-          <p className="font-sans text-gray-600 text-base md:text-lg leading-relaxed">
+          <p className="font-sans text-gray-400 text-base md:text-lg leading-relaxed">
             {settings.aboutUsText ?? "Created for travelers seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yourself."}
           </p>
         </AnimateIn>

@@ -90,7 +90,7 @@ export default async function AboutPage() {
 
   return (
     <main className="bg-white">
-      <Navbar theme="light" />
+      <Navbar solid />
 
       {/* ── About Section ─────────────────────────────────────────────────── */}
       <section className="pt-28 lg:pt-32 pb-14 lg:pb-20 px-6 lg:px-12 bg-white">

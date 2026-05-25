@@ -5,17 +5,20 @@ import { m } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
 
-const navLinks = [
-  { label: "About Us", href: "/about" },
-  { label: "Partner", href: "/partner" },
+const menuLinks = [
+  { label: "About Us",   href: "/about" },
+  { label: "Partner",    href: "/partner" },
+  { label: "Contact Us", href: "/contact" },
 ]
 
 interface NavbarProps {
   /** "dark" (default) — transparent → primary on scroll. "light" — always white with dark text. */
   theme?: "dark" | "light"
+  /** Force solid background from the start (no transparent phase). */
+  solid?: boolean
 }
 
-export default function Navbar({ theme = "dark" }: NavbarProps) {
+export default function Navbar({ theme = "dark", solid = false }: NavbarProps) {
   const [scrolled, setScrolled] = useState(false)
   const [hidden, setHidden] = useState(false)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -58,10 +61,11 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
     <m.header
       animate={{ y: hidden ? "-100%" : "0%" }}
       transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
+      style={solid ? { backgroundColor: "#052721" } : undefined}
       className={`fixed top-0 left-0 right-0 z-50 ${headerBg}`}
     >
       <div className="w-full px-4 sm:px-10 flex items-center justify-between py-4">
-        {/* Logo — brightness-0 inverts the cream SVG to black on light backgrounds */}
+        {/* Logo */}
         <Link href="/" className="flex items-center shrink-0" onClick={closeMenu}>
           <Image
             src="/logobeige.svg"
@@ -73,38 +77,9 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
           />
         </Link>
 
-        {/* Desktop nav links */}
-        <nav className="hidden md:flex items-center gap-8">
-          {navLinks.map((link) => (
-            <Link
-              key={link.href}
-              href={link.href}
-              className={
-                isLight
-                  ? "text-black hover:text-black/70 font-sans font-medium text-[15px] leading-none tracking-normal transition-colors"
-                  : "text-white/90 hover:text-white font-sans font-medium text-[15px] leading-none tracking-normal transition-colors"
-              }
-            >
-              {link.label}
-            </Link>
-          ))}
-        </nav>
-
-        {/* Desktop CTA */}
-        <Link
-          href="#book"
-          className={
-            isLight
-              ? "hidden md:inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-primary text-white text-sm font-sans hover:bg-primary/80 transition-colors"
-              : "hidden md:inline-flex items-center justify-center px-5 py-2.5 rounded-lg bg-ocean-600 text-white text-sm font-sans hover:bg-ocean-400 transition-colors"
-          }
-        >
-          Book Now
-        </Link>
-
-        {/* Mobile menu button */}
+        {/* Hamburger toggle — visible on all screen sizes */}
         <button
-          className={isLight ? "md:hidden text-gray-900 p-2" : "md:hidden text-white p-2"}
+          className={isLight ? "text-gray-900 p-2" : "text-white p-2"}
           aria-label={menuOpen ? "Close menu" : "Open menu"}
           onClick={() => setMenuOpen((v) => !v)}
         >
@@ -123,11 +98,11 @@ export default function Navbar({ theme = "dark" }: NavbarProps) {
         </button>
       </div>
 
-      {/* Mobile menu drawer */}
+      {/* Menu drawer */}
       {menuOpen && (
-        <div className={isLight ? "md:hidden bg-white border-t border-gray-100" : "md:hidden bg-primary border-t border-white/10"}>
+        <div className={isLight ? "bg-white border-t border-gray-100" : "bg-primary border-t border-white/10"}>
           <nav className="flex flex-col px-6 py-4 gap-1">
-            {navLinks.map((link) => (
+            {menuLinks.map((link) => (
               <Link
                 key={link.href}
                 href={link.href}

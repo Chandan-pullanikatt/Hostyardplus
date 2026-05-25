@@ -4,7 +4,7 @@ import { useRef, useState, useEffect } from "react"
 import { m } from "framer-motion"
 import BookingBar from "@/components/ui/BookingBar"
 import type { SiteSettings, Property } from "@/lib/types"
-import { Star, Volume2, VolumeX } from "lucide-react"
+import { Volume2, VolumeX } from "lucide-react"
 
 interface HeroProps {
   settings: SiteSettings
@@ -12,9 +12,7 @@ interface HeroProps {
 }
 
 const heroVariants = {
-  badge:    { hidden: { opacity: 0, y: 20 }, visible: { opacity: 1, y: 0 } },
   heading:  { hidden: { opacity: 0, y: 36 }, visible: { opacity: 1, y: 0 } },
-  sub:      { hidden: { opacity: 0, y: 28 }, visible: { opacity: 1, y: 0 } },
   booking:  { hidden: { opacity: 0, y: 24 }, visible: { opacity: 1, y: 0 } },
 }
 
@@ -107,19 +105,6 @@ export default function Hero({ settings, properties }: HeroProps) {
         <div className="h-16 md:h-24" />
 
         <div className="flex flex-col items-center justify-end flex-1 text-center gap-5 pb-10">
-          <m.div
-            variants={heroVariants.badge}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.7, ease, delay: 0.2 }}
-            className="inline-flex items-center gap-2 bg-black/30 backdrop-blur-sm text-white text-sm font-sans px-4 py-2 rounded-full"
-          >
-            <Star size={14} className="fill-sun-400 text-sun-400" />
-            <span>
-              {settings.heroRating ?? "4.93 / 5"} · {settings.heroRatingCount ?? "2000+"} reviews on Google
-            </span>
-          </m.div>
-
           <m.h1
             variants={heroVariants.heading}
             initial="hidden"

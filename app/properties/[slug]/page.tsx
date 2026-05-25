@@ -26,14 +26,18 @@ export default async function PropertyPage({
   if (!property) notFound()
 
   return (
-    <>
+    <main className="bg-[#F7F7F7]">
       <Navbar />
       <PropertyHero property={property} />
       <PropertyOverview property={property} />
       <PropertyExperiences property={property} />
       {property.galleryImages?.length > 1 && <PropertyGallery property={property} />}
-      {reviews?.length > 0 && <Reviews reviews={reviews} />}
+      {reviews?.length > 0 && (
+        <div className="[&>section]:bg-[#F7F7F7]">
+          <Reviews reviews={reviews} />
+        </div>
+      )}
       <Footer />
-    </>
+    </main>
   )
 }

@@ -36,7 +36,7 @@ export default function PropertyExperiences({ property }: Props) {
   const [hovered, setHovered] = useState<string | null>("yoga")
 
   return (
-    <section className="bg-[#F5F4F0] py-16">
+    <section className="bg-[#F7F7F7] py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         {/* Mobile: vertical stack. Desktop: horizontal flex with hover-expand */}
         <div className="flex flex-col gap-4 md:flex-row md:h-[580px]">

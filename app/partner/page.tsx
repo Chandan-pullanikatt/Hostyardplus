@@ -3,7 +3,6 @@ import { partnerPageQuery } from "@/sanity/lib/queries"
 import type { PartnerPage } from "@/lib/types"
 import { urlFor } from "@/sanity/lib/image"
 import Image from "next/image"
-import Link from "next/link"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import AnimateIn from "@/components/ui/AnimateIn"
@@ -80,13 +79,11 @@ async function fetchPage(): Promise<PartnerPage> {
 export default async function PartnerPage() {
   const page = await fetchPage()
 
-  const ctaImageSrc = page.ctaImage?.asset?._ref
-    ? urlFor(page.ctaImage).width(1400).height(500).url()
-    : "/photos/partner.jpg"
-
   return (
     <main className="bg-white">
-      <Navbar theme="light" />      {/* Hero */}
+      <Navbar solid />
+
+      {/* Hero */}
       <section className="pt-28 lg:pt-32 pb-14 lg:pb-20 px-6 lg:px-12 bg-white">
         <div className="max-w-[1400px] mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-20">
@@ -142,37 +139,6 @@ export default async function PartnerPage() {
         </div>
       </section>
  
-      {/* CTA Banner */}
-      <section className="pt-14 lg:pt-20 pb-14 lg:pb-20 px-6 lg:px-12 bg-white">
-        <div className="max-w-[1400px] mx-auto">
-          <AnimateIn>
-            <div className="relative rounded-2xl lg:rounded-3xl overflow-hidden flex flex-col items-center justify-center text-center min-h-[260px] md:min-h-[320px] lg:min-h-[360px] px-6 py-16">
-              <Image
-                src={ctaImageSrc}
-                alt="Partner with Hostyard+"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-black/40" />
-              <div className="relative z-10">
-                <h2 className="font-serif text-3xl md:text-4xl lg:text-5xl text-white leading-tight max-w-2xl mx-auto">
-                  {page.ctaHeading}
-                </h2>
-                <p className="font-sans text-white/75 text-sm md:text-base mt-4 max-w-xl mx-auto leading-relaxed">
-                  {page.ctaSubtitle}
-                </p>
-                <Link
-                  href={page.ctaButtonLink}
-                  className="mt-8 inline-block border border-white text-white font-sans text-sm px-8 py-3 rounded-md hover:bg-white/10 transition-colors"
-                >
-                  {page.ctaButtonText}
-                </Link>
-              </div>
-            </div>
-          </AnimateIn>
-        </div>
-      </section>
-
       {/* FAQ */}
       <PartnerFAQSection
         heading={page.faqHeading}

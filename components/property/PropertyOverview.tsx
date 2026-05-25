@@ -163,7 +163,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
   }
 
   return (
-    <section className="bg-white py-16">
+    <section className="bg-[#F7F7F7] py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
         <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
 

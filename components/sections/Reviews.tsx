@@ -2,6 +2,7 @@ import ReviewCard from "@/components/ui/ReviewCard"
 import SectionHeader from "@/components/ui/SectionHeader"
 import AnimateIn from "@/components/ui/AnimateIn"
 import type { Review } from "@/lib/types"
+import { Star } from "lucide-react"
 
 interface ReviewsProps {
   reviews: Review[]
@@ -18,11 +19,18 @@ export default function Reviews({ reviews }: ReviewsProps) {
   return (
     <section className="bg-[#f8f6f1] py-14 md:py-20 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <AnimateIn className="mb-14">
+        <AnimateIn className="mb-8">
           <SectionHeader
             heading="What Our Guests Say"
             subheading="Real experiences from travelers across our stays"
           />
+        </AnimateIn>
+
+        <AnimateIn className="mb-10 flex justify-center">
+          <div className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-sm font-sans px-4 py-2 rounded-full shadow-sm">
+            <Star size={14} className="fill-sun-400 text-sun-400" />
+            <span>4.93 / 5 · 2000+ reviews on Google</span>
+          </div>
         </AnimateIn>
       </div>
 

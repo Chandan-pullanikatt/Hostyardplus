@@ -75,15 +75,13 @@
   animation-play-state: paused;
 }
 
-/* Hide native cursor everywhere — custom cursor rendered via JS div */
-*, *::before, *::after {
-  cursor: none !important;
-}
-
-/* Restore native cursor on touch / pointer-coarse devices (mobile) */
-@media (pointer: coarse) {
-  *, *::before, *::after {
-    cursor: auto !important;
+/* Custom cursor only on button hover (pointer devices) */
+@media (pointer: fine) {
+  button:hover,
+  a:hover,
+  [role="button"]:hover,
+  .cursor-pointer:hover {
+    cursor: url("/icons/Cursor.svg") 8 8, pointer !important;
   }
 }
 

@@ -19,7 +19,7 @@ export default function PropertyGallery({ property }: Props) {
   const overlayImage = fifth ?? null
 
   return (
-    <section className="bg-[#F5F4F0] py-20">
+    <section className="bg-[#F7F7F7] py-20">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
 
         {/* heading */}
