@@ -4,7 +4,22 @@
       "Bash(Test-Path \"D:\\\\work\\\\hostyardplus\\\\node_modules\\\\@portabletext\\\\react\")",
       "Bash(Write-Output)",
       "Bash(npx next *)",
-      "Bash(git add *)"
+      "Bash(git add *)",
+      "Bash(not exist *)",
+      "PowerShell(New-Item *)",
+      "Bash(mkdir -p \"d:/work/hostyardplus/.grill\")",
+      "Bash(mkdir -p \"d:/work/hostyardplus/app/properties/[slug]/photos\")",
+      "Bash(npm run *)",
+      "Bash(echo \"PID=$!\")",
+      "Bash(curl -s -o /dev/null -w \"%{http_code}\" http://localhost:3000/properties/suryanelli/photos)",
+      "Bash(curl -s https://rau319d3.api.sanity.io/v2024-01-01/data/query/production?query=*%5B_type+%3D%3D+%22property%22+%26%26+slug.current+%3D%3D+%22suryanelli%22%5D%7B_id%2C+photoTourSections%7D -H 'Authorization: Bearer sk77fjCMtqSTQDLmJWYVOJvDXc1j1KAibn6bKefiLsTgCdp7pvCc7ugEfXouJQIeunNkYRTymWWtFpXPJ1DPI56RoiJ3mHsyHfIGc6EdzevJgSuTdODK2ER6NMu6sLb3iBWwpMituePNxthLCEfWgNl5XWYXTIoXNMuIIcHDYaL3Qu1BeY0D')",
+      "Bash(python3 -m json.tool)",
+      "Bash(curl -s https://rau319d3.api.sanity.io/v2024-01-01/data/query/production?query=*%5B_type+%3D%3D+%22property%22+%26%26+slug.current+%3D%3D+%22suryanelli%22%5D%7B_id%7D -H 'Authorization: Bearer sk77fjCMtqSTQDLmJWYVOJvDXc1j1KAibn6bKefiLsTgCdp7pvCc7ugEfXouJQIeunNkYRTymWWtFpXPJ1DPI56RoiJ3mHsyHfIGc6EdzevJgSuTdODK2ER6NMu6sLb3iBWwpMituePNxthLCEfWgNl5XWYXTIoXNMuIIcHDYaL3Qu1BeY0D')",
+      "Bash(node -e ' *)"
+    ],
+    "additionalDirectories": [
+      "d:\\work\\hostyardplus\\.grill",
+      "d:\\work\\hostyardplus\\app\\properties\\[slug]"
     ]
   }
 }

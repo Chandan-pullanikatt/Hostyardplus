@@ -11,6 +11,13 @@ export interface PropertyExperience {
   image: SanityImage
 }
 
+export interface PhotoTourSection {
+  _key: string
+  categoryName: string
+  description?: string
+  images: SanityImage[]
+}
+
 export interface PropertyDetail {
   _id: string
   title: string
@@ -28,6 +35,7 @@ export interface PropertyDetail {
   amenities: PropertyAmenity[]
   experiences: PropertyExperience[]
   galleryImages: SanityImage[]
+  photoTourSections?: PhotoTourSection[]
   stayTypes: string[]
   order: number
 }

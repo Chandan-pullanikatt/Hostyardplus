@@ -113,6 +113,37 @@ export const property = defineType({
       type: "array",
       of: [{ type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }],
     }),
+    defineField({
+      name: "photoTourSections",
+      title: "Photo Tour Sections",
+      type: "array",
+      description: "Room-by-room sections shown on the full photo tour page when users click '+N Images'",
+      of: [{
+        type: "object",
+        fields: [
+          defineField({
+            name: "categoryName",
+            title: "Room / Space Name",
+            type: "string",
+            description: 'e.g. "Living Room", "Bedroom", "Kitchen", "Private Pool"',
+            validation: (r) => r.required(),
+          }),
+          defineField({
+            name: "description",
+            title: "Description (optional)",
+            type: "string",
+            description: 'e.g. "Books · Ceiling fan · Sound system"',
+          }),
+          defineField({
+            name: "images",
+            title: "Images",
+            type: "array",
+            of: [{ type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }],
+          }),
+        ],
+        preview: { select: { title: "categoryName", media: "images.0" } },
+      }],
+    }),
   ],
   orderings: [{ title: "Display Order", name: "orderAsc", by: [{ field: "order", direction: "asc" }] }],
   preview: {

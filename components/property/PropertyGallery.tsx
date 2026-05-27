@@ -1,4 +1,5 @@
 import Image from "next/image"
+import Link from "next/link"
 import { urlFor } from "@/sanity/lib/image"
 import type { PropertyDetail } from "@/lib/types"
 
@@ -65,26 +66,29 @@ export default function PropertyGallery({ property }: Props) {
               </div>
             ))}
 
-            {/* overlay tile (5th image) */}
+            {/* overlay tile (5th image) — links to full photo tour */}
             {overlayImage && (
-              <div className="relative rounded-2xl overflow-hidden">
+              <Link
+                href={`/properties/${property.slug?.current}/photos`}
+                className="relative rounded-2xl overflow-hidden block group cursor-pointer"
+              >
                 {overlayImage?.asset?._ref && (
                   <Image
                     src={urlFor(overlayImage).width(500).height(350).url()}
                     alt={overlayImage.alt ?? `${property.title} more photos`}
                     fill
-                    className="object-cover"
+                    className="object-cover group-hover:scale-105 transition-transform duration-500"
                   />
                 )}
                 {/* dark overlay + count */}
                 {extraCount > 0 && (
-                  <div className="absolute inset-0 bg-black/55 flex items-center justify-center rounded-2xl">
+                  <div className="absolute inset-0 bg-black/55 group-hover:bg-black/65 transition-colors flex items-center justify-center rounded-2xl">
                     <span className="font-serif text-white text-2xl font-medium tracking-wide">
                       +{extraCount} Images
                     </span>
                   </div>
                 )}
-              </div>
+              </Link>
             )}
 
           </div>

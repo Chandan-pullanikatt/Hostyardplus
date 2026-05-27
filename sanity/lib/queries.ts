@@ -101,6 +101,7 @@ export const propertyBySlugQuery = groq`
     amenities[] { _key, iconKey, label },
     experiences[] { _key, title, description, image { asset, alt } },
     galleryImages[] { asset, alt },
+    photoTourSections[] { _key, categoryName, description, images[] { asset, alt } },
     stayTypes,
     order
   }

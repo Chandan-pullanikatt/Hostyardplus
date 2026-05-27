@@ -165,7 +165,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
   return (
     <section className="bg-[#F7F7F7] py-16">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-20">
+        <div className="flex flex-col xl:flex-row gap-12 xl:gap-16">
 
           {/* Left — description + amenities */}
           <div className="flex-1 min-w-0">
@@ -175,11 +175,11 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
               </h2>
             )}
             {isSuryanelli ? (
-              <div className="flex flex-col gap-6 mb-10 w-full lg:w-[793px]">
-                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] lg:h-[95px] text-left">
+              <div className="flex flex-col gap-6 mb-10 w-full">
+                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] text-left">
                   Discover a stay where peaceful landscapes, refined interiors, and unforgettable experiences come together in perfect harmony. Designed for travelers seeking calm, comfort, and exclusivity, every moment here invites you to slow down, unwind, and reconnect with what truly matters. Wake up to serene mornings, indulge in thoughtfully curated comforts, and experience hospitality that feels both warm and elevated
                 </p>
-                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] lg:h-[95px] text-left">
+                <p className="text-[#4b5563] font-sans text-base font-normal leading-[1.5] text-left">
                   From breathtaking sunrise views to cozy evenings under the stars, your stay is crafted to feel effortless, intimate, and deeply memorable — a destination you will never want to leave. Whether you seek relaxation, adventure, or a quiet escape from the everyday, every detail is designed to make your journey unforgettable
                 </p>
               </div>
@@ -216,9 +216,9 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
           </div>
 
           {/* Right — booking card */}
-          <div className="w-full lg:w-[440px] shrink-0 relative z-10">
+          <div className="w-full xl:w-[440px] shrink-0 relative z-10">
             {/* overflow-visible so calendar popovers aren't clipped */}
-            <div className="border border-gray-200/80 rounded-[24px] p-6 bg-white shadow-sm flex flex-col justify-between sticky top-24 lg:h-[483px]">
+            <div className="border border-gray-200/80 rounded-[24px] p-6 bg-white shadow-sm flex flex-col justify-between h-full gap-6 xl:gap-0">
 
               {/* Price + rating */}
               <div className="flex items-center justify-between">
@@ -239,7 +239,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
               </div>
 
               {/* Input Fields Group */}
-              <div className="flex flex-col gap-4 my-auto py-2">
+              <div className="flex flex-col gap-4">
                 {/* Stay Type */}
                 {property.stayTypes?.length > 0 && (
                   <div className="relative">
