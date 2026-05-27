@@ -18,7 +18,7 @@ export const siteSettingsQuery = groq`
 `
 
 export const propertiesQuery = groq`
-  *[_type == "property"] | order(order asc) {
+  *[_type == "property" && showOnWebsite == true] | order(order asc) {
     _id,
     title,
     slug,
@@ -26,6 +26,7 @@ export const propertiesQuery = groq`
     description,
     pricePerNight,
     status,
+    showOnWebsite,
     isClickable,
     image { asset, alt },
     stayTypes,

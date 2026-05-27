@@ -1,7 +1,7 @@
 import Image from "next/image"
-import Link from "next/link"
 import { urlFor } from "@/sanity/lib/image"
 import AnimateIn from "@/components/ui/AnimateIn"
+import BookNowButton from "@/components/ui/BookNowButton"
 import type { SiteSettings } from "@/lib/types"
 
 interface CommunityBannerProps {
@@ -30,12 +30,9 @@ export default function CommunityBanner({ settings }: CommunityBannerProps) {
             </p>
           </AnimateIn>
           <AnimateIn delay={300}>
-            <Link
-              href="#book"
-              className="mt-2 inline-flex items-center justify-center px-8 py-3 border border-white text-white font-sans text-sm rounded-lg hover:bg-white hover:text-primary transition-colors"
-            >
+            <BookNowButton className="mt-2 inline-flex items-center justify-center px-8 py-3 border border-white text-white font-sans text-sm rounded-lg hover:bg-white hover:text-primary transition-colors">
               Book Now
-            </Link>
+            </BookNowButton>
           </AnimateIn>
         </div>
       </div>

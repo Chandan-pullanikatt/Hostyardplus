@@ -41,6 +41,13 @@ export const property = defineType({
       },
     }),
     defineField({
+      name: "showOnWebsite",
+      title: "Show on Website",
+      type: "boolean",
+      description: "Toggle ON to make this property visible on the landing page. Off by default — turn on only when the property is ready to be shown.",
+      initialValue: false,
+    }),
+    defineField({
       name: "isClickable",
       title: "Clickable (has live detail page)",
       type: "boolean",

@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { Instrument_Serif, Inclusive_Sans } from "next/font/google"
 import MotionProvider from "@/components/ui/MotionProvider"
+import BookingModalProvider from "@/components/ui/BookingModalProvider"
 import CustomCursor from "@/components/ui/CustomCursor"
 import "./globals.css"
 
@@ -33,7 +34,11 @@ export default function RootLayout({
     <html lang="en" className={`${instrumentSerif.variable} ${inclusiveSans.variable}`}>
       <body className="antialiased">
         <CustomCursor />
-        <MotionProvider>{children}</MotionProvider>
+        <MotionProvider>
+          <BookingModalProvider>
+            {children}
+          </BookingModalProvider>
+        </MotionProvider>
       </body>
     </html>
   )

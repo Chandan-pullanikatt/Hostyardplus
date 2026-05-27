@@ -1,12 +1,12 @@
 import Link from "next/link"
 import Image from "next/image"
 import AnimateIn from "@/components/ui/AnimateIn"
+import BookNowButton from "@/components/ui/BookNowButton"
 
 const quickLinks = [
-  { label: "About",    href: "/about" },
-  { label: "Partner",  href: "/partner" },
-  { label: "Contact",  href: "/contact" },
-  { label: "Book Now", href: "/#book" },
+  { label: "About",   href: "/about" },
+  { label: "Partner", href: "/partner" },
+  { label: "Contact", href: "/contact" },
 ]
 
 const policies = [
@@ -90,6 +90,11 @@ export default function Footer() {
                   </Link>
                 </li>
               ))}
+              <li>
+                <BookNowButton className="text-white/70 hover:text-white text-sm font-sans transition-colors">
+                  Book Now
+                </BookNowButton>
+              </li>
             </ul>
           </div>
 

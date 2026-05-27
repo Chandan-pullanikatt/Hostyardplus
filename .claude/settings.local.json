@@ -15,7 +15,8 @@
       "Bash(curl -s https://rau319d3.api.sanity.io/v2024-01-01/data/query/production?query=*%5B_type+%3D%3D+%22property%22+%26%26+slug.current+%3D%3D+%22suryanelli%22%5D%7B_id%2C+photoTourSections%7D -H 'Authorization: Bearer sk77fjCMtqSTQDLmJWYVOJvDXc1j1KAibn6bKefiLsTgCdp7pvCc7ugEfXouJQIeunNkYRTymWWtFpXPJ1DPI56RoiJ3mHsyHfIGc6EdzevJgSuTdODK2ER6NMu6sLb3iBWwpMituePNxthLCEfWgNl5XWYXTIoXNMuIIcHDYaL3Qu1BeY0D')",
       "Bash(python3 -m json.tool)",
       "Bash(curl -s https://rau319d3.api.sanity.io/v2024-01-01/data/query/production?query=*%5B_type+%3D%3D+%22property%22+%26%26+slug.current+%3D%3D+%22suryanelli%22%5D%7B_id%7D -H 'Authorization: Bearer sk77fjCMtqSTQDLmJWYVOJvDXc1j1KAibn6bKefiLsTgCdp7pvCc7ugEfXouJQIeunNkYRTymWWtFpXPJ1DPI56RoiJ3mHsyHfIGc6EdzevJgSuTdODK2ER6NMu6sLb3iBWwpMituePNxthLCEfWgNl5XWYXTIoXNMuIIcHDYaL3Qu1BeY0D')",
-      "Bash(node -e ' *)"
+      "Bash(node -e ' *)",
+      "Bash(Select-Object -First 30)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",

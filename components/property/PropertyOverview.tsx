@@ -1,8 +1,8 @@
 "use client"
 
 import { useState, useRef, useEffect } from "react"
-import Link from "next/link"
 import { DayPicker } from "react-day-picker"
+import { useBookingModal } from "@/components/ui/BookingModalProvider"
 import { ChevronDown, Star, Wifi, SquareParking, Coffee, Dumbbell, Sparkles, MapPin } from "lucide-react"
 import type { PropertyDetail } from "@/lib/types"
 
@@ -54,6 +54,7 @@ interface Props {
 }
 
 export default function PropertyOverview({ property }: Props) {
+  const { open: openBooking } = useBookingModal()
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
@@ -394,20 +395,13 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
 
               {/* Book Now Button */}
               <div className="w-full">
-                {property.bookingUrl ? (
-                  <Link
-                    href={property.bookingUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex w-full items-center justify-center bg-primary hover:bg-[#0b3c33] text-white font-sans text-sm font-semibold h-12 rounded-xl transition-all shadow-sm"
-                  >
-                    Book Now
-                  </Link>
-                ) : (
-                  <button className="flex w-full items-center justify-center bg-primary text-white font-sans text-sm font-semibold h-12 rounded-xl">
-                    Book Now
-                  </button>
-                )}
+                <button
+                  type="button"
+                  onClick={openBooking}
+                  className="flex w-full items-center justify-center bg-primary hover:bg-[#0b3c33] text-white font-sans text-sm font-semibold h-12 rounded-xl transition-all shadow-sm"
+                >
+                  Book Now
+                </button>
               </div>
 
             </div>

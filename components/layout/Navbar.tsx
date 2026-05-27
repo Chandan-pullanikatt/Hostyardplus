@@ -4,6 +4,7 @@ import { useEffect, useRef, useState } from "react"
 import { m } from "framer-motion"
 import Link from "next/link"
 import Image from "next/image"
+import { useBookingModal } from "@/components/ui/BookingModalProvider"
 
 const menuLinks = [
   { label: "About Us",   href: "/about" },
@@ -48,6 +49,7 @@ export default function Navbar({ theme = "dark", solid = false }: NavbarProps) {
   }, [])
 
   const closeMenu = () => setMenuOpen(false)
+  const { open: openBooking } = useBookingModal()
 
   const headerBg = isLight
     ? scrolled || menuOpen
@@ -116,9 +118,9 @@ export default function Navbar({ theme = "dark", solid = false }: NavbarProps) {
                 {link.label}
               </Link>
             ))}
-            <Link
-              href="#book"
-              onClick={closeMenu}
+            <button
+              type="button"
+              onClick={() => { closeMenu(); openBooking() }}
               className={
                 isLight
                   ? "mt-3 flex items-center justify-center px-5 py-3 rounded-lg bg-primary text-white text-sm font-sans hover:bg-primary/80 transition-colors"
@@ -126,7 +128,7 @@ export default function Navbar({ theme = "dark", solid = false }: NavbarProps) {
               }
             >
               Book Now
-            </Link>
+            </button>
           </nav>
         </div>
       )}

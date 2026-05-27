@@ -1,6 +1,7 @@
 "use client"
 
 import { useState } from "react"
+import { useBookingModal } from "./BookingModalProvider"
 
 interface BookingBarProps {
   destinations: string[]
@@ -12,6 +13,7 @@ const placeholderCls = "text-sm font-normal font-sans tracking-[-0.02em] leading
 const cell = "flex flex-col px-4 py-3 md:px-6 md:py-4 md:flex-1 min-w-0"
 
 export default function BookingBar({ destinations }: BookingBarProps) {
+  const { open: openBooking } = useBookingModal()
   const [where, setWhere] = useState("")
   const [stayType, setStayType] = useState("")
   const [checkIn, setCheckIn] = useState("")
@@ -95,6 +97,7 @@ export default function BookingBar({ destinations }: BookingBarProps) {
       <div className="px-4 py-3 flex items-center col-span-2">
         <button
           type="button"
+          onClick={openBooking}
           className="w-full md:w-auto bg-primary text-white font-sans text-sm px-7 py-3.5 rounded-xl hover:bg-primary/90 transition-colors whitespace-nowrap"
         >
           Book Now

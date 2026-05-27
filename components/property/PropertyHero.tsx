@@ -2,8 +2,8 @@
 
 import { useEffect, useState } from "react"
 import Image from "next/image"
-import Link from "next/link"
 import { urlFor } from "@/sanity/lib/image"
+import { useBookingModal } from "@/components/ui/BookingModalProvider"
 import type { PropertyDetail } from "@/lib/types"
 
 interface Props {
@@ -18,6 +18,7 @@ export default function PropertyHero({ property }: Props) {
     : []
 
   const [current, setCurrent] = useState(0)
+  const { open: openBooking } = useBookingModal()
 
   useEffect(() => {
     if (images.length <= 1) return
@@ -72,16 +73,13 @@ export default function PropertyHero({ property }: Props) {
         )}
 
         {/* Book Now button */}
-        {property.bookingUrl && (
-          <Link
-            href={property.bookingUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="self-start md:self-auto shrink-0 bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-medium px-6 py-3 rounded-lg transition-colors"
-          >
-            Book Now
-          </Link>
-        )}
+        <button
+          type="button"
+          onClick={openBooking}
+          className="self-start md:self-auto shrink-0 bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-medium px-6 py-3 rounded-lg transition-colors"
+        >
+          Book Now
+        </button>
       </div>
     </section>
   )

@@ -48,6 +48,7 @@ export interface Property {
   description: string
   pricePerNight: number
   status: "active" | "work-in-progress" | "coming-soon"
+  showOnWebsite?: boolean
   isClickable?: boolean
   image: SanityImage
   stayTypes: string[]
