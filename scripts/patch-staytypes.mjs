@@ -43,13 +43,13 @@ const client = createClient({
   useCdn: false,
 })
 
-// Demo stay types per location. Values MUST be from the schema list:
-// Hostel, Resort, Dorm, Private Room, Houseboat, Homestay.
+// Demo room types per location. Values MUST EXACTLY match the Zoho form's "Room Type"
+// dropdown options: 4 Bed Mixed, 6 Bed Mixed, 6 Bed Female, 10 Bed Mixed, 12 Bed Mixed, Private Room.
 const STAY_TYPES_BY_LOCATION = {
-  suryanelli: ['Hostel', 'Dorm', 'Private Room'],   // no Resort
-  kozhikode:  ['Hostel', 'Resort', 'Private Room'], // has Resort
-  thrissur:   ['Hostel', 'Dorm'],
-  alappuzha:  ['Houseboat', 'Private Room'],
+  suryanelli: ['4 Bed Mixed', '6 Bed Mixed', 'Private Room'],
+  kozhikode:  ['6 Bed Female', '10 Bed Mixed', '12 Bed Mixed', 'Private Room'],
+  thrissur:   ['4 Bed Mixed', 'Private Room'],
+  alappuzha:  ['Private Room'],
 }
 
 function matchKey(p) {

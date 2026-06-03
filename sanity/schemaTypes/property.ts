@@ -33,11 +33,12 @@ export const property = defineType({
     }),
     defineField({
       name: "stayTypes",
-      title: "Stay Types",
+      title: "Room Types",
+      description: "Must match the Zoho form's Room Type options exactly, or booking-form prefill fails silently.",
       type: "array",
       of: [{ type: "string" }],
       options: {
-        list: ["Hostel", "Resort", "Dorm", "Private Room", "Houseboat", "Homestay"],
+        list: ["4 Bed Mixed", "6 Bed Mixed", "6 Bed Female", "10 Bed Mixed", "12 Bed Mixed", "Private Room"],
       },
     }),
     defineField({

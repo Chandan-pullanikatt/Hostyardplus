@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { useBookingModal } from "./BookingModalProvider"
 
 interface BookingBarProps {
@@ -13,6 +13,16 @@ const placeholderCls = "text-sm font-normal font-sans tracking-[-0.02em] leading
 
 const cell = "flex flex-col px-4 py-3 md:px-6 md:py-4 md:flex-1 min-w-0"
 
+/** Returns the day after the given yyyy-mm-dd (local), as yyyy-mm-dd. */
+function nextDay(iso: string): string {
+  const d = new Date(iso + "T00:00:00")
+  d.setDate(d.getDate() + 1)
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${y}-${m}-${day}`
+}
+
 export default function BookingBar({ properties }: BookingBarProps) {
   const { open: openBooking } = useBookingModal()
   const [where, setWhere] = useState("")
@@ -20,6 +30,14 @@ export default function BookingBar({ properties }: BookingBarProps) {
   const [checkIn, setCheckIn] = useState("")
   const [checkOut, setCheckOut] = useState("")
   const [guests, setGuests] = useState("")
+
+  // Today (local) as yyyy-mm-dd, set after mount so SSR/hydration can't mismatch.
+  // Used as the earliest selectable date so past dates can't be picked.
+  const [today, setToday] = useState("")
+  useEffect(() => {
+    const d = new Date()
+    setToday(new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 10))
+  }, [])
 
   // Dependent dropdown: only the stay types the selected destination actually offers.
   // (e.g. Suryanelli has no Resort; Kozhikode does.)
@@ -47,9 +65,10 @@ export default function BookingBar({ properties }: BookingBarProps) {
         </select>
       </div>
 
-      {/* Stay Type — col 2, row 1 — options depend on the selected destination */}
+      {/* Room Type — col 2, row 1 — options depend on the selected destination.
+          Matches the Zoho form's "Room Type" dropdown so the value prefills on Book Now. */}
       <div className={`${cell} border-b border-[#F5F5F5] md:border-b-0`}>
-        <label className={labelCls}>Stay Type</label>
+        <label className={labelCls}>Room Type</label>
         <select
           value={stayType}
           onChange={(e) => setStayType(e.target.value)}
@@ -63,27 +82,33 @@ export default function BookingBar({ properties }: BookingBarProps) {
         </select>
       </div>
 
-      {/* Check-in — col 1, row 2 */}
+      {/* Check-in — col 1, row 2. Earliest selectable date is today (no past dates). */}
       <div className={`${cell} border-b border-r border-[#F5F5F5] md:border-b-0 md:border-r-0`}>
         <label className={labelCls}>Check-in</label>
         <input
           type="date"
           value={checkIn}
-          onChange={(e) => setCheckIn(e.target.value)}
-          placeholder="Select date"
+          min={today}
+          onChange={(e) => {
+            const v = e.target.value
+            setCheckIn(v)
+            // Clear check-out if it's no longer after the new check-in (same day or earlier).
+            if (checkOut && v && checkOut <= v) setCheckOut("")
+          }}
           className={`${placeholderCls} cursor-pointer placeholder:text-[#B1B1B1] ${checkIn ? "text-[#3A3A3A]" : "text-[#B1B1B1]"}`}
         />
       </div>
 
-      {/* Check-out — col 2, row 2 */}
+      {/* Check-out — col 2, row 2. Locked until check-in is chosen, and can't be earlier than it. */}
       <div className={`${cell} border-b border-[#F5F5F5] md:border-b-0`}>
         <label className={labelCls}>Check-out</label>
         <input
           type="date"
           value={checkOut}
+          min={checkIn ? nextDay(checkIn) : today}
+          disabled={!checkIn}
           onChange={(e) => setCheckOut(e.target.value)}
-          placeholder="Select date"
-          className={`${placeholderCls} cursor-pointer placeholder:text-[#B1B1B1] ${checkOut ? "text-[#3A3A3A]" : "text-[#B1B1B1]"}`}
+          className={`${placeholderCls} placeholder:text-[#B1B1B1] ${checkIn ? "cursor-pointer" : "cursor-not-allowed"} ${checkOut ? "text-[#3A3A3A]" : "text-[#B1B1B1]"}`}
         />
       </div>
 

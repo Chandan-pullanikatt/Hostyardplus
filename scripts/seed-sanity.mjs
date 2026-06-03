@@ -141,8 +141,8 @@ async function seed() {
       pricePerNight: 1299,
       status: 'active',
       image: { ...imgSuryanelli, alt: 'Suryanelli hilltop retreat at dusk' },
-      // Demo: Suryanelli does NOT offer Resort — shows per-property filtering in the hero.
-      stayTypes: ['Hostel', 'Dorm', 'Private Room'],
+      // Room types — values match the Zoho form's "Room Type" dropdown so the hero prefills.
+      stayTypes: ['4 Bed Mixed', '6 Bed Mixed', 'Private Room'],
       order: 1,
     }),
     client.createOrReplace({
@@ -156,8 +156,7 @@ async function seed() {
       pricePerNight: 1299,
       status: 'active',
       image: { ...imgKozhikode, alt: 'Kozhikode heritage stay' },
-      // Demo: Kozhikode DOES offer Resort (Suryanelli does not).
-      stayTypes: ['Hostel', 'Resort', 'Private Room'],
+      stayTypes: ['6 Bed Female', '10 Bed Mixed', '12 Bed Mixed', 'Private Room'],
       order: 2,
     }),
     client.createOrReplace({
@@ -171,7 +170,7 @@ async function seed() {
       pricePerNight: 999,
       status: 'work-in-progress',
       image: { ...imgThrissur, alt: 'Thrissur stay' },
-      stayTypes: ['Hostel', 'Dorm'],
+      stayTypes: ['4 Bed Mixed', 'Private Room'],
       order: 3,
     }),
     client.createOrReplace({
@@ -185,7 +184,7 @@ async function seed() {
       pricePerNight: 2999,
       status: 'coming-soon',
       image: { ...imgAlappuzha, alt: 'Alappuzha houseboat backwaters' },
-      stayTypes: ['Houseboat'],
+      stayTypes: ['Private Room'],
       order: 4,
     }),
   ])
