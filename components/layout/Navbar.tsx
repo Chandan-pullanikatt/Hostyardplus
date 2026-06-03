@@ -100,37 +100,48 @@ export default function Navbar({ theme = "dark", solid = false }: NavbarProps) {
         </button>
       </div>
 
-      {/* Menu drawer */}
+      {/* Backdrop + compact floating menu card */}
       {menuOpen && (
-        <div className={isLight ? "bg-white border-t border-gray-100" : "bg-primary border-t border-white/10"}>
-          <nav className="flex flex-col px-6 py-4 gap-1">
-            {menuLinks.map((link) => (
-              <Link
-                key={link.href}
-                href={link.href}
-                onClick={closeMenu}
-                className={
-                  isLight
-                    ? "text-black hover:text-black/70 font-sans font-medium text-[15px] leading-none tracking-normal py-3 border-b border-gray-100 last:border-0 transition-colors"
-                    : "text-white/90 hover:text-white font-sans font-medium text-[15px] leading-none tracking-normal py-3 border-b border-white/10 last:border-0 transition-colors"
-                }
+        <>
+          {/* Dimmed backdrop — click to close */}
+          <m.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.2 }}
+            className="fixed inset-0 -z-10 bg-black/40"
+            onClick={closeMenu}
+            aria-hidden
+          />
+
+          {/* Floating card, anchored top-right under the hamburger */}
+          <m.div
+            initial={{ opacity: 0, scale: 0.95, y: -8 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
+            className="absolute right-4 sm:right-10 top-full mt-2 w-[300px] max-w-[calc(100vw-2rem)] origin-top-right rounded-2xl shadow-2xl ring-1 bg-white ring-black/5"
+          >
+            <nav className="flex flex-col p-5 gap-1">
+              {menuLinks.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="text-black hover:text-black/70 font-sans font-medium text-[15px] leading-none tracking-normal py-3 border-b border-gray-100 last:border-0 transition-colors"
+                >
+                  {link.label}
+                </Link>
+              ))}
+              <button
+                type="button"
+                onClick={() => { closeMenu(); openBooking() }}
+                className="mt-4 flex items-center justify-center px-5 py-3 rounded-lg bg-primary text-white text-sm font-sans hover:bg-primary/80 transition-colors"
               >
-                {link.label}
-              </Link>
-            ))}
-            <button
-              type="button"
-              onClick={() => { closeMenu(); openBooking() }}
-              className={
-                isLight
-                  ? "mt-3 flex items-center justify-center px-5 py-3 rounded-lg bg-primary text-white text-sm font-sans hover:bg-primary/80 transition-colors"
-                  : "mt-3 flex items-center justify-center px-5 py-3 rounded-lg bg-ocean-600 text-white text-sm font-sans hover:bg-ocean-400 transition-colors"
-              }
-            >
-              Book Now
-            </button>
-          </nav>
-        </div>
+                Book Now
+              </button>
+            </nav>
+          </m.div>
+        </>
       )}
     </m.header>
   )
