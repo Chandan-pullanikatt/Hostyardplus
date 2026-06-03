@@ -21,7 +21,7 @@ export function useBookingModal() {
 /* ─── Zoho form URL ───────────────────────────────────────────────────── */
 
 const ZOHO_FORM_URL =
-  "https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDblbkprRzVcXE7-k1S0mE_aU"
+  "https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDbIbkprRzVcXE7-k1S0mE_aU"
 
 /* ─── Provider + Modal ────────────────────────────────────────────────── */
 
@@ -84,6 +84,19 @@ export default function BookingModalProvider({ children }: { children: ReactNode
                   src={ZOHO_FORM_URL}
                   className="w-full h-full border-none"
                 />
+              </div>
+
+              {/* Fallback — if the embed is blocked (CSP/whitelist) the iframe
+                  shows blank; this link guarantees the user can still reach the form. */}
+              <div className="px-6 py-3 border-t border-white/10 text-center">
+                <a
+                  href={ZOHO_FORM_URL}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-xs text-white/40 hover:text-white/70 transition-colors"
+                >
+                  Form not loading? Open it in a new tab ↗
+                </a>
               </div>
             </m.div>
           </m.div>
