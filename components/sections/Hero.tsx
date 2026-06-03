@@ -19,9 +19,11 @@ const heroVariants = {
 const ease = [0.16, 1, 0.3, 1] as const
 
 export default function Hero({ settings, properties }: HeroProps) {
-  const destinations = properties
+  // Active properties only, carrying each one's per-property stayTypes so the
+  // BookingBar's Stay Type dropdown can filter by the selected destination.
+  const bookingProperties = properties
     .filter((p) => p.status === "active")
-    .map((p) => p.location)
+    .map((p) => ({ location: p.location, stayTypes: p.stayTypes ?? [] }))
 
   const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
 
@@ -123,7 +125,7 @@ export default function Hero({ settings, properties }: HeroProps) {
           transition={{ duration: 0.7, ease, delay: 0.7 }}
           className="pb-8"
         >
-          <BookingBar destinations={destinations} />
+          <BookingBar properties={bookingProperties} />
         </m.div>
       </div>
     </section>

@@ -20,7 +20,14 @@
       "WebFetch(domain:forms.hostyardplus.com)",
       "Bash(echo '=== __TRACKED_VAR__ ===')",
       "Bash(curl -s -o /dev/null -D - https://__TRACKED_VAR__/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDbIbkprRzVcXE7-k1S0mE_aU)",
-      "Bash(curl -s -o /dev/null -D - \"https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDbIbkprRzVcXE7-k1S0mE_aU\")"
+      "Bash(curl -s -o /dev/null -D - \"https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDbIbkprRzVcXE7-k1S0mE_aU\")",
+      "Bash(node *)",
+      "Bash(curl -s \"https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm/formperma/kVdrYuLSSm3okewj0idDbIbkprRzVcXE7-k1S0mE_aU\" -o /tmp/zoho_form.html)",
+      "Read(//tmp/**)",
+      "Bash(grep -oiE 'date_format[^,}]{0,40}' /tmp/zoho_form.html)",
+      "Bash(grep -oiE '.{0,80}__TRACKED_VAR__.{0,80}' /tmp/zoho_form.html)",
+      "Bash(sed -E 's/fieldLabelTxt \">/LABEL: /; s/compname=\"/   field=/; s/\"$//')",
+      "Bash(grep -oiE '.{0,40}\\(check|arriv|depart\\).{0,40}' /tmp/zoho_form.html)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",

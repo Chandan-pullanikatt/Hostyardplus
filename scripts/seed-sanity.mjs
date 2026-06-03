@@ -141,7 +141,8 @@ async function seed() {
       pricePerNight: 1299,
       status: 'active',
       image: { ...imgSuryanelli, alt: 'Suryanelli hilltop retreat at dusk' },
-      stayTypes: ['Homestay', 'Private Room'],
+      // Demo: Suryanelli does NOT offer Resort — shows per-property filtering in the hero.
+      stayTypes: ['Hostel', 'Dorm', 'Private Room'],
       order: 1,
     }),
     client.createOrReplace({
@@ -155,7 +156,8 @@ async function seed() {
       pricePerNight: 1299,
       status: 'active',
       image: { ...imgKozhikode, alt: 'Kozhikode heritage stay' },
-      stayTypes: ['Private Room', 'Homestay'],
+      // Demo: Kozhikode DOES offer Resort (Suryanelli does not).
+      stayTypes: ['Hostel', 'Resort', 'Private Room'],
       order: 2,
     }),
     client.createOrReplace({
@@ -169,7 +171,7 @@ async function seed() {
       pricePerNight: 999,
       status: 'work-in-progress',
       image: { ...imgThrissur, alt: 'Thrissur stay' },
-      stayTypes: ['Private Room'],
+      stayTypes: ['Hostel', 'Dorm'],
       order: 3,
     }),
     client.createOrReplace({

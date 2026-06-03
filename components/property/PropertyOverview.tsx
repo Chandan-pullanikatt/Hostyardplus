@@ -397,7 +397,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
               <div className="w-full">
                 <button
                   type="button"
-                  onClick={openBooking}
+                  onClick={() => openBooking()}
                   className="flex w-full items-center justify-center bg-primary hover:bg-[#0b3c33] text-white font-sans text-sm font-semibold h-12 rounded-xl transition-all shadow-sm"
                 >
                   Book Now
