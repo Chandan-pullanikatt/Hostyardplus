@@ -113,14 +113,10 @@ export interface CloudinaryAsset {
 
 export interface SiteSettings {
   heroVideo?: CloudinaryAsset
-  heroRating: string
-  heroRatingCount: string
   heroHeading: string
-  heroHeadingItalic: string
-  heroSubheading: string
+  reviewsBadge: string
   aboutUsHeading: string
   aboutUsText: string
-  quoteBannerText: string
   communityBannerImage?: SanityImage
   communityBannerHeading: string
   communityBannerSubheading: string

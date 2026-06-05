@@ -94,15 +94,10 @@ const FALLBACK_STATS: Stat[] = [
 
 const FALLBACK_SETTINGS: SiteSettings = {
   heroVideo: undefined,
-  heroRating: "4.93 / 5",
-  heroRatingCount: "2000+",
   heroHeading: "Your Perfect Escape in the Mountains",
-  heroHeadingItalic: "Escape",
-  heroSubheading: "Find calm in a modern hideaway with stunning views in the heart of Suryanelli",
+  reviewsBadge: "4.93 / 5 · 2000+ reviews on Google",
   aboutUsHeading: "About us",
   aboutUsText: "Created for travelers seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yourself.",
-  quoteBannerText:
-    "We thoughtfully curate every stay, design every touchpoint with care, and move with a clear focus on experience. The difference? We're building memories with you not just facilitating stays",
   communityBannerHeading: "Comfort Meets Community",
   communityBannerSubheading:
     "Designed For Travelers Who Value Both Comfort And Community, Enjoy Modern Amenities, Cozy Common Spaces, And Opportunities To Meet Fellow Explorers From Around The World.",
@@ -159,7 +154,7 @@ export default async function Home() {
       <WhyChooseUs tabs={processedWhyChooseTabs.length > 0 ? processedWhyChooseTabs : undefined} />
       <Stats stats={stats} />
       {stories.length > 0 && <StoriesSection stories={stories} />}
-      {reviews.length > 0 && <Reviews reviews={reviews} />}
+      {reviews.length > 0 && <Reviews reviews={reviews} badge={settings.reviewsBadge} />}
       <Destinations properties={properties} />
       <CommunityBanner settings={settings} />
       {faqs.length > 0 && <FAQ faqs={faqs} />}

@@ -112,14 +112,11 @@ async function seed() {
     _id: 'siteSettings',
     _type: 'siteSettings',
     heroVideoUrl: '',
-    heroRating: '4.93 / 5',
-    heroRatingCount: '2,000+',
     heroHeading: 'Your Perfect Escape in the Mountains',
-    heroHeadingItalic: 'Escape',
-    heroSubheading:
-      'Find calm in a modern hideaway with stunning views in the heart of Suryanelli',
-    quoteBannerText:
-      "We thoughtfully curate every stay, design every touchpoint with care, and move with a clear focus on experience. The difference? We're building memories with you — not just facilitating stays.",
+    reviewsBadge: '4.93 / 5 · 2000+ reviews on Google',
+    aboutUsHeading: 'About us',
+    aboutUsText:
+      'Created for travelers seeking calm, comfort, and meaningful experiences, our space blends modern luxury with the beauty of nature. From peaceful mornings and wellness activities to unforgettable sunsets and curated experiences, every detail is thoughtfully designed to help you disconnect from the noise and reconnect with yourself.',
     communityBannerImage: imgCommunity,
     communityBannerHeading: 'Comfort Meets Community',
     communityBannerSubheading:

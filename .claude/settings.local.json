@@ -29,7 +29,12 @@
       "Bash(sed -E 's/fieldLabelTxt \">/LABEL: /; s/compname=\"/   field=/; s/\"$//')",
       "Bash(grep -oiE '.{0,40}\\(check|arriv|depart\\).{0,40}' /tmp/zoho_form.html)",
       "Bash(grep -oiE '.{0,30}\\(Bed Mixed|Solo Girl|Boys Group|Couples|Hostel|Resort|Dorm\\).{0,30}' /tmp/zoho_form.html)",
-      "PowerShell(npx tsc --noEmit -p tsconfig.json)"
+      "PowerShell(npx tsc --noEmit -p tsconfig.json)",
+      "Bash(sed -n '/FALLBACK_BODY/,/^]/p' app/privacy-policy/page.tsx)",
+      "Bash(sed -n '/FALLBACK_BODY/,/^]/p' app/guest-policies/page.tsx)",
+      "Bash(sed -n '/FALLBACK_BODY/,/^]/p' app/cancellation-policies/page.tsx)",
+      "PowerShell(npm run *)",
+      "PowerShell(node scripts/inspect-settings.mjs)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",

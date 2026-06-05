@@ -6,9 +6,10 @@ import { Star } from "lucide-react"
 
 interface ReviewsProps {
   reviews: Review[]
+  badge?: string
 }
 
-export default function Reviews({ reviews }: ReviewsProps) {
+export default function Reviews({ reviews, badge }: ReviewsProps) {
   // Row 2 starts at the midpoint for visual variety between rows
   const pivot = Math.floor(reviews.length / 2)
   const row2 = [...reviews.slice(pivot), ...reviews.slice(0, pivot)]
@@ -26,12 +27,14 @@ export default function Reviews({ reviews }: ReviewsProps) {
           />
         </AnimateIn>
 
-        <AnimateIn className="mb-10 flex justify-center">
-          <div className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-sm font-sans px-4 py-2 rounded-full shadow-sm">
-            <Star size={14} className="fill-sun-400 text-sun-400" />
-            <span>4.93 / 5 · 2000+ reviews on Google</span>
-          </div>
-        </AnimateIn>
+        {badge && (
+          <AnimateIn className="mb-10 flex justify-center">
+            <div className="inline-flex items-center gap-2 bg-white border border-gray-200 text-gray-700 text-sm font-sans px-4 py-2 rounded-full shadow-sm">
+              <Star size={14} className="fill-sun-400 text-sun-400" />
+              <span>{badge}</span>
+            </div>
+          </AnimateIn>
+        )}
       </div>
 
       {/* Row 1 — scrolls left */}

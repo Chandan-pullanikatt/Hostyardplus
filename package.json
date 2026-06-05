@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "seed": "node scripts/seed-sanity.mjs"
+    "seed": "node scripts/seed-sanity.mjs",
+    "migrate": "node scripts/migrate-content.mjs"
   },
   "dependencies": {
     "@sanity/image-url": "^2.1.1",

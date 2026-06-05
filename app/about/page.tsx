@@ -157,17 +157,17 @@ export default async function AboutPage() {
           </AnimateIn>
 
           {/* Promise items */}
-          <div className="rounded-2xl overflow-hidden bg-[#EAF2F0] divide-y divide-black/[0.07]">
+          <div className="rounded-2xl overflow-hidden bg-[#FFF9D066] divide-y divide-black/[0.07]">
             {page.promises.map((promise, i) => (
               <AnimateIn key={promise.title} delay={i * 60}>
                 <div className="flex flex-col sm:flex-row items-start gap-4 sm:gap-8 lg:gap-12 px-6 sm:px-8 lg:px-12 py-7 lg:py-9">
-                  <span className="font-serif text-gray-400 text-[36px] leading-none tracking-normal flex-none w-14">
+                  <span className="font-serif text-[#000000] text-[36px] leading-none tracking-normal flex-none w-14">
                     {String(i + 1).padStart(2, "0")}
                   </span>
-                  <h3 className="font-serif text-[36px] leading-none tracking-normal text-gray-900 flex-none sm:w-[400px]">
+                  <h3 className="font-serif text-[36px] leading-none tracking-normal text-[#000000] flex-none sm:w-[400px]">
                     {promise.title}
                   </h3>
-                  <p className="font-sans text-gray-500 text-base leading-none tracking-normal flex-1">
+                  <p className="font-sans text-[#6C6C6C] text-base leading-none tracking-normal flex-1">
                     {promise.description}
                   </p>
                 </div>
