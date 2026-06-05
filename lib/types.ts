@@ -113,6 +113,7 @@ export interface CloudinaryAsset {
 
 export interface SiteSettings {
   heroVideo?: CloudinaryAsset
+  heroVideoMuted?: boolean
   heroHeading: string
   reviewsBadge: string
   aboutUsHeading: string

@@ -156,9 +156,15 @@ async function run() {
     for (const [key, value] of Object.entries(SITE_DEFAULTS)) {
       if (!doc[key]) patch[key] = published[key] || value // prefer the live value
     }
-    if (Object.keys(patch).length) {
-      await client.patch(id).set(patch).commit()
-      console.log(`   ✓ ${id} — filled: ${Object.keys(patch).join(', ')}`)
+    // Default the mute toggle to ON if it was never set (boolean — setIfMissing so
+    // a deliberate "false" from the client is never overwritten).
+    const needsMuteDefault = doc.heroVideoMuted === undefined || doc.heroVideoMuted === null
+    if (Object.keys(patch).length || needsMuteDefault) {
+      let tx = client.patch(id).set(patch)
+      if (needsMuteDefault) tx = tx.setIfMissing({ heroVideoMuted: true })
+      await tx.commit()
+      const filled = [...Object.keys(patch), ...(needsMuteDefault ? ['heroVideoMuted'] : [])]
+      console.log(`   ✓ ${id} — filled: ${filled.join(', ')}`)
     } else {
       console.log(`   ✓ ${id} — already populated`)
     }

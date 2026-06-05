@@ -27,19 +27,30 @@ export default function Hero({ settings, properties }: HeroProps) {
 
   const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
 
+  // CMS toggle: when on (default), the video starts muted; when off, we attempt
+  // to start it with sound. Browsers block unmuted autoplay, so that attempt may
+  // fail — in which case we fall back to muted so the video still plays.
+  const startMuted = settings.heroVideoMuted ?? true
+
   const videoRef       = useRef<HTMLVideoElement>(null)
   const sectionRef     = useRef<HTMLElement>(null)
   const hasScrolledRef = useRef(false)
-  const [muted, setMuted] = useState(true) // matches the muted HTML attribute
+  const [muted, setMuted] = useState(startMuted)
 
   useEffect(() => {
     const v = videoRef.current
     if (!v) return
-    // Programmatic play as a fallback — keeps audio muted (matches the HTML attribute).
-    // Browsers block autoPlay only when unmuted; muted autoplay is always allowed.
-    v.muted = true
-    v.play().catch(() => {})
-  }, [])
+    v.muted = startMuted
+    setMuted(startMuted)
+    v.play().catch(() => {
+      // Likely an unmuted-autoplay block — retry muted so the video still plays.
+      if (!v.muted) {
+        v.muted = true
+        setMuted(true)
+        v.play().catch(() => {})
+      }
+    })
+  }, [startMuted])
 
   // Pause when hero scrolls out of view, resume when it comes back.
   // Skip the initial callback (hero is visible on load) to avoid interfering

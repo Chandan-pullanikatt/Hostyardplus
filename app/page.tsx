@@ -94,6 +94,7 @@ const FALLBACK_STATS: Stat[] = [
 
 const FALLBACK_SETTINGS: SiteSettings = {
   heroVideo: undefined,
+  heroVideoMuted: true,
   heroHeading: "Your Perfect Escape in the Mountains",
   reviewsBadge: "4.93 / 5 · 2000+ reviews on Google",
   aboutUsHeading: "About us",

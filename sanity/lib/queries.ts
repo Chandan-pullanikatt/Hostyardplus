@@ -3,6 +3,7 @@ import { groq } from "next-sanity"
 export const siteSettingsQuery = groq`
   *[_type == "siteSettings"][0] {
     heroVideo { secure_url, public_id, resource_type, format },
+    heroVideoMuted,
     heroHeading,
     reviewsBadge,
     aboutUsHeading,
