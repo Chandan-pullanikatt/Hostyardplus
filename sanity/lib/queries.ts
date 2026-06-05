@@ -142,7 +142,7 @@ export const partnerPageQuery = groq`
     heroLabel,
     heroHeading,
     heroDescription,
-    partnerCards[] { _key, category, title, description, image { asset, alt } },
+    partnerCards[] { _key, category, title, description, image { asset, alt }, ctaLabel, formUrl },
     ctaHeading,
     ctaSubtitle,
     ctaButtonText,

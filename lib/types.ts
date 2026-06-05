@@ -167,6 +167,8 @@ export interface PartnerCard {
   title: string
   description: string
   image?: SanityImage
+  ctaLabel?: string
+  formUrl?: string
 }
 
 export interface PartnerPageFAQ {

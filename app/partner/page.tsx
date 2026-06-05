@@ -1,12 +1,11 @@
 import { sanityFetch } from "@/sanity/lib/client"
 import { partnerPageQuery } from "@/sanity/lib/queries"
 import type { PartnerPage } from "@/lib/types"
-import { urlFor } from "@/sanity/lib/image"
-import Image from "next/image"
 import Navbar from "@/components/layout/Navbar"
 import Footer from "@/components/layout/Footer"
 import AnimateIn from "@/components/ui/AnimateIn"
 import PartnerFAQSection from "./PartnerFAQSection"
+import PartnerCardsSection from "./PartnerCardsSection"
 
 const FALLBACK: PartnerPage = {
   heroLabel: "Partner With Us",
@@ -20,6 +19,9 @@ const FALLBACK: PartnerPage = {
       title: "Transform Properties Into Stays",
       description:
         "Partner with us to reach more travelers, increase bookings, and create memorable experiences across destinations",
+      ctaLabel: "List Your Property",
+      formUrl:
+        "https://forms.hostyardplus.com/hostyardplus1/form/EnquiryForm1/formperma/GlPubvgSC9cu6oTBbc_3CUHib-J02hvk6NN06Fy2_e8",
     },
     {
       _key: "agencies",
@@ -27,6 +29,9 @@ const FALLBACK: PartnerPage = {
       title: "Create Better Travel Experiences",
       description:
         "Collaborate with us to offer curated stays, seamless planning, and unforgettable journeys for your travelers",
+      ctaLabel: "Partner With Us",
+      formUrl:
+        "https://forms.hostyardplus.com/hostyardplus1/form/TravelAgenciesTourOperators/formperma/IhPwwJgwsMAj-YYts7OoBQz1u-eQTNWV0qv6Q40TlfQ",
     },
     {
       _key: "creators",
@@ -34,6 +39,9 @@ const FALLBACK: PartnerPage = {
       title: "Inspire Through Travel Content",
       description:
         "Work with us to showcase destinations, create engaging travel content, and connect with a community of explorers",
+      ctaLabel: "Collaborate With Us",
+      formUrl:
+        "https://forms.hostyardplus.com/hostyardplus1/form/CreatorsInfluencers/formperma/XrvnuVECBlO-x7sAq918is9X-PEk0CvW-dlm46wdwT8",
     },
   ],
   ctaHeading: "Ready To Partner With Hostyard+",
@@ -105,40 +113,8 @@ export default async function PartnerPage() {
       </section>
  
       {/* Partner Cards */}
-      <section className="py-14 lg:py-20 px-6 lg:px-12 bg-white">
-        <div className="max-w-[1400px] mx-auto">
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {page.partnerCards.map((card, i) => {
-              const imgSrc = card.image?.asset?._ref
-                ? urlFor(card.image).width(600).height(400).url()
-                : null
-              return (
-                <AnimateIn key={card._key} delay={i * 80}>
-                  <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm h-full">
-                    <div className="relative h-60 bg-[#e8f0ed]">
-                      {imgSrc && (
-                        <Image src={imgSrc} alt={card.title} fill className="object-cover" />
-                      )}
-                    </div>
-                    <div className="p-6">
-                      <span className="inline-block font-sans text-xs text-gray-600 border border-gray-200 rounded-full px-3 py-1 mb-4">
-                        {card.category}
-                      </span>
-                      <h3 className="font-serif text-2xl text-gray-900 mb-2 leading-snug">
-                        {card.title}
-                      </h3>
-                      <p className="font-sans text-sm text-gray-500 leading-relaxed">
-                        {card.description}
-                      </p>
-                    </div>
-                  </div>
-                </AnimateIn>
-              )
-            })}
-          </div>
-        </div>
-      </section>
- 
+      <PartnerCardsSection cards={page.partnerCards} />
+
       {/* FAQ */}
       <PartnerFAQSection
         heading={page.faqHeading}

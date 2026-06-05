@@ -28,7 +28,8 @@
       "Bash(grep -oiE '.{0,80}__TRACKED_VAR__.{0,80}' /tmp/zoho_form.html)",
       "Bash(sed -E 's/fieldLabelTxt \">/LABEL: /; s/compname=\"/   field=/; s/\"$//')",
       "Bash(grep -oiE '.{0,40}\\(check|arriv|depart\\).{0,40}' /tmp/zoho_form.html)",
-      "Bash(grep -oiE '.{0,30}\\(Bed Mixed|Solo Girl|Boys Group|Couples|Hostel|Resort|Dorm\\).{0,30}' /tmp/zoho_form.html)"
+      "Bash(grep -oiE '.{0,30}\\(Bed Mixed|Solo Girl|Boys Group|Couples|Hostel|Resort|Dorm\\).{0,30}' /tmp/zoho_form.html)",
+      "PowerShell(npx tsc --noEmit -p tsconfig.json)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",
