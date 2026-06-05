@@ -81,26 +81,23 @@ export default function PartnerCardsSection({ cards }: Props) {
           aria-label={`${active.category} enquiry form`}
         >
           <div
-            className="relative flex h-full w-full flex-col bg-white shadow-xl sm:h-[85vh] sm:max-w-[640px] sm:rounded-2xl"
+            className="relative flex h-full w-full flex-col overflow-hidden bg-white shadow-xl sm:h-[85vh] sm:max-w-[640px] sm:rounded-2xl"
             onClick={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center justify-between border-b border-gray-100 px-5 py-4">
-              <span className="font-sans text-sm font-medium text-gray-900">
-                {active.category}
-              </span>
-              <button
-                type="button"
-                onClick={() => setActive(null)}
-                aria-label="Close"
-                className="flex h-9 w-9 items-center justify-center rounded-full text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-900"
-              >
-                <X size={20} />
-              </button>
-            </div>
+            {/* Floating close — no header bar; the Zoho form carries its own heading */}
+            <button
+              type="button"
+              onClick={() => setActive(null)}
+              aria-label="Close"
+              className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/10 text-gray-600 transition-colors hover:bg-black/20 hover:text-gray-900"
+            >
+              <X size={20} />
+            </button>
+            {/* oversized width clips the cross-origin scrollbar gutter (scroll still works) */}
             <iframe
               src={active.formUrl}
               title={`${active.category} enquiry form`}
-              className="h-full w-full flex-1 border-0"
+              className="h-full w-[calc(100%+18px)] max-w-none flex-1 border-0"
             />
           </div>
         </div>

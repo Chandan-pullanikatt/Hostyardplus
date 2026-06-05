@@ -116,30 +116,26 @@ export default function BookingModalProvider({ children }: { children: ReactNode
               className="relative w-full max-w-2xl bg-[#052721] rounded-2xl overflow-hidden shadow-2xl"
               onClick={(e) => e.stopPropagation()}
             >
-              {/* Header */}
-              <div className="flex items-center justify-between px-6 py-4 border-b border-white/10">
-                <h2 className="font-serif text-xl text-white tracking-wide">
-                  Book Your Stay
-                </h2>
-                <button
-                  onClick={close}
-                  aria-label="Close booking form"
-                  className="text-white/50 hover:text-white transition-colors p-1 rounded-md hover:bg-white/10"
-                >
-                  <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
-                    <line x1="2" y1="2" x2="16" y2="16" />
-                    <line x1="16" y1="2" x2="2" y2="16" />
-                  </svg>
-                </button>
-              </div>
+              {/* Floating close — no header bar; the Zoho form carries its own heading */}
+              <button
+                onClick={close}
+                aria-label="Close booking form"
+                className="absolute top-3 right-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-black/30 text-white/70 transition-colors hover:bg-black/50 hover:text-white"
+              >
+                <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round">
+                  <line x1="2" y1="2" x2="16" y2="16" />
+                  <line x1="16" y1="2" x2="2" y2="16" />
+                </svg>
+              </button>
 
-              {/* Zoho Form iframe */}
-              <div className="h-[500px] md:h-[580px]">
+              {/* Zoho Form iframe — overflow-hidden + oversized width clips the
+                  cross-origin scrollbar gutter off the right edge (scroll still works) */}
+              <div className="h-[500px] md:h-[580px] overflow-hidden">
                 <iframe
                   aria-label="Enquiry Form"
                   frameBorder="0"
                   src={formUrl}
-                  className="w-full h-full border-none"
+                  className="w-[calc(100%+18px)] h-full border-none"
                 />
               </div>
 
