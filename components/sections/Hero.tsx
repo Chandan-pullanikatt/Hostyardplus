@@ -3,6 +3,7 @@
 import { useRef, useState, useEffect } from "react"
 import { m } from "framer-motion"
 import BookingBar from "@/components/ui/BookingBar"
+import BookNowButton from "@/components/ui/BookNowButton"
 import type { SiteSettings, Property } from "@/lib/types"
 import { Volume2, VolumeX } from "lucide-react"
 
@@ -127,6 +128,20 @@ export default function Hero({ settings, properties }: HeroProps) {
           >
             {heading}
           </m.h1>
+
+          {/* Mobile only: a single Book Now button in place of the full booking bar,
+              so the hero video stays fully visible. Desktop uses the BookingBar below. */}
+          <m.div
+            variants={heroVariants.booking}
+            initial="hidden"
+            animate="visible"
+            transition={{ duration: 0.7, ease, delay: 0.7 }}
+            className="md:hidden"
+          >
+            <BookNowButton className="inline-flex items-center justify-center rounded-full bg-white text-gray-900 font-sans text-sm font-semibold px-8 py-3.5 shadow-lg hover:bg-white/90 transition-colors">
+              Book Now
+            </BookNowButton>
+          </m.div>
         </div>
 
         <m.div
@@ -134,7 +149,7 @@ export default function Hero({ settings, properties }: HeroProps) {
           initial="hidden"
           animate="visible"
           transition={{ duration: 0.7, ease, delay: 0.7 }}
-          className="pb-8"
+          className="hidden md:block pb-8"
         >
           <BookingBar properties={bookingProperties} />
         </m.div>

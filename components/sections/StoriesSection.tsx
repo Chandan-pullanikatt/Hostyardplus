@@ -30,6 +30,8 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
   const sectionRef  = useRef<HTMLElement>(null)
   const timerRef    = useRef<ReturnType<typeof setTimeout> | null>(null)
   const slotsRef    = useRef(slots)
+  const touchStartX = useRef(0)
+  const touchStartY = useRef(0)
   const recenterRef = useRef(false)
   const snapAnimatedRef = useRef(false)
   const activeOrigRef    = useRef(slots[center])
@@ -193,6 +195,25 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
     setMuted(prev => !prev)
   }
 
+  // ── Touch swipe: one horizontal swipe advances one card (snap on release) ──
+  // Reuses handleCardClick so swipe lands on the same centering animation as a tap.
+  const onTouchStart = (e: React.TouchEvent) => {
+    touchStartX.current = e.touches[0].clientX
+    touchStartY.current = e.touches[0].clientY
+  }
+
+  const onTouchEnd = (e: React.TouchEvent) => {
+    const dx = e.changedTouches[0].clientX - touchStartX.current
+    const dy = e.changedTouches[0].clientY - touchStartY.current
+    // Ignore taps and predominantly-vertical drags (let the page scroll).
+    if (Math.abs(dx) < 40 || Math.abs(dx) < Math.abs(dy)) return
+    if (dx < 0) {
+      if (active < N - 1) handleCardClick(active + 1)   // swipe left → next
+    } else {
+      if (active > 0) handleCardClick(active - 1)        // swipe right → prev
+    }
+  }
+
   return (
     <section ref={sectionRef} className="bg-[#f8f6f1] py-20 overflow-hidden">
       <div className="max-w-[1400px] mx-auto px-6 lg:px-12">
@@ -205,7 +226,11 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
       </div>
 
       <AnimateIn delay={200}>
-        <div className="w-full overflow-hidden h-[480px] sm:h-[540px] md:h-[600px]">
+        <div
+          className="w-full overflow-hidden h-[480px] sm:h-[540px] md:h-[600px] touch-pan-y"
+          onTouchStart={onTouchStart}
+          onTouchEnd={onTouchEnd}
+        >
           <div
             ref={stripRef}
             className="flex items-center gap-4 h-full"
@@ -223,12 +248,10 @@ export default function StoriesSection({ stories }: StoriesSectionProps) {
                 <div
                   key={story._id}
                   ref={el => { cardRefs.current[slotIndex] = el }}
-                  className="relative flex-shrink-0 w-[240px] h-[400px] sm:w-[270px] sm:h-[450px] md:w-[300px] md:h-[500px] flex items-center justify-center"
-                  style={{
-                    zIndex: isCenter ? 10 : 0,
-                    marginLeft:  isCenter ? '40px' : '0px',
-                    marginRight: isCenter ? '40px' : '0px',
-                  }}
+                  className={`relative flex-shrink-0 flex items-center justify-center w-[200px] h-[340px] sm:w-[260px] sm:h-[440px] md:w-[300px] md:h-[500px] ${
+                    isCenter ? "mx-5 md:mx-10" : "mx-0"
+                  }`}
+                  style={{ zIndex: isCenter ? 10 : 0 }}
                 >
                   {/* Inner card: non-uniform scale via inline style — GPU composited, no reflow */}
                   <div

@@ -1,4 +1,4 @@
-import ReviewCard from "@/components/ui/ReviewCard"
+import ReviewMarquee from "@/components/ui/ReviewMarquee"
 import SectionHeader from "@/components/ui/SectionHeader"
 import AnimateIn from "@/components/ui/AnimateIn"
 import type { Review } from "@/lib/types"
@@ -37,23 +37,13 @@ export default function Reviews({ reviews, badge }: ReviewsProps) {
         )}
       </div>
 
-      {/* Row 1 — scrolls left */}
-      <div className="mb-4 overflow-hidden">
-        <div className="flex gap-4 animate-scroll-left">
-          {tile(reviews).map((review, i) => (
-            <ReviewCard key={`r1-${review._id}-${i}`} review={review} />
-          ))}
-        </div>
+      {/* Row 1 — auto-scrolls left, also drag/swipe-able */}
+      <div className="mb-4">
+        <ReviewMarquee reviews={tile(reviews)} direction="left" />
       </div>
 
-      {/* Row 2 — scrolls right */}
-      <div className="overflow-hidden">
-        <div className="flex gap-4 animate-scroll-right">
-          {tile(row2).map((review, i) => (
-            <ReviewCard key={`r2-${review._id}-${i}`} review={review} />
-          ))}
-        </div>
-      </div>
+      {/* Row 2 — auto-scrolls right, also drag/swipe-able */}
+      <ReviewMarquee reviews={tile(row2)} direction="right" />
     </section>
   )
 }

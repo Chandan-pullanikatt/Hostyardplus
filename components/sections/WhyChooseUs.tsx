@@ -127,7 +127,7 @@ export default function WhyChooseUs({ tabs }: Props) {
               <button
                 onClick={prevTab}
                 aria-label="Previous tab"
-                className="shrink-0 w-9 h-10 rounded-2xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+                className="shrink-0 w-9 h-10 rounded-2xl flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="10 4 4 8 10 12" />
@@ -145,7 +145,7 @@ export default function WhyChooseUs({ tabs }: Props) {
               <button
                 onClick={nextTab}
                 aria-label="Next tab"
-                className="shrink-0 w-9 h-10 rounded-2xl border border-gray-200 flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
+                className="shrink-0 w-9 h-10 rounded-2xl flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                   <polyline points="6 4 12 8 6 12" />
