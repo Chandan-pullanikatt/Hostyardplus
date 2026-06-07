@@ -1,3 +1,4 @@
+
 # Grill: Hero booking-bar brand restyle + iframe modal header removal
 Date: 2026-06-06
 

@@ -138,7 +138,7 @@ export default function Hero({ settings, properties }: HeroProps) {
             transition={{ duration: 0.7, ease, delay: 0.7 }}
             className="md:hidden"
           >
-            <BookNowButton className="inline-flex items-center justify-center rounded-full bg-white text-gray-900 font-sans text-sm font-semibold px-8 py-3.5 shadow-lg hover:bg-white/90 transition-colors">
+            <BookNowButton className="inline-flex items-center justify-center rounded-full bg-primary text-white font-sans text-sm font-semibold px-8 py-3.5 shadow-lg hover:bg-primary/90 transition-colors">
               Book Now
             </BookNowButton>
           </m.div>
