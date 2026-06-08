@@ -68,15 +68,37 @@ export default function WhyChooseUs({ tabs }: Props) {
   const [activeIndex, setActiveIndex] = useState(0)
   const [slideIndex, setSlideIndex] = useState(0)
 
-  const prevTab = () => setActiveIndex((i) => (i - 1 + TABS.length) % TABS.length)
-  const nextTab = () => setActiveIndex((i) => (i + 1) % TABS.length)
-
   const active = TABS[activeIndex] ?? TABS[0]
   const slideCount = active?.imageUrls?.length ?? 0
 
-  // Auto-advance slides every 3 s; reset when tab changes
-  useEffect(() => {
+  // Select a section directly (tab click) — reset to its first photo
+  const selectTab = (i: number) => {
+    setActiveIndex(i)
     setSlideIndex(0)
+  }
+
+  // Global photo stepper: advance through photos within the section, then roll
+  // into the next/previous section once the section's photos are exhausted.
+  const goNext = () => {
+    if (slideIndex < slideCount - 1) {
+      setSlideIndex(slideIndex + 1)
+    } else {
+      setActiveIndex((activeIndex + 1) % TABS.length)
+      setSlideIndex(0)
+    }
+  }
+  const goPrev = () => {
+    if (slideIndex > 0) {
+      setSlideIndex(slideIndex - 1)
+    } else {
+      const prev = (activeIndex - 1 + TABS.length) % TABS.length
+      setActiveIndex(prev)
+      setSlideIndex(Math.max((TABS[prev]?.imageUrls?.length ?? 1) - 1, 0))
+    }
+  }
+
+  // Auto-rotate photos WITHIN the current section only (never changes section)
+  useEffect(() => {
     if (slideCount < 2) return
     const id = setInterval(() => setSlideIndex((i) => (i + 1) % slideCount), 3000)
     return () => clearInterval(id)
@@ -104,7 +126,7 @@ export default function WhyChooseUs({ tabs }: Props) {
               {TABS.map((tab, i) => (
                 <button
                   key={tab.id}
-                  onClick={() => setActiveIndex(i)}
+                  onClick={() => selectTab(i)}
                   className={`relative font-sans text-sm px-8 py-3 whitespace-nowrap transition-colors ${
                     i === activeIndex
                       ? "bg-white text-gray-900 font-semibold rounded-t-2xl border border-gray-200 border-b-white z-10"
@@ -125,8 +147,8 @@ export default function WhyChooseUs({ tabs }: Props) {
 
               {/* Mobile prev arrow */}
               <button
-                onClick={prevTab}
-                aria-label="Previous tab"
+                onClick={goPrev}
+                aria-label="Previous photo"
                 className="shrink-0 w-9 h-10 rounded-2xl flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -143,8 +165,8 @@ export default function WhyChooseUs({ tabs }: Props) {
 
               {/* Mobile next arrow */}
               <button
-                onClick={nextTab}
-                aria-label="Next tab"
+                onClick={goNext}
+                aria-label="Next photo"
                 className="shrink-0 w-9 h-10 rounded-2xl flex items-center justify-center text-gray-500 hover:text-gray-900 transition-colors"
               >
                 <svg width="16" height="16" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -174,6 +196,28 @@ export default function WhyChooseUs({ tabs }: Props) {
                 <div className="hidden md:block absolute bottom-6 left-6 bg-white rounded-xl p-5 max-w-xs shadow-md">
                   <h3 className="font-serif text-base text-gray-900 mb-2">{active.title}</h3>
                   <p className="font-sans text-xs text-gray-600 leading-relaxed">{active.description}</p>
+                </div>
+
+                {/* Desktop arrows — bottom-right photo stepper */}
+                <div className="hidden md:flex absolute bottom-6 right-6 items-center gap-2">
+                  <button
+                    onClick={goPrev}
+                    aria-label="Previous photo"
+                    className="w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-700 hover:bg-white hover:text-gray-900 transition-colors"
+                  >
+                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="11 4 5 9 11 14" />
+                    </svg>
+                  </button>
+                  <button
+                    onClick={goNext}
+                    aria-label="Next photo"
+                    className="w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm shadow-md flex items-center justify-center text-gray-700 hover:bg-white hover:text-gray-900 transition-colors"
+                  >
+                    <svg width="18" height="18" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="7 4 13 9 7 14" />
+                    </svg>
+                  </button>
                 </div>
 
                 {/* Slide dots — center bottom of image */}
