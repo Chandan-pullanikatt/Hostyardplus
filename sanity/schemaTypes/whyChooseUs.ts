@@ -8,10 +8,9 @@ export const whyChooseUs = defineType({
     defineField({ name: "tabLabel", title: "Tab Label", type: "string", validation: (r) => r.required() }),
     defineField({
       name: "images",
-      title: "Tab Images (upload up to 3 — used as slideshow)",
+      title: "Tab Images (add as many as you like — used as slideshow)",
       type: "array",
       of: [{ type: "image", options: { hotspot: true }, fields: [defineField({ name: "alt", type: "string", title: "Alt text" })] }],
-      validation: (r) => r.max(3),
     }),
     defineField({ name: "title", title: "Content Title", type: "string" }),
     defineField({ name: "description", title: "Content Description", type: "text", rows: 3 }),
