@@ -35,7 +35,8 @@
       "Bash(sed -n '/FALLBACK_BODY/,/^]/p' app/cancellation-policies/page.tsx)",
       "PowerShell(npm run *)",
       "PowerShell(node scripts/inspect-settings.mjs)",
-      "PowerShell(node scripts/check.mjs)"
+      "PowerShell(node scripts/check.mjs)",
+      "Bash(echo \"exit: $?\")"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",

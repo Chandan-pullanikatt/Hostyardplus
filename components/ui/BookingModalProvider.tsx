@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, type ReactNode } from "react"
 import { m, AnimatePresence } from "framer-motion"
+import { track } from "@vercel/analytics"
 
 /* ─── Prefill type ────────────────────────────────────────────────────── */
 
@@ -83,6 +84,9 @@ export default function BookingModalProvider({ children }: { children: ReactNode
   const [formUrl, setFormUrl] = useState(ZOHO_FORM_URL)
 
   const open  = (prefill?: BookingPrefill) => {
+    // Fires for every "Book Now" trigger site-wide (nav, hero, booking bar,
+    // property pages) since they all funnel through this one open().
+    track("book_now_click", { property: prefill?.property ?? "none" })
     setFormUrl(buildFormUrl(prefill))
     setIsOpen(true)
   }

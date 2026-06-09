@@ -3,6 +3,7 @@ import { Instrument_Serif, Inclusive_Sans } from "next/font/google"
 import MotionProvider from "@/components/ui/MotionProvider"
 import BookingModalProvider from "@/components/ui/BookingModalProvider"
 import CustomCursor from "@/components/ui/CustomCursor"
+import { Analytics } from "@vercel/analytics/next"
 import "./globals.css"
 
 const instrumentSerif = Instrument_Serif({
@@ -39,6 +40,7 @@ export default function RootLayout({
             {children}
           </BookingModalProvider>
         </MotionProvider>
+        <Analytics />
       </body>
     </html>
   )
