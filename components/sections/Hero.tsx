@@ -83,36 +83,34 @@ export default function Hero({ settings, properties }: HeroProps) {
     return () => obs.disconnect()
   }, [])
 
-  // Tapping the video turns sound ON (one-way). A tap can only happen while the
-  // hero is on screen, so audio never fires after the user has scrolled past.
+  // Turn sound ON (one-way). The clean trick: just flip `muted` — don't call
+  // play() while it's already playing, so the video unmutes without restarting.
   // Muting again is done via the speaker icon.
   const enableSound = () => {
     const v = videoRef.current
     if (!v || !v.muted) return
     v.muted = false
     setMuted(false)
-    v.play().catch(() => {
-      // Unmute was blocked (this interaction didn't count as a user gesture —
-      // e.g. a wheel/programmatic scroll). Stay muted and keep the video
-      // playing instead of letting the browser pause it.
-      v.muted = true
-      setMuted(true)
-      v.play().catch(() => {})
-    })
+    // Only (re)play if the browser actually paused it as a side effect; if that
+    // play is blocked too, fall back to muted so it never sits paused.
+    if (v.paused) {
+      v.play().catch(() => { v.muted = true; setMuted(true); v.play().catch(() => {}) })
+    }
   }
 
-  // Also unmute on the user's first scroll/touch. The hero pauses once it leaves
-  // the viewport (observer above), so this can't blast audio after they scroll
-  // past. Runs once, then removes itself.
+  // Global first-interaction capture: the instant the user touches, scrolls,
+  // clicks, or types anywhere on the page, unmute the hero video. A real gesture
+  // (touchstart on mobile, pointer/click/keydown on desktop) is what the browser
+  // requires to allow audio. Fires once, then tears all listeners down.
   useEffect(() => {
-    const onFirstInteract = () => enableSound()
-    const opts = { once: true, passive: true } as const
-    window.addEventListener("scroll", onFirstInteract, opts)
-    window.addEventListener("touchstart", onFirstInteract, opts)
-    return () => {
-      window.removeEventListener("scroll", onFirstInteract)
-      window.removeEventListener("touchstart", onFirstInteract)
-    }
+    const events = ["pointerdown", "touchstart", "click", "keydown", "scroll"]
+    const remove = () =>
+      events.forEach((e) => window.removeEventListener(e, onFirst, true))
+    const onFirst = () => { enableSound(); remove() }
+    events.forEach((e) =>
+      window.addEventListener(e, onFirst, { passive: true, capture: true })
+    )
+    return remove
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
