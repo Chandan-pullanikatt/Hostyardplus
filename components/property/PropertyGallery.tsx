@@ -54,7 +54,7 @@ export default function PropertyGallery({ property }: Props) {
           <div className="grid grid-cols-2 grid-rows-2 gap-3 lg:w-[640px] shrink-0">
 
             {gridTiles.map((img, i) => (
-              <div key={i} className="relative rounded-2xl overflow-hidden">
+              <div key={i} className="relative rounded-2xl overflow-hidden aspect-[4/3] lg:aspect-auto">
                 {img?.asset?._ref && (
                   <Image
                     src={urlFor(img).width(500).height(350).url()}
@@ -70,7 +70,7 @@ export default function PropertyGallery({ property }: Props) {
             {overlayImage && (
               <Link
                 href={`/properties/${property.slug?.current}/photos`}
-                className="relative rounded-2xl overflow-hidden block group cursor-pointer"
+                className="relative rounded-2xl overflow-hidden block group cursor-pointer aspect-[4/3] lg:aspect-auto"
               >
                 {overlayImage?.asset?._ref && (
                   <Image

@@ -26,14 +26,32 @@ export default function ReviewMarquee({ reviews, direction, speed = 0.5 }: Revie
     const el = scrollerRef.current
     if (!el) return
 
-    // Start the rightward row from the middle so it has room to travel back.
-    el.scrollLeft = direction === "right" ? el.scrollWidth / 2 : 0
+    // The track is tiled, so the content width must exceed the visible width
+    // before the loop math is valid. On mobile the avatar images/fonts often
+    // load *after* mount, so the initial measurement is too small — we wait
+    // until the layout is wide enough, and re-seed the start position then.
+    let seeded = false
+    const ready = () => el.scrollWidth > el.clientWidth + 1
+    const seed = () => {
+      if (!ready()) return
+      // Start the rightward row from the middle so it has room to travel back.
+      el.scrollLeft = direction === "right" ? el.scrollWidth / 2 : 0
+      seeded = true
+    }
+    seed()
+
+    // Re-measure when card sizes settle (images decoding, font swap, resize).
+    const ro = new ResizeObserver(() => { if (!seeded) seed() })
+    ro.observe(el)
 
     let raf = 0
     const step = () => {
       const half = el.scrollWidth / 2
-      if (half > 0) {
-        if (!pausedRef.current) {
+      // Only advance once there is real content to loop through; otherwise the
+      // seam wrap can fling the row into an empty region (the white-gap glitch).
+      if (half > 0 && ready()) {
+        if (!seeded) seed()
+        if (!pausedRef.current && !draggingRef.current) {
           el.scrollLeft += direction === "left" ? speed : -speed
         }
         // Wrap every frame (even while dragging) so a fast drag past the seam
@@ -44,7 +62,7 @@ export default function ReviewMarquee({ reviews, direction, speed = 0.5 }: Revie
       raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
-    return () => cancelAnimationFrame(raf)
+    return () => { cancelAnimationFrame(raf); ro.disconnect() }
   }, [direction, speed])
 
   const pause = () => {
@@ -84,7 +102,7 @@ export default function ReviewMarquee({ reviews, direction, speed = 0.5 }: Revie
       onTouchEnd={resume}
       className="overflow-x-auto scrollbar-hide cursor-grab active:cursor-grabbing select-none"
     >
-      <div className="flex gap-4 w-max">
+      <div className="flex flex-nowrap gap-4 w-max">
         {reviews.map((review, i) => (
           <ReviewCard key={`${review._id}-${i}`} review={review} />
         ))}
