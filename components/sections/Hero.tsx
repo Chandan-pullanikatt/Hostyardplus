@@ -35,34 +35,22 @@ export default function Hero({ settings, properties }: HeroProps) {
 
   const videoRef       = useRef<HTMLVideoElement>(null)
   const sectionRef     = useRef<HTMLElement>(null)
-  const hasScrolledRef = useRef(false)
+  // The mute state the user actually wants. Kept in a ref so the visibility
+  // observer can apply it at play-time without re-subscribing.
+  const desiredMutedRef = useRef(startMuted)
   const [muted, setMuted] = useState(startMuted)
 
   useEffect(() => {
-    const v = videoRef.current
-    if (!v) return
-    v.muted = startMuted
+    desiredMutedRef.current = startMuted
     setMuted(startMuted)
-    v.play().catch(() => {
-      // Likely an unmuted-autoplay block — retry muted so the video still plays.
-      if (!v.muted) {
-        v.muted = true
-        setMuted(true)
-        v.play().catch(() => {})
-      }
-    })
   }, [startMuted])
 
-  const toggleMute = () => {
-    const v = videoRef.current
-    if (!v) return
-    v.muted = !v.muted
-    setMuted(v.muted)
-  }
-
-  // Pause only once the hero is COMPLETELY off-screen (threshold 0 → fires when
-  // zero pixels remain visible), and resume when any part scrolls back in.
-  // Skip the initial callback so it doesn't interfere with the autoplay setup.
+  // Visibility-driven play/pause. The <video> element starts muted (its `muted`
+  // attribute), so the browser's initial autoplay is always silent — no audio
+  // can leak from an off-screen hero, even on machines allowed to autoplay with
+  // sound (e.g. after reloading the page partway down). We only apply the
+  // desired mute state and play once the hero is at least HALF visible, and we
+  // pause only when it is COMPLETELY off-screen.
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
@@ -70,40 +58,45 @@ export default function Hero({ settings, properties }: HeroProps) {
       ([entry]) => {
         const v = videoRef.current
         if (!v) return
-        if (entry.isIntersecting) {
-          if (hasScrolledRef.current) v.play().catch(() => {})
-        } else {
-          hasScrolledRef.current = true
+        if (entry.intersectionRatio === 0) {
           v.pause()
+        } else if (entry.intersectionRatio >= 0.5) {
+          v.muted = desiredMutedRef.current
+          v.play().catch(() => {
+            // Unmuted autoplay blocked — fall back to muted so it still plays.
+            v.muted = true
+            setMuted(true)
+            v.play().catch(() => {})
+          })
         }
       },
-      { threshold: 0 }
+      { threshold: [0, 0.5] }
     )
     obs.observe(section)
     return () => obs.disconnect()
   }, [])
 
-  // Tapping the video turns sound ON (one-way). A tap can only happen while the
-  // hero is on screen, so audio never fires after the user has scrolled past.
-  // Muting again is done via the speaker icon.
-  const enableSound = () => {
+  const toggleMute = () => {
     const v = videoRef.current
-    if (!v || !v.muted) return
-    v.muted = false
-    setMuted(false)
-    v.play().catch(() => {
-      // Unmute was blocked (this interaction didn't count as a user gesture —
-      // e.g. a wheel/programmatic scroll). Stay muted and keep the video
-      // playing instead of letting the browser pause it.
-      v.muted = true
-      setMuted(true)
-      v.play().catch(() => {})
-    })
+    if (!v) return
+    const next = !v.muted
+    v.muted = next
+    desiredMutedRef.current = next
+    setMuted(next)
   }
 
-  // Also unmute on the user's first scroll/touch. The hero pauses once it leaves
-  // the viewport (observer above), so this can't blast audio after they scroll
-  // past. Runs once, then removes itself.
+  // Turn sound ON from a user interaction. We record the intent and unmute the
+  // element ONLY if it is actually playing (i.e. the hero is in view) — never
+  // start audio for an off-screen, paused hero.
+  const enableSound = () => {
+    desiredMutedRef.current = false
+    setMuted(false)
+    const v = videoRef.current
+    if (v && !v.paused) v.muted = false
+  }
+
+  // Unmute on the user's first scroll/touch (one-shot). Safe even off-screen:
+  // enableSound only unmutes a video that is actually playing.
   useEffect(() => {
     const onFirstInteract = () => enableSound()
     const opts = { once: true, passive: true } as const
