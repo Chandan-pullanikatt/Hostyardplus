@@ -47,6 +47,13 @@ function fmt(d: Date) {
   return d.toLocaleDateString("en-IN", { month: "short", day: "numeric", year: "numeric" })
 }
 
+/** Local yyyy-mm-dd (avoids the UTC off-by-one toISOString would cause). */
+function toISO(d: Date) {
+  const m = String(d.getMonth() + 1).padStart(2, "0")
+  const day = String(d.getDate()).padStart(2, "0")
+  return `${d.getFullYear()}-${m}-${day}`
+}
+
 const GUEST_OPTIONS = [1, 2, 3, 4, 5, 6, 7, 8]
 
 interface Props {
@@ -58,8 +65,8 @@ export default function PropertyOverview({ property }: Props) {
   const today = new Date()
   today.setHours(0, 0, 0, 0)
 
-  const [stayType, setStayType]       = useState(property.stayTypes?.[0] ?? "")
-  const [guests, setGuests]           = useState(2)
+  const [stayType, setStayType]       = useState("")
+  const [guests, setGuests]           = useState<number | null>(null)
   const [showStayMenu, setShowStayMenu]   = useState(false)
   const [showGuestMenu, setShowGuestMenu] = useState(false)
   const [checkIn, setCheckIn]         = useState<Date | undefined>(undefined)
@@ -257,7 +264,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
                         <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
                           Stay Type
                         </p>
-                        <span className="font-sans text-sm text-gray-900 font-semibold">{stayType || "Select"}</span>
+                        <span className={`font-sans text-sm font-semibold ${stayType ? "text-gray-900" : "text-gray-400"}`}>{stayType || "Select Type"}</span>
                       </div>
                       <ChevronDown
                         size={16}
@@ -370,7 +377,7 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
                       <p className="text-[10px] font-sans font-semibold uppercase tracking-wider text-gray-400 mb-0.5">
                         Travelers
                       </p>
-                      <span className="font-sans text-sm text-gray-900 font-semibold">{guests} Guests</span>
+                      <span className={`font-sans text-sm font-semibold ${guests ? "text-gray-900" : "text-gray-400"}`}>{guests ? `${guests} Guests` : "Select Guests"}</span>
                     </div>
                     <ChevronDown
                       size={16}
@@ -397,7 +404,13 @@ Whether you seek relaxation, adventure, or a quiet escape from the everyday, eve
               <div className="w-full">
                 <button
                   type="button"
-                  onClick={() => openBooking()}
+                  onClick={() => openBooking({
+                    property: property.location || undefined,
+                    stayType: stayType || undefined,
+                    checkIn: checkIn ? toISO(checkIn) : undefined,
+                    checkOut: checkOut ? toISO(checkOut) : undefined,
+                    guests: guests ? String(guests) : undefined,
+                  })}
                   className="flex w-full items-center justify-center bg-primary hover:bg-[#0b3c33] text-white font-sans text-sm font-semibold h-12 rounded-xl transition-all shadow-sm"
                 >
                   Book Now
