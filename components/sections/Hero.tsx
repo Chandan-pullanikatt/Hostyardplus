@@ -53,9 +53,16 @@ export default function Hero({ settings, properties }: HeroProps) {
     })
   }, [startMuted])
 
-  // Pause when hero scrolls out of view, resume when it comes back.
-  // Skip the initial callback (hero is visible on load) to avoid interfering
-  // with the autoplay that's already been triggered.
+  const toggleMute = () => {
+    const v = videoRef.current
+    if (!v) return
+    v.muted = !v.muted
+    setMuted(v.muted)
+  }
+
+  // Pause only once the hero is COMPLETELY off-screen (threshold 0 → fires when
+  // zero pixels remain visible), and resume when any part scrolls back in.
+  // Skip the initial callback so it doesn't interfere with the autoplay setup.
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
@@ -70,21 +77,47 @@ export default function Hero({ settings, properties }: HeroProps) {
           v.pause()
         }
       },
-      { threshold: 0.1 }
+      { threshold: 0 }
     )
     obs.observe(section)
     return () => obs.disconnect()
   }, [])
 
-  const toggleMute = () => {
+  // Tapping the video turns sound ON (one-way). A tap can only happen while the
+  // hero is on screen, so audio never fires after the user has scrolled past.
+  // Muting again is done via the speaker icon.
+  const enableSound = () => {
     const v = videoRef.current
-    if (!v) return
-    v.muted = !v.muted
-    setMuted(v.muted)
+    if (!v || !v.muted) return
+    v.muted = false
+    setMuted(false)
+    v.play().catch(() => {
+      // Unmute was blocked (this interaction didn't count as a user gesture —
+      // e.g. a wheel/programmatic scroll). Stay muted and keep the video
+      // playing instead of letting the browser pause it.
+      v.muted = true
+      setMuted(true)
+      v.play().catch(() => {})
+    })
   }
 
+  // Also unmute on the user's first scroll/touch. The hero pauses once it leaves
+  // the viewport (observer above), so this can't blast audio after they scroll
+  // past. Runs once, then removes itself.
+  useEffect(() => {
+    const onFirstInteract = () => enableSound()
+    const opts = { once: true, passive: true } as const
+    window.addEventListener("scroll", onFirstInteract, opts)
+    window.addEventListener("touchstart", onFirstInteract, opts)
+    return () => {
+      window.removeEventListener("scroll", onFirstInteract)
+      window.removeEventListener("touchstart", onFirstInteract)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
   return (
-    <section ref={sectionRef} className="relative min-h-[100svh] flex flex-col">
+    <section ref={sectionRef} onClick={enableSound} className="relative min-h-[100svh] flex flex-col">
       {/* Video / image background */}
       <div className="absolute inset-0 overflow-hidden">
         {settings.heroVideo?.secure_url ? (
@@ -105,7 +138,7 @@ export default function Hero({ settings, properties }: HeroProps) {
         {/* Mute / unmute toggle */}
         {settings.heroVideo?.secure_url && (
           <button
-            onClick={toggleMute}
+            onClick={(e) => { e.stopPropagation(); toggleMute() }}
             aria-label={muted ? "Unmute video" : "Mute video"}
             className="absolute bottom-6 right-6 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors"
           >
