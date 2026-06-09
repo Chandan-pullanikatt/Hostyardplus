@@ -76,7 +76,7 @@ export default function PropertyHero({ property }: Props) {
         <button
           type="button"
           onClick={() => openBooking()}
-          className="self-start md:self-auto shrink-0 bg-primary hover:bg-ocean-600 text-white font-sans text-sm font-medium px-6 py-3 rounded-lg transition-colors"
+          className="self-start md:self-auto shrink-0 inline-flex items-center justify-center rounded-full bg-transparent border border-white/70 text-white font-sans text-sm font-semibold px-8 py-3.5 shadow-lg hover:bg-white/10 transition-colors"
         >
           Book Now
         </button>
