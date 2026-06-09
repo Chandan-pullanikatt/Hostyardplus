@@ -26,7 +26,8 @@ export default function Hero({ settings, properties }: HeroProps) {
     .filter((p) => p.status === "active")
     .map((p) => ({ location: p.location, stayTypes: p.stayTypes ?? [] }))
 
-  const heading = settings.heroHeading ?? "Experience Your Perfect Escape Across Scenic Destinations"
+  // Fully CMS-controlled — empty means empty (no hardcoded fallback text).
+  const heading = settings.heroHeading ?? ""
 
   // CMS toggle: when on (default), the video starts muted; when off, we attempt
   // to start it with sound. Browsers block unmuted autoplay, so that attempt may
@@ -145,15 +146,17 @@ export default function Hero({ settings, properties }: HeroProps) {
         <div className="h-16 md:h-24" />
 
         <div className="flex flex-col items-center justify-end flex-1 text-center gap-5 pb-10">
-          <m.h1
-            variants={heroVariants.heading}
-            initial="hidden"
-            animate="visible"
-            transition={{ duration: 0.85, ease, delay: 0.38 }}
-            className="text-white text-2xl md:text-3xl lg:text-[52px] font-serif leading-none lg:whitespace-nowrap"
-          >
-            {heading}
-          </m.h1>
+          {heading && (
+            <m.h1
+              variants={heroVariants.heading}
+              initial="hidden"
+              animate="visible"
+              transition={{ duration: 0.85, ease, delay: 0.38 }}
+              className="text-white text-2xl md:text-3xl lg:text-[52px] font-serif leading-none lg:whitespace-nowrap"
+            >
+              {heading}
+            </m.h1>
+          )}
 
           {/* Mobile only: a single Book Now button in place of the full booking bar,
               so the hero video stays fully visible. Desktop uses the BookingBar below. */}

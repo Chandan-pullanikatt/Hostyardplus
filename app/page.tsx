@@ -117,6 +117,9 @@ async function fetchData<T>(query: string, fallback: T): Promise<T> {
           merged[key] = incoming[key]
         }
       }
+      // The hero heading is fully CMS-controlled: if the client clears it, it
+      // should render empty rather than fall back to the default text.
+      if ("heroHeading" in incoming) merged.heroHeading = incoming.heroHeading
       return merged as T
     }
     return data

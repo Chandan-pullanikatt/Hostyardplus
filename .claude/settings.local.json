@@ -37,7 +37,8 @@
       "PowerShell(node scripts/inspect-settings.mjs)",
       "PowerShell(node scripts/check.mjs)",
       "Bash(echo \"exit: $?\")",
-      "WebFetch(domain:www.aman.com)"
+      "WebFetch(domain:www.aman.com)",
+      "WebFetch(domain:hostyardplus.vercel.app)"
     ],
     "additionalDirectories": [
       "d:\\work\\hostyardplus\\.grill",
