@@ -26,43 +26,35 @@ export default function ReviewMarquee({ reviews, direction, speed = 0.5 }: Revie
     const el = scrollerRef.current
     if (!el) return
 
-    // The track is tiled, so the content width must exceed the visible width
-    // before the loop math is valid. On mobile the avatar images/fonts often
-    // load *after* mount, so the initial measurement is too small — we wait
-    // until the layout is wide enough, and re-seed the start position then.
-    let seeded = false
+    // The track is tiled, so its content must be wider than the viewport before
+    // the loop math is valid. On mobile the avatar images/fonts often load after
+    // mount, so we don't advance until the row is actually wide enough.
     const ready = () => el.scrollWidth > el.clientWidth + 1
-    const seed = () => {
-      if (!ready()) return
-      // Start the rightward row from the middle so it has room to travel back.
-      el.scrollLeft = direction === "right" ? el.scrollWidth / 2 : 0
-      seeded = true
-    }
-    seed()
 
-    // Re-measure when card sizes settle (images decoding, font swap, resize).
-    const ro = new ResizeObserver(() => { if (!seeded) seed() })
-    ro.observe(el)
-
+    // We track the target position ourselves instead of reading/writing the
+    // browser's scrollLeft directly: scrollLeft is clamped to >= 0, so the
+    // right-moving row (which counts *down*) would otherwise stick at the 0
+    // floor and never animate. Normalizing with modulo keeps the mapped
+    // scrollLeft a valid positive value in [0, half) for both directions.
+    let pos = 0
     let raf = 0
     const step = () => {
       const half = el.scrollWidth / 2
-      // Only advance once there is real content to loop through; otherwise the
-      // seam wrap can fling the row into an empty region (the white-gap glitch).
       if (half > 0 && ready()) {
-        if (!seeded) seed()
-        if (!pausedRef.current && !draggingRef.current) {
-          el.scrollLeft += direction === "left" ? speed : -speed
+        if (pausedRef.current || draggingRef.current) {
+          // User is in control — follow their scroll so auto-scroll resumes
+          // smoothly from wherever they let go.
+          pos = el.scrollLeft
+        } else {
+          pos += direction === "left" ? speed : -speed
+          pos = ((pos % half) + half) % half
+          el.scrollLeft = pos
         }
-        // Wrap every frame (even while dragging) so a fast drag past the seam
-        // lands on identical tiled content instead of running out of cards.
-        if (el.scrollLeft >= half) el.scrollLeft -= half
-        else if (el.scrollLeft <= 0) el.scrollLeft += half
       }
       raf = requestAnimationFrame(step)
     }
     raf = requestAnimationFrame(step)
-    return () => { cancelAnimationFrame(raf); ro.disconnect() }
+    return () => cancelAnimationFrame(raf)
   }, [direction, speed])
 
   const pause = () => {
