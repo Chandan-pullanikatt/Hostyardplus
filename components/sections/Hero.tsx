@@ -36,22 +36,24 @@ export default function Hero({ settings, properties }: HeroProps) {
 
   const videoRef       = useRef<HTMLVideoElement>(null)
   const sectionRef     = useRef<HTMLElement>(null)
-  // The mute state the user actually wants. Kept in a ref so the visibility
-  // observer can apply it at play-time without re-subscribing.
-  const desiredMutedRef = useRef(startMuted)
   const [muted, setMuted] = useState(startMuted)
+  // Mirror of `muted` so the visibility observer can read the latest value
+  // without re-subscribing.
+  const mutedRef = useRef(startMuted)
 
   useEffect(() => {
-    desiredMutedRef.current = startMuted
+    mutedRef.current = muted
+  }, [muted])
+
+  useEffect(() => {
     setMuted(startMuted)
   }, [startMuted])
 
-  // Visibility-driven play/pause. The <video> element starts muted (its `muted`
-  // attribute), so the browser's initial autoplay is always silent — no audio
-  // can leak from an off-screen hero, even on machines allowed to autoplay with
-  // sound (e.g. after reloading the page partway down). We only apply the
-  // desired mute state and play once the hero is at least HALF visible, and we
-  // pause only when it is COMPLETELY off-screen.
+  // Visibility-driven play/pause. The <video> starts muted (its `muted`
+  // attribute) so the browser's initial autoplay is always silent and no audio
+  // leaks from an off-screen hero. We play (respecting the current mute state)
+  // once the hero is at least HALF visible, and pause only when it is
+  // COMPLETELY off-screen.
   useEffect(() => {
     const section = sectionRef.current
     if (!section) return
@@ -62,9 +64,8 @@ export default function Hero({ settings, properties }: HeroProps) {
         if (entry.intersectionRatio === 0) {
           v.pause()
         } else if (entry.intersectionRatio >= 0.5) {
-          v.muted = desiredMutedRef.current
+          v.muted = mutedRef.current
           v.play().catch(() => {
-            // Unmuted autoplay blocked — fall back to muted so it still plays.
             v.muted = true
             setMuted(true)
             v.play().catch(() => {})
@@ -77,41 +78,26 @@ export default function Hero({ settings, properties }: HeroProps) {
     return () => obs.disconnect()
   }, [])
 
+  // The speaker icon is the ONLY audio control. Unmuting a muted-autoplay video
+  // on mobile pauses it unless we re-play within the same tap, so we always call
+  // play() here (falling back to muted if an unmute is still blocked).
   const toggleMute = () => {
     const v = videoRef.current
     if (!v) return
     const next = !v.muted
     v.muted = next
-    desiredMutedRef.current = next
     setMuted(next)
+    v.play().catch(() => {
+      if (!next) {
+        v.muted = true
+        setMuted(true)
+        v.play().catch(() => {})
+      }
+    })
   }
-
-  // Turn sound ON from a user interaction. We record the intent and unmute the
-  // element ONLY if it is actually playing (i.e. the hero is in view) — never
-  // start audio for an off-screen, paused hero.
-  const enableSound = () => {
-    desiredMutedRef.current = false
-    setMuted(false)
-    const v = videoRef.current
-    if (v && !v.paused) v.muted = false
-  }
-
-  // Unmute on the user's first scroll/touch (one-shot). Safe even off-screen:
-  // enableSound only unmutes a video that is actually playing.
-  useEffect(() => {
-    const onFirstInteract = () => enableSound()
-    const opts = { once: true, passive: true } as const
-    window.addEventListener("scroll", onFirstInteract, opts)
-    window.addEventListener("touchstart", onFirstInteract, opts)
-    return () => {
-      window.removeEventListener("scroll", onFirstInteract)
-      window.removeEventListener("touchstart", onFirstInteract)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
 
   return (
-    <section ref={sectionRef} onClick={enableSound} className="relative min-h-[100svh] flex flex-col">
+    <section ref={sectionRef} className="relative min-h-[100svh] flex flex-col">
       {/* Video / image background */}
       <div className="absolute inset-0 overflow-hidden">
         {settings.heroVideo?.secure_url ? (
@@ -132,7 +118,7 @@ export default function Hero({ settings, properties }: HeroProps) {
         {/* Mute / unmute toggle */}
         {settings.heroVideo?.secure_url && (
           <button
-            onClick={(e) => { e.stopPropagation(); toggleMute() }}
+            onClick={toggleMute}
             aria-label={muted ? "Unmute video" : "Mute video"}
             className="absolute bottom-6 right-6 z-20 w-10 h-10 rounded-full bg-black/40 backdrop-blur-sm flex items-center justify-center text-white hover:bg-black/60 transition-colors"
           >
